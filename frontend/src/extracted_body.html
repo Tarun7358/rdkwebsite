@@ -1,0 +1,2996 @@
+
+  <div id="publicSite">
+    <!-- NAV -->
+    <nav id="navbar">
+      <div class="nav-inner">
+        <a href="#" class="logo">
+          <div>
+            <span class="abbr">RDK</span>
+            <span class="full">Reliable Digital Kreations</span>
+          </div>
+        </a>
+        <div class="nav-links">
+          <a href="#services">Services</a>
+          <a href="#portfolio">Portfolio</a>
+          <a href="#pricing">Pricing</a>
+          <a href="#about">About</a>
+          <a href="#careers">Careers</a>
+          <a href="#contact">Contact</a>
+        </div>
+        <div class="nav-right" style="display:flex;align-items:center;gap:.75rem;">
+          <button id="themeToggle" class="btn btn-ghost"
+            style="padding:.5rem;font-size:1.1rem;display:flex;align-items:center;justify-content:center;border:none;background:transparent;"
+            onclick="toggleTheme()">🌙</button>
+          <a href="javascript:void(0)" class="btn btn-ghost" onclick="openAuthModal()">Log in</a>
+          <a href="#contact" class="btn btn-primary">Start a project</a>
+        </div>
+        <div class="hamburger" onclick="toggleMenu()">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+    </nav>
+
+    <!-- MOBILE MENU -->
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="#services" onclick="toggleMenu()">Services</a>
+      <a href="#portfolio" onclick="toggleMenu()">Portfolio</a>
+      <a href="#pricing" onclick="toggleMenu()">Pricing</a>
+      <a href="#about" onclick="toggleMenu()">About</a>
+      <a href="#careers" onclick="toggleMenu()">Careers</a>
+      <a href="#contact" onclick="toggleMenu()">Contact</a>
+      <a href="javascript:void(0)" class="btn btn-ghost btn-lg" onclick="toggleMenu();openAuthModal();">Log in</a>
+      <a href="#contact" class="btn btn-primary btn-lg" onclick="toggleMenu()">Start a project</a>
+    </div>
+
+    <!-- HERO -->
+    <section class="hero" id="home">
+      <div class="hero-bg"></div>
+      <div class="hero-grid"></div>
+      <div class="hero-shapes">
+        <div class="shape s1"></div>
+        <div class="shape s2"></div>
+        <div class="shape s3"></div>
+      </div>
+      <div class="hero-inner">
+        <div>
+          <div class="hero-badge">🚀 Trusted by 200+ businesses worldwide</div>
+          <h1>Build software<br>that <span class="grad">scales.</span></h1>
+          <p class="hero-sub">We help businesses, startups, creators, and communities build modern websites, mobile
+            apps,
+            Discord bots, AI solutions, automation systems, and custom software.</p>
+          <div class="hero-btns">
+            <a href="#contact" class="btn btn-primary btn-xl">Start a project ↗</a>
+            <a href="#portfolio" class="btn btn-ghost btn-xl">View portfolio</a>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <div style="position:relative">
+            <div class="hero-card">
+              <div class="code-bar">
+                <div class="dot dot-r"></div>
+                <div class="dot dot-y"></div>
+                <div class="dot dot-g"></div>
+                <span style="font-size:.8rem;color:var(--text3);margin-left:.5rem">app.tsx — RDK</span>
+              </div>
+              <div class="code-line"><span class="kw">import</span> { <span class="fn">RDK</span> } <span
+                  class="kw">from</span> <span class="str">'@rdk/core'</span></div>
+              <div class="code-line" style="margin-top:.5rem"><span class="kw">const</span> <span class="fn">app</span>
+                =
+                <span class="kw">new</span> <span class="fn">RDK</span>({
+              </div>
+              <div class="code-line">&nbsp;&nbsp;<span class="fn">stack</span>: <span class="str">'next + nest +
+                  pg'</span>,</div>
+              <div class="code-line">&nbsp;&nbsp;<span class="fn">deploy</span>: <span class="str">'vercel +
+                  railway'</span>,</div>
+              <div class="code-line">&nbsp;&nbsp;<span class="fn">scale</span>: <span class="str">'∞'</span></div>
+              <div class="code-line">})</div>
+              <div style="margin-top:1rem">
+                <div class="stat-row">
+                  <div class="stat-chip"><strong>99.9%</strong><small>Uptime</small></div>
+                  <div class="stat-chip"><strong>&lt;100ms</strong><small>Response</small></div>
+                  <div class="stat-chip"><strong>A+</strong><small>Lighthouse</small></div>
+                </div>
+              </div>
+              <div class="mini-card" style="margin-top:1rem">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem">
+                  <span style="font-size:.8rem;font-weight:600">E-commerce platform</span>
+                  <span class="status-badge status-active">● Live</span>
+                </div>
+                <div class="progress-bar">
+                  <div class="progress-fill" style="width:100%"></div>
+                </div>
+                <div style="font-size:.75rem;color:var(--text3)">Delivered in 6 weeks · Next.js + Stripe</div>
+              </div>
+            </div>
+            <div class="floating-badge fb1">
+              <div class="fb-dot fb-green"></div>
+              <span>New project started</span>
+            </div>
+            <div class="floating-badge fb2">
+              <div class="fb-dot fb-blue"></div>
+              <span>Payment received ✓</span>
+            </div>
+            <div class="floating-badge fb3">
+              <div class="fb-dot fb-purple"></div>
+              <span>AI bot deployed</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATS -->
+    <section class="stats-section" style="padding:0">
+      <div class="section-inner">
+        <div class="stats-grid">
+          <div class="stat-item fade-in">
+            <div class="stat-num" id="stat1">0</div>
+            <div class="stat-label">Projects completed</div>
+          </div>
+          <div class="stat-item fade-in">
+            <div class="stat-num" id="stat2">0</div>
+            <div class="stat-label">Happy clients</div>
+          </div>
+          <div class="stat-item fade-in">
+            <div class="stat-num" id="stat3">0</div>
+            <div class="stat-label">Active projects</div>
+          </div>
+          <div class="stat-item fade-in">
+            <div class="stat-num" id="stat4">0</div>
+            <div class="stat-label">Years of experience</div>
+          </div>
+          <div class="stat-item fade-in">
+            <div class="stat-num" id="stat5">0</div>
+            <div class="stat-label">Countries served</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SERVICES -->
+    <section id="services">
+      <div class="section-inner">
+        <div class="section-label">What we build</div>
+        <h2 class="section-title">Services built for scale</h2>
+        <p class="section-sub">End-to-end software development for teams that need more than a template. RDK ships
+          production-grade solutions, on time.</p>
+        <div class="services-grid">
+          <div class="svc-card fade-in">
+            <div class="svc-icon icon-blue">🌐</div>
+            <div class="svc-name">Website development</div>
+            <div class="svc-desc">Custom websites, business sites, landing pages, CMS-driven platforms, dashboards, and
+              e-commerce solutions with full SEO and performance optimization.</div>
+            <div class="svc-tags"><span class="tag">Next.js</span><span class="tag">WordPress</span><span
+                class="tag">Shopify</span><span class="tag">Webflow</span><span class="tag">SEO</span></div>
+            <div class="svc-footer"><span class="svc-delivery">⏱ 2–8 weeks</span><span class="svc-link">Learn more
+                →</span></div>
+          </div>
+          <div class="svc-card fade-in">
+            <div class="svc-icon icon-purple">📱</div>
+            <div class="svc-name">Mobile development</div>
+            <div class="svc-desc">Native Android and iOS apps, cross-platform Flutter and React Native solutions with
+              API
+              integration, Firebase backend, and app store submission.</div>
+            <div class="svc-tags"><span class="tag">Flutter</span><span class="tag">React Native</span><span
+                class="tag">iOS</span><span class="tag">Android</span><span class="tag">Firebase</span></div>
+            <div class="svc-footer"><span class="svc-delivery">⏱ 4–12 weeks</span><span class="svc-link">Learn more
+                →</span></div>
+          </div>
+          <div class="svc-card fade-in">
+            <div class="svc-icon icon-orange">🤖</div>
+            <div class="svc-name">Discord development</div>
+            <div class="svc-desc">Custom bots for verification, moderation, tickets, anti-nuke protection, AI-powered
+              assistants, dashboards, logging systems, and full automation.</div>
+            <div class="svc-tags"><span class="tag">Discord.js</span><span class="tag">Python</span><span class="tag">AI
+                bots</span><span class="tag">Dashboard</span></div>
+            <div class="svc-footer"><span class="svc-delivery">⏱ 1–4 weeks</span><span class="svc-link">Learn more
+                →</span></div>
+          </div>
+          <div class="svc-card fade-in">
+            <div class="svc-icon icon-green">⚡</div>
+            <div class="svc-name">Full-stack development</div>
+            <div class="svc-desc">Production-ready applications with Next.js, React, Node.js, NestJS, PostgreSQL,
+              MongoDB,
+              REST APIs, GraphQL, and robust authentication systems.</div>
+            <div class="svc-tags"><span class="tag">Next.js</span><span class="tag">NestJS</span><span
+                class="tag">PostgreSQL</span><span class="tag">GraphQL</span></div>
+            <div class="svc-footer"><span class="svc-delivery">⏱ 6–16 weeks</span><span class="svc-link">Learn more
+                →</span></div>
+          </div>
+          <div class="svc-card fade-in">
+            <div class="svc-icon icon-pink">🧠</div>
+            <div class="svc-name">AI solutions</div>
+            <div class="svc-desc">Custom AI assistants, LLM integrations, intelligent chatbots, voice AI, document
+              intelligence, recommendation systems, and full automation pipelines.</div>
+            <div class="svc-tags"><span class="tag">OpenAI</span><span class="tag">LangChain</span><span
+                class="tag">RAG</span><span class="tag">Voice AI</span></div>
+            <div class="svc-footer"><span class="svc-delivery">⏱ 3–10 weeks</span><span class="svc-link">Learn more
+                →</span></div>
+          </div>
+          <div class="svc-card fade-in">
+            <div class="svc-icon icon-teal">☁️</div>
+            <div class="svc-name">Cloud & DevOps</div>
+            <div class="svc-desc">Docker containerization, AWS and Google Cloud deployment, CI/CD pipelines, Linux
+              server
+              setup, monitoring, scaling, and full infrastructure management.</div>
+            <div class="svc-tags"><span class="tag">Docker</span><span class="tag">AWS</span><span
+                class="tag">CI/CD</span><span class="tag">GCP</span><span class="tag">Linux</span></div>
+            <div class="svc-footer"><span class="svc-delivery">⏱ 1–6 weeks</span><span class="svc-link">Learn more
+                →</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- WORKFLOW -->
+    <section class="workflow-section" id="about">
+      <div class="section-inner">
+        <div class="section-label">How we work</div>
+        <h2 class="section-title" style="text-align:center">From idea to deployment</h2>
+        <p class="section-sub" style="text-align:center;margin:0 auto 3rem">A structured process that keeps you in the
+          loop at every step — no surprises, just progress.</p>
+        <div class="workflow-steps">
+          <div class="step-item fade-in">
+            <div class="step-num">💬</div>
+            <div class="step-name">Consultation</div>
+            <div class="step-desc">Free discovery call</div>
+          </div>
+          <div class="step-item fade-in">
+            <div class="step-num">📋</div>
+            <div class="step-name">Planning</div>
+            <div class="step-desc">Scope & timeline</div>
+          </div>
+          <div class="step-item fade-in">
+            <div class="step-num">🎨</div>
+            <div class="step-name">Design</div>
+            <div class="step-desc">UI/UX prototypes</div>
+          </div>
+          <div class="step-item fade-in">
+            <div class="step-num">⚙️</div>
+            <div class="step-name">Development</div>
+            <div class="step-desc">Iterative sprints</div>
+          </div>
+          <div class="step-item fade-in">
+            <div class="step-num">🧪</div>
+            <div class="step-name">Testing</div>
+            <div class="step-desc">QA & review</div>
+          </div>
+          <div class="step-item fade-in">
+            <div class="step-num">🚀</div>
+            <div class="step-name">Deployment</div>
+            <div class="step-desc">Go live</div>
+          </div>
+          <div class="step-item fade-in">
+            <div class="step-num">🛡️</div>
+            <div class="step-name">Support</div>
+            <div class="step-desc">Ongoing care</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PORTFOLIO -->
+    <section id="portfolio">
+      <div class="section-inner">
+        <div class="section-label">Our work</div>
+        <h2 class="section-title">Projects we're proud of</h2>
+        <p class="section-sub">A selection of client projects across industries — from scrappy startups to enterprise
+          platforms.</p>
+        <div class="filter-bar">
+          <button class="filter-btn active" onclick="filterPortfolio(this,'all')">All projects</button>
+          <button class="filter-btn" onclick="filterPortfolio(this,'web')">Websites</button>
+          <button class="filter-btn" onclick="filterPortfolio(this,'mobile')">Mobile apps</button>
+          <button class="filter-btn" onclick="filterPortfolio(this,'discord')">Discord bots</button>
+          <button class="filter-btn" onclick="filterPortfolio(this,'ai')">AI solutions</button>
+        </div>
+        <div class="portfolio-grid" id="portfolioGrid">
+          <div class="port-card fade-in" data-cat="web">
+            <div class="port-img" style="background:linear-gradient(135deg,#EFF6FF,#DBEAFE)">🛒</div>
+            <div class="port-body">
+              <div class="port-cat">E-commerce</div>
+              <div class="port-title">Luxora Marketplace</div>
+              <div class="port-desc">Multi-vendor e-commerce platform with real-time inventory, AI recommendations, and
+                integrated payment processing.</div>
+              <div class="port-stack"><span class="tag">Next.js</span><span class="tag">Stripe</span><span
+                  class="tag">PostgreSQL</span></div>
+              <div class="port-footer"><span class="port-date">Jan 2026</span><a href="#contact" class="btn btn-outline"
+                  style="padding:.3rem .85rem;font-size:.8rem">Case study</a></div>
+            </div>
+          </div>
+          <div class="port-card fade-in" data-cat="mobile">
+            <div class="port-img" style="background:linear-gradient(135deg,#F5F3FF,#EDE9FE)">📱</div>
+            <div class="port-body">
+              <div class="port-cat">Mobile app</div>
+              <div class="port-title">FitTrack Pro</div>
+              <div class="port-desc">Cross-platform fitness tracking app with AI coaching, social features, and health
+                device integrations.</div>
+              <div class="port-stack"><span class="tag">Flutter</span><span class="tag">Firebase</span><span
+                  class="tag">HealthKit</span></div>
+              <div class="port-footer"><span class="port-date">Nov 2025</span><a href="#contact" class="btn btn-outline"
+                  style="padding:.3rem .85rem;font-size:.8rem">Case study</a></div>
+            </div>
+          </div>
+          <div class="port-card fade-in" data-cat="discord">
+            <div class="port-img" style="background:linear-gradient(135deg,#FFF7ED,#FFEDD5)">🤖</div>
+            <div class="port-body">
+              <div class="port-cat">Discord bot</div>
+              <div class="port-title">GuardianBot</div>
+              <div class="port-desc">Enterprise-grade Discord moderation system managing 500K+ member server with AI
+                content filtering.</div>
+              <div class="port-stack"><span class="tag">Discord.js</span><span class="tag">OpenAI</span><span
+                  class="tag">Redis</span></div>
+              <div class="port-footer"><span class="port-date">Oct 2025</span><a href="#contact" class="btn btn-outline"
+                  style="padding:.3rem .85rem;font-size:.8rem">Case study</a></div>
+            </div>
+          </div>
+          <div class="port-card fade-in" data-cat="ai">
+            <div class="port-img" style="background:linear-gradient(135deg,#FDF2F8,#FCE7F3)">🧠</div>
+            <div class="port-body">
+              <div class="port-cat">AI solution</div>
+              <div class="port-title">LegalMind AI</div>
+              <div class="port-desc">Document intelligence platform for a law firm — contract analysis, clause
+                extraction,
+                and risk scoring at scale.</div>
+              <div class="port-stack"><span class="tag">LangChain</span><span class="tag">FastAPI</span><span
+                  class="tag">Pinecone</span></div>
+              <div class="port-footer"><span class="port-date">Sep 2025</span><a href="#contact" class="btn btn-outline"
+                  style="padding:.3rem .85rem;font-size:.8rem">Case study</a></div>
+            </div>
+          </div>
+          <div class="port-card fade-in" data-cat="web">
+            <div class="port-img" style="background:linear-gradient(135deg,#ECFDF5,#D1FAE5)">🏥</div>
+            <div class="port-body">
+              <div class="port-cat">SaaS platform</div>
+              <div class="port-title">MediBook</div>
+              <div class="port-desc">Healthcare appointment booking platform with telemedicine, EHR integration, and
+                HIPAA-compliant architecture.</div>
+              <div class="port-stack"><span class="tag">NestJS</span><span class="tag">React</span><span
+                  class="tag">PostgreSQL</span></div>
+              <div class="port-footer"><span class="port-date">Aug 2025</span><a href="#contact" class="btn btn-outline"
+                  style="padding:.3rem .85rem;font-size:.8rem">Case study</a></div>
+            </div>
+          </div>
+          <div class="port-card fade-in" data-cat="mobile">
+            <div class="port-img" style="background:linear-gradient(135deg,#F0FDFA,#CCFBF1)">🚗</div>
+            <div class="port-body">
+              <div class="port-cat">Mobile app</div>
+              <div class="port-title">RideSwift</div>
+              <div class="port-desc">Ride-hailing app with real-time GPS tracking, surge pricing, driver matching
+                algorithm, and in-app payments.</div>
+              <div class="port-stack"><span class="tag">React Native</span><span class="tag">Google Maps</span><span
+                  class="tag">Razorpay</span></div>
+              <div class="port-footer"><span class="port-date">Jul 2025</span><a href="#contact" class="btn btn-outline"
+                  style="padding:.3rem .85rem;font-size:.8rem">Case study</a></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DASHBOARD PREVIEW -->
+    <section style="background:var(--bg2)">
+      <div class="section-inner">
+        <div class="section-label">Client portal</div>
+        <h2 class="section-title">Track everything in one place</h2>
+        <p class="section-sub">Your dedicated RDK dashboard to monitor project progress, manage tickets, view invoices,
+          and communicate with your team.</p>
+        <div class="dash-preview fade-in">
+          <div class="dash-wrap">
+            <div class="dash-sidebar">
+              <div
+                style="font-size:.75rem;font-weight:600;color:var(--text3);padding:.5rem .75rem;text-transform:uppercase;letter-spacing:.05em">
+                RDK Portal</div>
+              <div class="sidebar-item active">📊 Dashboard</div>
+              <div class="sidebar-item">📁 Projects</div>
+              <div class="sidebar-item">🎫 Tickets</div>
+              <div class="sidebar-item">💬 Messages</div>
+              <div class="sidebar-item">💳 Invoices</div>
+              <div class="sidebar-item">📂 Files</div>
+              <div class="sidebar-item">🔔 Alerts</div>
+              <div class="sidebar-item">👤 Profile</div>
+            </div>
+            <div class="dash-main" style="overflow-y:auto">
+              <div style="font-size:1rem;font-weight:700;margin-bottom:1rem">Good morning, Alex ☀️</div>
+              <div class="dash-card-grid">
+                <div class="dash-card">
+                  <div class="dc-num">3</div>
+                  <div class="dc-label">Active projects</div>
+                </div>
+                <div class="dash-card">
+                  <div class="dc-num">2</div>
+                  <div class="dc-label">Open tickets</div>
+                </div>
+                <div class="dash-card">
+                  <div class="dc-num">1</div>
+                  <div class="dc-label">Pending invoice</div>
+                </div>
+                <div class="dash-card">
+                  <div class="dc-num">5</div>
+                  <div class="dc-label">Unread messages</div>
+                </div>
+              </div>
+              <div style="font-size:.85rem;font-weight:600;margin-bottom:.5rem">Active projects</div>
+              <div class="proj-item">
+                <div class="proj-top"><span class="proj-name">Luxora Marketplace v2</span><span
+                    class="status-badge status-active">In progress</span></div>
+                <div class="progress-bar">
+                  <div class="progress-fill" style="width:72%"></div>
+                </div>
+                <div style="display:flex;justify-content:space-between;font-size:.75rem;color:var(--text3)"><span>72%
+                    complete</span><span>Due Jul 20</span></div>
+              </div>
+              <div class="proj-item">
+                <div class="proj-top"><span class="proj-name">Mobile App Redesign</span><span
+                    class="status-badge status-open">Review</span></div>
+                <div class="progress-bar">
+                  <div class="progress-fill" style="width:90%"></div>
+                </div>
+                <div style="display:flex;justify-content:space-between;font-size:.75rem;color:var(--text3)"><span>90%
+                    complete</span><span>Due Jul 5</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TICKET SYSTEM -->
+    <section class="ticket-section" id="tickets">
+      <div class="section-inner" style="display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center">
+        <div>
+          <div class="section-label">Support system</div>
+          <h2 class="section-title">Track requests with tickets</h2>
+          <p class="section-sub">Create project requests or support tickets and track them from submission to resolution
+            with auto-generated IDs.</p>
+          <div style="display:flex;flex-direction:column;gap:.75rem">
+            <div style="display:flex;align-items:center;gap:.75rem;font-size:.9rem">
+              <div
+                style="width:32px;height:32px;border-radius:8px;background:#EFF6FF;display:flex;align-items:center;justify-content:center">
+                🎫</div><span>Automatic ticket ID generation (WEB-2026-0041)</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:.75rem;font-size:.9rem">
+              <div
+                style="width:32px;height:32px;border-radius:8px;background:#ECFDF5;display:flex;align-items:center;justify-content:center">
+                🔔</div><span>Real-time status updates and notifications</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:.75rem;font-size:.9rem">
+              <div
+                style="width:32px;height:32px;border-radius:8px;background:#F5F3FF;display:flex;align-items:center;justify-content:center">
+                📎</div><span>File attachments and priority settings</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:.75rem;font-size:.9rem">
+              <div
+                style="width:32px;height:32px;border-radius:8px;background:#FFF7ED;display:flex;align-items:center;justify-content:center">
+                👥</div><span>Developer assignment and progress tracking</span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="ticket-demo">
+            <div class="ticket-header">
+              <div>
+                <div style="font-weight:700">E-commerce Bug Report</div>
+                <div style="font-size:.8rem;opacity:.8;margin-top:.1rem">Payment gateway timeout on checkout</div>
+              </div>
+              <div class="ticket-id">WEB-2026-0041</div>
+            </div>
+            <div class="ticket-body">
+              <div class="ticket-row">
+                <div class="ticket-field">
+                  <div class="tf-label">Category</div>
+                  <div class="tf-val">Website Dev</div>
+                </div>
+                <div class="ticket-field">
+                  <div class="tf-label">Priority</div>
+                  <div class="tf-val" style="color:#DC2626">🔴 Critical</div>
+                </div>
+                <div class="ticket-field">
+                  <div class="tf-label">Status</div>
+                  <div><span class="status-badge status-active">● Active</span></div>
+                </div>
+                <div class="ticket-field">
+                  <div class="tf-label">Assigned to</div>
+                  <div class="tf-val">Sarah K.</div>
+                </div>
+              </div>
+              <div
+                style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:.75rem;margin-bottom:1rem">
+                <div class="tf-label" style="margin-bottom:.4rem">Description</div>
+                <div style="font-size:.85rem;color:var(--text2);line-height:1.6">Stripe webhooks are timing out after 5s
+                  on the production server during peak traffic hours...</div>
+              </div>
+              <div style="display:flex;gap:.5rem">
+                <div
+                  style="background:#D1FAE5;color:#065F46;padding:.35rem .75rem;border-radius:6px;font-size:.78rem;font-weight:600">
+                  Investigating</div>
+                <div
+                  style="background:#EFF6FF;color:#1D4ED8;padding:.35rem .75rem;border-radius:6px;font-size:.78rem;font-weight:600">
+                  Est. fix: 4h</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LIVE CHAT -->
+    <section>
+      <div class="section-inner" style="display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center">
+        <div>
+          <div class="chat-preview">
+            <div class="chat-header">
+              <div
+                style="width:36px;height:36px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:.85rem">
+                RDK</div>
+              <div>
+                <div style="font-weight:700;font-size:.9rem">RDK Support</div>
+                <div style="font-size:.78rem;color:#10B981;display:flex;align-items:center;gap:.3rem">
+                  <div class="online-dot" style="width:7px;height:7px"></div>Online now
+                </div>
+              </div>
+            </div>
+            <div class="chat-body">
+              <div class="msg msg-in">Hey! Quick update on your project — the payment integration is complete ✅<div
+                  class="msg-time">10:32 AM</div>
+              </div>
+              <div class="msg msg-out">That's great news! Can I review the staging environment?<div class="msg-time"
+                  style="text-align:right">10:34 AM</div>
+              </div>
+              <div class="msg msg-in">Absolutely! Here's the link: staging.luxora.app — login with your test credentials
+                <div class="msg-time">10:35 AM</div>
+              </div>
+              <div class="msg msg-out">Perfect. I'll review and get back to you within the hour 🙌<div class="msg-time"
+                  style="text-align:right">10:36 AM</div>
+              </div>
+              <div style="text-align:center;font-size:.75rem;color:var(--text3);padding:.25rem">RDK Support is typing...
+              </div>
+            </div>
+            <div class="chat-footer">
+              <input class="chat-input" type="text" placeholder="Type a message...">
+              <button class="send-btn">Send</button>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="section-label">Real-time chat</div>
+          <h2 class="section-title">Always in the loop</h2>
+          <p class="section-sub">Direct communication with your assigned RDK developer. No email chains, no delays —
+            just
+            fast, clear conversations.</p>
+          <div style="display:flex;flex-direction:column;gap:.75rem">
+            <div style="display:flex;align-items:center;gap:.75rem;font-size:.9rem">
+              <div
+                style="width:32px;height:32px;border-radius:8px;background:#EFF6FF;display:flex;align-items:center;justify-content:center">
+                💬</div><span>Real-time messaging with read receipts</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:.75rem;font-size:.9rem">
+              <div
+                style="width:32px;height:32px;border-radius:8px;background:#ECFDF5;display:flex;align-items:center;justify-content:center">
+                📁</div><span>File and image sharing</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:.75rem;font-size:.9rem">
+              <div
+                style="width:32px;height:32px;border-radius:8px;background:#F5F3FF;display:flex;align-items:center;justify-content:center">
+                🔍</div><span>Searchable conversation history</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MEETING -->
+    <section style="background:var(--bg2)">
+      <div class="section-inner">
+        <div class="section-label">Meetings</div>
+        <h2 class="section-title" style="text-align:center">Schedule a consultation</h2>
+        <p class="section-sub" style="text-align:center;margin:0 auto 2.5rem">Pick the format that works for you — RDK
+          will send the invite instantly.</p>
+        <div class="meeting-grid">
+          <div class="meet-card fade-in">
+            <div class="meet-icon">📹</div>
+            <div class="meet-name">Google Meet</div>
+            <div class="meet-desc">30 or 60 min video call</div>
+            <div style="margin-top:1rem"><a href="#contact" class="btn btn-outline"
+                style="width:100%;justify-content:center">Schedule</a></div>
+          </div>
+          <div class="meet-card fade-in">
+            <div class="meet-icon">🎥</div>
+            <div class="meet-name">Zoom call</div>
+            <div class="meet-desc">Video meeting + screen share</div>
+            <div style="margin-top:1rem"><a href="#contact" class="btn btn-outline"
+                style="width:100%;justify-content:center">Schedule</a></div>
+          </div>
+          <div class="meet-card fade-in">
+            <div class="meet-icon">🎮</div>
+            <div class="meet-name">Discord voice</div>
+            <div class="meet-desc">Voice or video on Discord</div>
+            <div style="margin-top:1rem"><a href="#contact" class="btn btn-outline"
+                style="width:100%;justify-content:center">Schedule</a></div>
+          </div>
+          <div class="meet-card fade-in">
+            <div class="meet-icon">📞</div>
+            <div class="meet-name">Phone call</div>
+            <div class="meet-desc">Direct phone consultation</div>
+            <div style="margin-top:1rem"><a href="#contact" class="btn btn-outline"
+                style="width:100%;justify-content:center">Schedule</a></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section>
+      <div class="section-inner">
+        <div class="section-label">Client reviews</div>
+        <h2 class="section-title">What clients say</h2>
+        <p class="section-sub">Don't take our word for it — here's what the teams we've worked with have to say.</p>
+        <div class="testi-grid">
+          <div class="testi-card fade-in">
+            <div class="stars">★★★★★</div>
+            <div class="testi-text">"RDK delivered our marketplace in exactly 6 weeks as promised. The code quality was
+              exceptional — clean, well-documented, and easy to hand off to our in-house team."</div>
+            <div class="testi-author">
+              <div class="avatar" style="background:var(--blue)">MR</div>
+              <div>
+                <div class="testi-name">Marcus Reid</div>
+                <div class="testi-co">CEO, Luxora — E-commerce platform</div>
+              </div>
+            </div>
+          </div>
+          <div class="testi-card fade-in">
+            <div class="stars">★★★★★</div>
+            <div class="testi-text">"The AI assistant RDK built for us handles 80% of our support tickets automatically.
+              It's saved us 40 hours a week and our customers love the instant responses."</div>
+            <div class="testi-author">
+              <div class="avatar" style="background:var(--purple)">PL</div>
+              <div>
+                <div class="testi-name">Priya Lal</div>
+                <div class="testi-co">CTO, SupportBase — AI integration</div>
+              </div>
+            </div>
+          </div>
+          <div class="testi-card fade-in">
+            <div class="stars">★★★★★</div>
+            <div class="testi-text">"Our Discord server went from 10K to 200K members and the bot RDK built handled
+              everything flawlessly. Zero downtime, near-instant responses, and it saved our mods hours daily."</div>
+            <div class="testi-author">
+              <div class="avatar" style="background:#059669">TK</div>
+              <div>
+                <div class="testi-name">Tom Keller</div>
+                <div class="testi-co">Founder, GamingHub — Discord bot</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRICING -->
+    <section style="background:var(--bg2)" id="pricing">
+      <div class="section-inner">
+        <div class="section-label">Pricing</div>
+        <h2 class="section-title" style="text-align:center">Every project is different</h2>
+        <p class="section-sub" style="text-align:center;margin:0 auto 3rem">RDK doesn't do cookie-cutter packages. Tell
+          us
+          what you need and we'll build a proposal that fits your scope and budget.</p>
+        <div class="pricing-card">
+          <div class="pricing-icon">💼</div>
+          <div class="pricing-title">Custom quote, every time</div>
+          <div class="pricing-sub">No fixed pricing tiers — because no two projects are the same. Get a detailed RDK
+            proposal with timeline, deliverables, and payment schedule.</div>
+          <div class="pricing-features">
+            <div class="pf-item">Free 30-min consultation</div>
+            <div class="pf-item">Detailed scope document</div>
+            <div class="pf-item">Timeline estimate</div>
+            <div class="pf-item">Milestone-based payments</div>
+            <div class="pf-item">Budget planning support</div>
+            <div class="pf-item">No hidden fees</div>
+            <div class="pf-item">Revisions included</div>
+            <div class="pf-item">Post-launch support</div>
+          </div>
+          <a href="#contact" class="btn btn-primary btn-xl" style="display:inline-flex">Request a quote ↗</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact">
+      <div class="section-inner">
+        <div class="section-label">Get in touch</div>
+        <h2 class="section-title">Start your project</h2>
+        <div class="contact-grid">
+          <div class="contact-info">
+            <h3>Let's build something great together</h3>
+            <p>Tell us about your project and the RDK team will get back to you with a detailed proposal within 24
+              hours.
+              Free consultation included.</p>
+            <div class="contact-detail">
+              <div class="contact-icon">📧</div>
+              <div>
+                <div style="font-weight:600">Email</div>
+                <div style="color:var(--text2);font-size:.9rem">hello@rdkreations.io</div>
+              </div>
+            </div>
+            <div class="contact-detail">
+              <div class="contact-icon">🎮</div>
+              <div>
+                <div style="font-weight:600">Discord</div>
+                <div style="color:var(--text2);font-size:.9rem">discord.gg/rdkreations</div>
+              </div>
+            </div>
+            <div class="contact-detail">
+              <div class="contact-icon">📍</div>
+              <div>
+                <div style="font-weight:600">Office</div>
+                <div style="color:var(--text2);font-size:.9rem">Remote-first · GMT+0 to GMT+5:30</div>
+              </div>
+            </div>
+            <div class="contact-detail">
+              <div class="contact-icon">🕐</div>
+              <div>
+                <div style="font-weight:600">Business hours</div>
+                <div style="color:var(--text2);font-size:.9rem">Mon–Fri, 9am–7pm</div>
+              </div>
+            </div>
+            <div
+              style="margin-top:2rem;padding:1.25rem;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius)">
+              <div style="font-size:.85rem;font-weight:700;margin-bottom:.75rem">🎫 Or open a support ticket</div>
+              <div style="font-size:.83rem;color:var(--text2);margin-bottom:.75rem">Already an RDK client? Use our
+                ticket
+                system for project updates and support.</div>
+              <a href="#tickets" class="btn btn-ghost" style="font-size:.83rem">Open ticket →</a>
+            </div>
+          </div>
+          <div class="contact-form">
+            <div class="form-row">
+              <div class="form-group"><label>Full name</label><input type="text" placeholder="Alex Johnson"></div>
+              <div class="form-group"><label>Company</label><input type="text" placeholder="Acme Inc."></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label>Email</label><input type="email" placeholder="alex@company.com"></div>
+              <div class="form-group"><label>Discord username</label><input type="text" placeholder="alex#0001"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label>Project type</label><select>
+                  <option>Website development</option>
+                  <option>Mobile app</option>
+                  <option>Discord bot</option>
+                  <option>AI solution</option>
+                  <option>Full-stack platform</option>
+                  <option>Cloud / DevOps</option>
+                  <option>Other</option>
+                </select></div>
+              <div class="form-group"><label>Budget range</label><select>
+                  <option>Under $1,000</option>
+                  <option>$1,000 – $5,000</option>
+                  <option>$5,000 – $15,000</option>
+                  <option>$15,000 – $50,000</option>
+                  <option>$50,000+</option>
+                </select></div>
+            </div>
+            <div class="form-group"><label>Deadline</label><input type="date"></div>
+            <div class="form-group"><label>Project description</label><textarea
+                placeholder="Tell the RDK team about your project — what you're building, who it's for, and any specific requirements or integrations..."></textarea>
+            </div>
+            <button class="btn btn-primary" style="width:100%;justify-content:center;padding:.85rem;font-size:1rem"
+              onclick="submitForm(this)">Send project request ↗</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CAREERS -->
+    <section style="background:var(--bg2)" id="careers">
+      <div class="section-inner">
+        <div class="section-label">Join the team</div>
+        <h2 class="section-title">Open positions at RDK</h2>
+        <p class="section-sub">We're always looking for talented people. All RDK roles are remote-first.</p>
+        <div class="careers-grid">
+          <div class="job-card fade-in">
+            <div class="job-top">
+              <div class="job-title">Senior Frontend Developer</div><span class="job-type">Full-time</span>
+            </div>
+            <div class="job-dept">Engineering · Remote</div>
+            <div class="job-tags"><span class="tag">React</span><span class="tag">Next.js</span><span
+                class="tag">TypeScript</span><span class="tag">3+ years</span></div>
+            <div class="job-footer"><span class="salary">$60k – $90k/yr</span><a href="#contact" class="btn btn-primary"
+                style="padding:.35rem .9rem;font-size:.83rem">Apply now</a></div>
+          </div>
+          <div class="job-card fade-in">
+            <div class="job-top">
+              <div class="job-title">Backend Developer (NestJS)</div><span class="job-type">Full-time</span>
+            </div>
+            <div class="job-dept">Engineering · Remote</div>
+            <div class="job-tags"><span class="tag">NestJS</span><span class="tag">PostgreSQL</span><span
+                class="tag">Node.js</span><span class="tag">2+ years</span></div>
+            <div class="job-footer"><span class="salary">$55k – $85k/yr</span><a href="#contact" class="btn btn-primary"
+                style="padding:.35rem .9rem;font-size:.83rem">Apply now</a></div>
+          </div>
+          <div class="job-card fade-in">
+            <div class="job-top">
+              <div class="job-title">Flutter Developer</div><span class="job-type">Full-time</span>
+            </div>
+            <div class="job-dept">Mobile · Remote</div>
+            <div class="job-tags"><span class="tag">Flutter</span><span class="tag">Dart</span><span
+                class="tag">Firebase</span><span class="tag">2+ years</span></div>
+            <div class="job-footer"><span class="salary">$50k – $80k/yr</span><a href="#contact" class="btn btn-primary"
+                style="padding:.35rem .9rem;font-size:.83rem">Apply now</a></div>
+          </div>
+          <div class="job-card fade-in">
+            <div class="job-top">
+              <div class="job-title">AI/ML Engineer</div><span class="job-type">Full-time</span>
+            </div>
+            <div class="job-dept">AI · Remote</div>
+            <div class="job-tags"><span class="tag">Python</span><span class="tag">LangChain</span><span
+                class="tag">OpenAI</span><span class="tag">3+ years</span></div>
+            <div class="job-footer"><span class="salary">$70k – $110k/yr</span><a href="#contact"
+                class="btn btn-primary" style="padding:.35rem .9rem;font-size:.83rem">Apply now</a></div>
+          </div>
+          <div class="job-card fade-in">
+            <div class="job-top">
+              <div class="job-title">Discord Bot Developer</div><span class="job-type">Freelance</span>
+            </div>
+            <div class="job-dept">Bots · Remote</div>
+            <div class="job-tags"><span class="tag">Discord.js</span><span class="tag">Python</span><span class="tag">1+
+                years</span></div>
+            <div class="job-footer"><span class="salary">$25 – $50/hr</span><a href="#contact" class="btn btn-outline"
+                style="padding:.35rem .9rem;font-size:.83rem">Apply</a></div>
+          </div>
+          <div class="job-card fade-in">
+            <div class="job-top">
+              <div class="job-title">UI/UX Designer</div><span class="job-type">Full-time</span>
+            </div>
+            <div class="job-dept">Design · Remote</div>
+            <div class="job-tags"><span class="tag">Figma</span><span class="tag">Framer</span><span class="tag">Design
+                systems</span><span class="tag">3+ years</span></div>
+            <div class="job-footer"><span class="salary">$55k – $80k/yr</span><a href="#contact" class="btn btn-primary"
+                style="padding:.35rem .9rem;font-size:.83rem">Apply now</a></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+      <div class="footer-inner">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <div class="footer-logo-text"><span>RDK</span> — Reliable Digital Kreations<span
+                class="footer-logo-sub">Building software that scales.</span></div>
+            <p>End-to-end software development for businesses, startups, creators, and communities — delivered on time,
+              built to last.</p>
+            <div style="display:flex;gap:.75rem;margin-top:1.25rem">
+              <a href="#"
+                style="width:36px;height:36px;border-radius:8px;border:1px solid #374151;display:flex;align-items:center;justify-content:center;font-size:1rem;color:#9CA3AF;text-decoration:none">𝕏</a>
+              <a href="#"
+                style="width:36px;height:36px;border-radius:8px;border:1px solid #374151;display:flex;align-items:center;justify-content:center;font-size:1rem;color:#9CA3AF;text-decoration:none">in</a>
+              <a href="#"
+                style="width:36px;height:36px;border-radius:8px;border:1px solid #374151;display:flex;align-items:center;justify-content:center;font-size:1rem;color:#9CA3AF;text-decoration:none">gh</a>
+              <a href="#"
+                style="width:36px;height:36px;border-radius:8px;border:1px solid #374151;display:flex;align-items:center;justify-content:center;font-size:1rem;color:#9CA3AF;text-decoration:none">🎮</a>
+            </div>
+          </div>
+          <div class="footer-col">
+            <h4>Services</h4>
+            <a href="#services">Website development</a>
+            <a href="#services">Mobile apps</a>
+            <a href="#services">Discord bots</a>
+            <a href="#services">AI solutions</a>
+            <a href="#services">Full-stack development</a>
+            <a href="#services">Cloud & DevOps</a>
+          </div>
+          <div class="footer-col">
+            <h4>Company</h4>
+            <a href="#about">About RDK</a>
+            <a href="#portfolio">Portfolio</a>
+            <a href="#careers">Careers</a>
+            <a href="#pricing">Pricing</a>
+            <a href="#contact">Contact</a>
+          </div>
+          <div class="footer-col">
+            <h4>Client portal</h4>
+            <a href="javascript:void(0)" onclick="openAuthModal()">Log in</a>
+            <a href="javascript:void(0)" onclick="openAuthModal()">Dashboard</a>
+            <a href="javascript:void(0)" onclick="openAuthModal()">Tickets</a>
+            <a href="javascript:void(0)" onclick="openAuthModal()">Invoices</a>
+            <a href="#">Privacy policy</a>
+            <a href="#">Terms of service</a>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <span>© 2026 RDK – Reliable Digital Kreations. All rights reserved.</span>
+          <span>Built with ❤️ by the RDK team</span>
+        </div>
+      </div>
+    </footer>
+  </div> <!-- /publicSite -->
+
+  <!-- AUTH MODAL -->
+  <div class="modal-overlay" id="authModal">
+    <div class="modal-content" style="max-width: 420px; text-align: center; padding: 2rem;">
+      <button class="modal-close" onclick="closeAuthModal()">&times;</button>
+
+      <div style="margin-bottom: 2rem;">
+        <div style="font-size: 1.8rem; font-weight: 800; margin-bottom: .35rem; color: var(--text);"><span
+            style="color: var(--blue);">RDK</span> Console</div>
+        <div style="font-size: .9rem; color: var(--text2);">Sign in to access client portals, track projects, and manage
+          tickets.</div>
+      </div>
+
+      <!-- Google OAuth Button -->
+      <button onclick="signInWithGoogle()"
+        style="width: 100%; display: flex; align-items: center; justify-content: center; gap: .75rem; padding: .85rem; border-radius: 8px; border: 1.5px solid var(--border); background: var(--card); cursor: pointer; font-size: .95rem; font-weight: 600; color: var(--text); transition: all 0.2s;">
+        <svg width="18" height="18" viewBox="0 0 48 48">
+          <path fill="#FFC107"
+            d="M43.6 20H24v8h11.1C33.5 33.3 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3 0 5.8 1.1 7.9 3l5.7-5.7C34.1 6.5 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20c11 0 20-8 20-20 0-1.3-.1-2.7-.4-4z" />
+          <path fill="#FF3D00"
+            d="M6.3 14.7l6.6 4.8C14.5 15.1 18.9 12 24 12c3 0 5.8 1.1 7.9 3l5.7-5.7C34.1 6.5 29.3 4 24 4 16.3 4 9.6 8.3 6.3 14.7z" />
+          <path fill="#4CAF50"
+            d="M24 44c5.2 0 9.9-1.9 13.5-5l-6.2-5.2C29.5 35.6 26.9 36 24 36c-5.2 0-9.5-2.7-11.1-6.8l-6.6 5.1C9.7 40 16.4 44 24 44z" />
+          <path fill="#1976D2"
+            d="M43.6 20H24v8h11.1c-.8 2.2-2.3 4-4.2 5.3l6.2 5.2C40.8 35.4 44 30.1 44 24c0-1.3-.1-2.7-.4-4z" />
+        </svg>
+        Continue with Google
+      </button>
+
+      <div style="margin: 1.5rem 0; display: flex; align-items: center; gap: .75rem;">
+        <div style="flex: 1; height: 1px; background: var(--border);"></div>
+        <span style="font-size: .8rem; color: var(--text3); font-weight: 500;">OR</span>
+        <div style="flex: 1; height: 1px; background: var(--border);"></div>
+      </div>
+
+      <div class="auth-tabs" style="margin-bottom: 1.25rem;">
+        <div class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Log In</div>
+        <div class="auth-tab" id="tabRegister" onclick="switchAuthTab('register')">Register</div>
+      </div>
+
+      <!-- Login Form -->
+      <form id="loginForm" onsubmit="handleLoginSubmit(event)">
+        <div class="form-group" style="text-align: left;">
+          <label style="font-size: .85rem; font-weight: 500; color: var(--text2);">Email Address</label>
+          <input type="email" id="loginEmail" placeholder="you@company.com" required
+            style="width: 100%; padding: .75rem; border-radius: 6px; border: 1px solid var(--border); background: var(--bg); color: var(--text); margin-top: .35rem;">
+        </div>
+        <div class="form-group" style="text-align: left; margin-top: 1rem;">
+          <label style="font-size: .85rem; font-weight: 500; color: var(--text2);">Password</label>
+          <input type="password" id="loginPassword" placeholder="••••••••" required
+            style="width: 100%; padding: .75rem; border-radius: 6px; border: 1px solid var(--border); background: var(--bg); color: var(--text); margin-top: .35rem;">
+        </div>
+        <button type="submit" class="btn btn-primary"
+          style="width: 100%; justify-content: center; margin-top: 1.5rem; padding: .8rem;">Sign In</button>
+      </form>
+
+      <!-- Register Form -->
+      <form id="registerForm" style="display: none;" onsubmit="handleRegisterSubmit(event)">
+        <div class="form-group" style="text-align: left;">
+          <label style="font-size: .85rem; font-weight: 500; color: var(--text2);">Full Name</label>
+          <input type="text" id="regName" placeholder="Alex Johnson" required
+            style="width: 100%; padding: .75rem; border-radius: 6px; border: 1px solid var(--border); background: var(--bg); color: var(--text); margin-top: .35rem;">
+        </div>
+        <div class="form-group" style="text-align: left; margin-top: 1rem;">
+          <label style="font-size: .85rem; font-weight: 500; color: var(--text2);">Email Address</label>
+          <input type="email" id="regEmail" placeholder="alex@company.com" required
+            style="width: 100%; padding: .75rem; border-radius: 6px; border: 1px solid var(--border); background: var(--bg); color: var(--text); margin-top: .35rem;">
+        </div>
+        <div class="form-group" style="text-align: left; margin-top: 1rem;">
+          <label style="font-size: .85rem; font-weight: 500; color: var(--text2);">Password</label>
+          <input type="password" id="regPassword" placeholder="••••••••" required
+            style="width: 100%; padding: .75rem; border-radius: 6px; border: 1px solid var(--border); background: var(--bg); color: var(--text); margin-top: .35rem;">
+        </div>
+        <button type="submit" class="btn btn-primary"
+          style="width: 100%; justify-content: center; margin-top: 1.5rem; padding: .8rem;">Create Account</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- DASHBOARD SYSTEM -->
+  <div id="dashboardView" style="display:none;min-height:100vh;flex-direction:row;background:var(--bg);">
+    <!-- Sidebar -->
+    <div class="dash-sidebar"
+      style="width:250px;padding:1.5rem 1rem;display:flex;flex-direction:column;border-right:1px solid var(--border);background:var(--bg2);flex-shrink:0;">
+      <div style="margin-bottom:2rem;padding:0 .5rem;">
+        <div style="font-size:1.2rem;font-weight:800;color:var(--text);display:flex;align-items:center;gap:.4rem;">
+          <span style="color:var(--blue)">RDK</span><span>Console</span>
+        </div>
+        <div
+          style="font-size:.7rem;color:var(--text3);font-weight:600;text-transform:uppercase;margin-top:.25rem;letter-spacing:.05em"
+          id="userRoleBadge">Client Dashboard</div>
+      </div>
+
+      <!-- Menu Links -->
+      <div style="flex:1;display:flex;flex-direction:column;gap:.25rem;" id="dashSidebarMenu">
+        <!-- Generated Dynamically -->
+      </div>
+
+      <!-- Footer Info -->
+      <div style="border-top:1px solid var(--border);padding-top:1rem;margin-top:auto;">
+        <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1rem;padding:0 .5rem;">
+          <div class="avatar"
+            style="background:var(--blue);width:36px;height:36px;font-size:.8rem;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;"
+            id="userAvatar">CU</div>
+          <div style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+            <div style="font-size:.85rem;font-weight:700;" id="userProfileName">Alex Johnson</div>
+            <div style="font-size:.7rem;color:var(--text2);" id="userProfileEmail">alex@company.com</div>
+          </div>
+        </div>
+        <button class="btn btn-ghost" style="width:100%;justify-content:center;border-color:var(--border)"
+          onclick="handleLogout()">Logout</button>
+      </div>
+    </div>
+
+    <!-- Main Display -->
+    <div style="flex:1;display:flex;flex-direction:column;overflow-y:auto;height:100vh;">
+      <div
+        style="height:64px;border-bottom:1px solid var(--border);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;background:var(--bg);flex-shrink:0;">
+        <div style="font-size:1.15rem;font-weight:800;" id="dashActiveTabTitle">Overview</div>
+        <div style="display:flex;align-items:center;gap:1rem;">
+          <button class="btn btn-ghost" style="padding:.5rem;font-size:1.1rem;border:none;background:transparent;"
+            onclick="toggleTheme()" id="dashThemeToggle">🌙</button>
+          <div style="position:relative;">
+            <button class="btn btn-ghost" style="padding:.5rem;border:none;background:transparent;"
+              onclick="toggleNotificationDropdown()">🔔 <span id="notifBadge"
+                style="position:absolute;top:2px;right:2px;width:8px;height:8px;background:#EF4444;border-radius:50%;display:none;"></span></button>
+            <!-- Dropdown -->
+            <div id="notifDropdown" class="hidden"
+              style="position:absolute;right:0;top:40px;background:var(--card);border:1px solid var(--border);border-radius:8px;box-shadow:var(--shadow-lg);width:280px;z-index:999;padding:.5rem;">
+              <div
+                style="font-size:.75rem;font-weight:700;padding:.5rem;border-bottom:1px solid var(--border);color:var(--text2)">
+                NOTIFICATIONS</div>
+              <div id="notifList" style="max-height:200px;overflow-y:auto;font-size:.78rem;padding:.25rem 0;">
+                <div style="padding:.5rem;color:var(--text2);text-align:center;">No new notifications</div>
+              </div>
+            </div>
+          </div>
+          <button class="btn btn-outline" style="font-size:.8rem;padding:.4rem 1rem;" onclick="exitDashboard()">Exit
+            Console</button>
+        </div>
+      </div>
+
+      <!-- Content Area -->
+      <div style="flex:1;padding:2rem;background:var(--bg);" id="dashContentArea">
+        <!-- Rendered Dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- PAYMENT MODAL -->
+  <div class="modal-overlay" id="paymentModal">
+    <div class="modal-content" style="max-width:400px;">
+      <button class="modal-close" onclick="closePaymentModal()">&times;</button>
+      <h3 style="font-size:1.25rem;font-weight:800;margin-bottom:1rem;">Simulate Secure Payment</h3>
+      <div id="paymentInvoiceInfo"
+        style="margin-bottom:1.5rem;font-size:.9rem;background:var(--bg2);padding:.75rem;border-radius:8px;border:1px solid var(--border)">
+        <!-- Invoice details injected -->
+      </div>
+      <form onsubmit="handlePaymentSubmit(event)">
+        <div class="form-group">
+          <label>Cardholder Name</label>
+          <input type="text" placeholder="Alex Johnson" required>
+        </div>
+        <div class="form-group">
+          <label>Card Number</label>
+          <input type="text" placeholder="4111 2222 3333 4444" required>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Expiry</label><input type="text" placeholder="MM/YY" required></div>
+          <div class="form-group"><label>CVC</label><input type="password" placeholder="***" required></div>
+        </div>
+        <button type="submit" id="paySubmitBtn" class="btn btn-primary"
+          style="width:100%;justify-content:center;margin-top:1.5rem;">Pay Invoice</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- TOAST CONTAINER -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const _supabase = supabase.createClient('{{SUPABASE_URL}}', '{{SUPABASE_ANON_KEY}}');
+
+    // ----------------------------------------------------
+    // 1. REAL-TIME STATE — backed by server API + SSE
+    // ----------------------------------------------------
+    let RDK_State = {
+      currentUser: null,
+      theme: 'light',
+      services: [], portfolio: [], careers: [],
+      projects: [], tickets: [], invoices: [],
+      applications: [], meetings: [], chatMessages: [],
+      freelancerProfiles: {}, users: {}
+    };
+
+    // --- API helpers ---
+    async function apiAction(action, data = {}) {
+      const res = await fetch('/api/action', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action, data })
+      });
+      return res.json();
+    }
+
+    async function loadStateFromServer() {
+      try {
+        const res = await fetch('/api/state');
+        const serverState = await res.json();
+        // Preserve currentUser across SSE refreshes
+        const cu = RDK_State.currentUser;
+        RDK_State = { ...serverState, currentUser: cu };
+        applyTheme();
+      } catch (e) {
+        console.error('Failed to fetch state:', e);
+      }
+    }
+
+    function applyTheme() {
+      if (RDK_State.theme === 'dark') {
+        document.body.classList.add('dark');
+        const btn = document.getElementById('themeToggle');
+        if (btn) btn.textContent = '☀️';
+        const dBtn = document.getElementById('dashThemeToggle');
+        if (dBtn) dBtn.textContent = '☀️';
+      } else {
+        document.body.classList.remove('dark');
+        const btn = document.getElementById('themeToggle');
+        if (btn) btn.textContent = '🌙';
+        const dBtn = document.getElementById('dashThemeToggle');
+        if (dBtn) dBtn.textContent = '🌙';
+      }
+    }
+
+    function initSSE() {
+      const es = new EventSource('/api/events');
+      es.onmessage = (e) => {
+        try {
+          const msg = JSON.parse(e.data);
+          if (msg.type === 'UPDATE_STATE') {
+            const cu = RDK_State.currentUser;
+            RDK_State = { ...msg.state, currentUser: cu };
+            applyTheme();
+            // Re-render active dashboard tab if logged in
+            if (RDK_State.currentUser) {
+              renderActiveDashboardTab();
+              renderPublicCMS();
+            }
+          }
+        } catch (err) { console.error('SSE parse error', err); }
+      };
+      es.onerror = () => {
+        console.warn('SSE disconnected. Retrying in 3s...');
+        es.close();
+        setTimeout(initSSE, 3000);
+      };
+    }
+
+    // Legacy stub — no-op since server persists
+    function saveState() { }
+
+    function loadState() {
+      loadStateFromServer().then(() => {
+        renderPublicCMS();
+      });
+      initSSE();
+
+      // Listen to Supabase Auth State Changes
+      _supabase.auth.onAuthStateChange(async (event, session) => {
+        console.log("Auth event:", event);
+        if (session && session.user) {
+          const user = session.user;
+          const name = user.user_metadata?.full_name || user.email.split('@')[0];
+          // Get/Create user profile in PostgreSQL database
+          const res = await apiAction('get_or_create_profile', {
+            userId: user.id,
+            email: user.email,
+            name: name
+          });
+          if (res.success) {
+            performLogin(res.data);
+          } else {
+            showToast("Profile sync failed: " + res.message, "error");
+          }
+        } else {
+          // Logged out
+          RDK_State.currentUser = null;
+          document.getElementById('dashboardView').style.display = 'none';
+          document.getElementById('publicSite').style.display = 'block';
+        }
+      });
+    }
+
+    // ----------------------------------------------------
+    // 2. TOAST NOTIFICATIONS
+    // ----------------------------------------------------
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+
+      let borderCol = 'var(--blue)';
+      if (type === 'success') borderCol = '#10B981';
+      if (type === 'error') borderCol = '#EF4444';
+      if (type === 'warning') borderCol = '#F59E0B';
+
+      toast.style.borderLeftColor = borderCol;
+      toast.innerHTML = `
+        <span style="font-weight: 600;">${type.toUpperCase()}:</span>
+        <span>${message}</span>
+      `;
+      container.appendChild(toast);
+
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(20px)';
+        toast.style.transition = 'all 0.3s';
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
+    }
+
+    // ----------------------------------------------------
+    // 3. THEME TOGGLER
+    // ----------------------------------------------------
+    function toggleTheme() {
+      const isDark = document.body.classList.toggle('dark');
+      RDK_State.theme = isDark ? 'dark' : 'light';
+      const emoji = isDark ? '☀️' : '🌙';
+      const btn = document.getElementById('themeToggle');
+      if (btn) btn.textContent = emoji;
+      const dBtn = document.getElementById('dashThemeToggle');
+      if (dBtn) dBtn.textContent = emoji;
+      apiAction('toggle_theme', { theme: RDK_State.theme });
+      showToast(`Switched to ${RDK_State.theme} mode`, 'success');
+    }
+
+    // ----------------------------------------------------
+    // 4. AUTH MODAL LOGIC
+    // ----------------------------------------------------
+    function openAuthModal() {
+      document.getElementById('authModal').classList.add('open');
+    }
+
+    // Close Auth Modal
+    function closeAuthModal() {
+      document.getElementById('authModal').classList.remove('open');
+    }
+
+    function switchAuthTab(tab) {
+      const tabLogin = document.getElementById('tabLogin');
+      const tabRegister = document.getElementById('tabRegister');
+      const formLogin = document.getElementById('loginForm');
+      const formRegister = document.getElementById('registerForm');
+
+      if (tab === 'login') {
+        tabLogin.classList.add('active');
+        tabRegister.classList.remove('active');
+        formLogin.style.display = 'block';
+        formRegister.style.display = 'none';
+      } else {
+        tabLogin.classList.remove('active');
+        tabRegister.classList.add('active');
+        formLogin.style.display = 'none';
+        formRegister.style.display = 'block';
+      }
+    }
+
+    async function signInWithGoogle() {
+      showToast("Redirecting to Google Sign-In...", "info");
+      const { error } = await _supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: window.location.origin + '/'
+        }
+      });
+      if (error) {
+        showToast(error.message, "error");
+      }
+    }
+
+    async function handleLoginSubmit(e) {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value;
+
+      showToast("Signing in...", "info");
+      const { error } = await _supabase.auth.signInWithPassword({ email, password });
+
+      if (error) {
+        if (
+          error.message.includes("Invalid login credentials") ||
+          error.message.includes("Email not confirmed")
+        ) {
+          showToast(
+            "User credentials invalid. Attempting auto-registration...",
+            "warning"
+          );
+
+          const { error: signUpError } = await _supabase.auth.signUp({
+            email,
+            password
+          });
+
+          if (signUpError) {
+            showToast(signUpError.message, "error");
+          } else {
+            showToast(
+              "Registration successful! Logging you in...",
+              "success"
+            );
+
+            const { error: signInErr } =
+              await _supabase.auth.signInWithPassword({
+                email,
+                password
+              });
+
+            if (signInErr) {
+              showToast(
+                "Please check your email to verify your registration, then try signing in.",
+                "info"
+              );
+            } else {
+              showToast("Login successful!", "success");
+            }
+          }
+        } else {
+          showToast(error.message, "error");
+        }
+      } else {
+        showToast("Login successful!", "success");
+      }
+
+    }
+
+    async function handleRegisterSubmit(e) {
+      e.preventDefault();
+      const name = document.getElementById('regName').value.trim();
+      const email = document.getElementById('regEmail').value.trim();
+      const password = document.getElementById('regPassword').value;
+
+      showToast("Creating account...", "info");
+      const { error } = await _supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            full_name: name
+          }
+        }
+      });
+
+      if (error) {
+        showToast(error.message, "error");
+      } else {
+        showToast("Registration successful! Attempting sign-in...", "success");
+        const { error: signInErr } = await _supabase.auth.signInWithPassword({ email, password });
+        if (signInErr) {
+          showToast("Please check your email to verify your registration, then try signing in.", "info");
+        }
+      }
+    }
+
+    function performLogin(user) {
+      RDK_State.currentUser = user;
+      closeAuthModal();
+      showToast(`Welcome back, ${user.name}!`, 'success');
+
+      // Switch view to dashboard
+      document.getElementById('publicSite').style.display = 'none';
+      document.getElementById('dashboardView').style.display = 'flex';
+
+      // Populate user info in dashboard sidebar
+      document.getElementById('userProfileName').textContent = user.name;
+      document.getElementById('userProfileEmail').textContent = user.email;
+      document.getElementById('userAvatar').textContent = user.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+
+      let roleLabel = 'Client Partner';
+      if (user.role === 'employee') roleLabel = 'Core Developer';
+      if (user.role === 'freelancer') roleLabel = 'Contractor Gigs';
+      if (user.role === 'admin') roleLabel = 'System Administrator';
+      document.getElementById('userRoleBadge').textContent = roleLabel;
+
+      setupSidebarMenu(user.role);
+
+      // Default tab
+      switchDashboardTab('overview');
+    }
+
+    async function handleLogout() {
+      const { error } = await _supabase.auth.signOut();
+      if (error) {
+        showToast(error.message, "error");
+      } else {
+        RDK_State.currentUser = null;
+        document.getElementById('dashboardView').style.display = 'none';
+        document.getElementById('publicSite').style.display = 'block';
+        showToast("Logged out successfully.", "info");
+      }
+    }
+
+    function exitDashboard() {
+      // Keep user logged in but return to landing page
+      document.getElementById('dashboardView').style.display = 'none';
+      document.getElementById('publicSite').style.display = 'block';
+    }
+
+    // ----------------------------------------------------
+    // 5. DASHBOARD NAVIGATION & TAB RENDERER
+    // ----------------------------------------------------
+    let currentDashboardTab = 'overview';
+
+    function setupSidebarMenu(role) {
+      const menu = document.getElementById('dashSidebarMenu');
+      let html = '';
+
+      if (role === 'client') {
+        html = `
+          <div class="sidebar-item active" onclick="switchDashboardTab('overview')">📊 Overview</div>
+          <div class="sidebar-item" onclick="switchDashboardTab('projects')">📁 My Projects</div>
+          <div class="sidebar-item" onclick="switchDashboardTab('tickets')">🎫 Support Tickets</div>
+          <div class="sidebar-item" onclick="switchDashboardTab('chat')">💬 Live Chat</div>
+          <div class="sidebar-item" onclick="switchDashboardTab('invoices')">💳 Invoices</div>
+          <div class="sidebar-item" onclick="switchDashboardTab('meetings')">📅 Meetings</div>
+        `;
+      } else if (role === 'employee') {
+        html = `
+          <div class="sidebar-item active" onclick="switchDashboardTab('overview')">📊 Work Overview</div>
+          <div class="sidebar-item" onclick="switchDashboardTab('kanban')">📋 Kanban Board</div>
+          <div class="sidebar-item" onclick="switchDashboardTab('tracker')">⏱ Time Tracker</div>
+          <div class="sidebar-item" onclick="switchDashboardTab('tickets')">🎫 Client Tickets</div>
+        `;
+      } else if (role === 'freelancer') {
+        html = `
+          <div class="sidebar-item active" onclick="switchDashboardTab('overview')">📊 Freelance Board</div>
+          <div class="sidebar-item" onclick="switchDashboardTab('contracts')">🤝 Gig Contracts</div>
+          <div class="sidebar-item" onclick="switchDashboardTab('skills')">👤 Profile & Skills</div>
+        `;
+      } else if (role === 'admin') {
+        html = `
+          <div class="sidebar-item active" onclick="switchDashboardTab('overview')">👑 Admin Control</div>
+          <div class="sidebar-item" onclick="switchDashboardTab('projects')">📁 Manage Projects</div>
+          <div class="sidebar-item" onclick="switchDashboardTab('tickets')">🎫 Dispatch Tickets</div>
+          <div class="sidebar-item" onclick="switchDashboardTab('invoices')">💳 Billing Center</div>
+          <div class="sidebar-item" onclick="switchDashboardTab('careers')">💼 Career Applicants</div>
+          <div class="sidebar-item" onclick="switchDashboardTab('cms')">⚙️ Web CMS Config</div>
+        `;
+      }
+      menu.innerHTML = html;
+    }
+
+    function switchDashboardTab(tab) {
+      currentDashboardTab = tab;
+
+      // Update sidebar active classes
+      const items = document.querySelectorAll('#dashSidebarMenu .sidebar-item');
+      items.forEach(el => {
+        el.classList.remove('active');
+        if (el.textContent.toLowerCase().includes(tab.substring(0, 4))) {
+          el.classList.add('active');
+        }
+      });
+
+      // Update Active Title Header
+      document.getElementById('dashActiveTabTitle').textContent = tab.charAt(0).toUpperCase() + tab.slice(1);
+
+      renderActiveDashboardTab();
+    }
+
+    function renderActiveDashboardTab() {
+      const area = document.getElementById('dashContentArea');
+      const role = RDK_State.currentUser.role;
+
+      if (role === 'client') {
+        if (currentDashboardTab === 'overview') renderClientOverview(area);
+        else if (currentDashboardTab === 'projects') renderClientProjects(area);
+        else if (currentDashboardTab === 'tickets') renderClientTickets(area);
+        else if (currentDashboardTab === 'chat') renderClientChat(area);
+        else if (currentDashboardTab === 'invoices') renderClientInvoices(area);
+        else if (currentDashboardTab === 'meetings') renderClientMeetings(area);
+      } else if (role === 'employee') {
+        if (currentDashboardTab === 'overview') renderEmployeeOverview(area);
+        else if (currentDashboardTab === 'kanban') renderEmployeeKanban(area);
+        else if (currentDashboardTab === 'tracker') renderEmployeeTracker(area);
+        else if (currentDashboardTab === 'tickets') renderEmployeeTickets(area);
+      } else if (role === 'freelancer') {
+        if (currentDashboardTab === 'overview') renderFreelancerOverview(area);
+        else if (currentDashboardTab === 'contracts') renderFreelancerContracts(area);
+        else if (currentDashboardTab === 'skills') renderFreelancerSkills(area);
+      } else if (role === 'admin') {
+        if (currentDashboardTab === 'overview') renderAdminOverview(area);
+        else if (currentDashboardTab === 'projects') renderAdminProjects(area);
+        else if (currentDashboardTab === 'tickets') renderAdminTickets(area);
+        else if (currentDashboardTab === 'invoices') renderAdminInvoices(area);
+        else if (currentDashboardTab === 'careers') renderAdminCareers(area);
+        else if (currentDashboardTab === 'cms') renderAdminCMS(area);
+      }
+    }
+
+    // ----------------------------------------------------
+    // 6. CLIENT PORTAL RENDERS
+    // ----------------------------------------------------
+    function renderClientOverview(target) {
+      const myProjs = RDK_State.projects.filter(p => p.client === RDK_State.currentUser.email);
+      const myTickets = RDK_State.tickets.filter(t => t.client === RDK_State.currentUser.email);
+      const myInvoices = RDK_State.invoices.filter(i => i.client === RDK_State.currentUser.email);
+      const unpaidCount = myInvoices.filter(i => i.status === 'Unpaid').length;
+
+      target.innerHTML = `
+        <div style="font-size:1.4rem;font-weight:800;margin-bottom:1.5rem">Good morning, ${RDK_State.currentUser.name} ☀️</div>
+        
+        <div class="dash-card-grid" style="margin-bottom: 2rem;">
+          <div class="dash-card">
+            <div class="dc-num">${myProjs.length}</div>
+            <div class="dc-label">My Projects</div>
+          </div>
+          <div class="dash-card">
+            <div class="dc-num">${myTickets.length}</div>
+            <div class="dc-label">Open Support Tickets</div>
+          </div>
+          <div class="dash-card">
+            <div class="dc-num">${unpaidCount}</div>
+            <div class="dc-label">Pending Invoices</div>
+          </div>
+          <div class="dash-card">
+            <div class="dc-num">Online</div>
+            <div class="dc-label">RDK Developer Status</div>
+          </div>
+        </div>
+        
+        <div style="display:grid;grid-template-columns:1.6fr 1fr;gap:2rem;">
+          <div>
+            <div style="font-size:1.1rem;font-weight:700;margin-bottom:1rem">Active Projects Checklist</div>
+            ${myProjs.map(p => `
+              <div class="proj-item" style="margin-bottom:1rem;background:var(--bg2);">
+                <div class="proj-top">
+                  <span class="proj-name" style="font-weight:700">${p.name}</span>
+                  <span class="status-badge status-active">${p.status}</span>
+                </div>
+                <div class="progress-bar">
+                  <div class="progress-fill" style="width:${p.progress}%"></div>
+                </div>
+                <div style="display:flex;justify-content:space-between;font-size:.78rem;color:var(--text2);margin-top:.4rem">
+                  <span>${p.progress}% completed</span>
+                  <span>Assigned: ${p.assignedTo}</span>
+                </div>
+              </div>
+            `).join('')}
+            ${myProjs.length === 0 ? '<p style="color:var(--text2)">No active projects found. Submit a request below!</p>' : ''}
+          </div>
+          <div>
+            <div style="font-size:1.1rem;font-weight:700;margin-bottom:1rem">Quick Actions</div>
+            <div style="display:flex;flex-direction:column;gap:.75rem">
+              <button class="btn btn-primary" onclick="switchDashboardTab('projects')">➕ New Project Request</button>
+              <button class="btn btn-outline" onclick="switchDashboardTab('tickets')">🎫 File support ticket</button>
+              <button class="btn btn-ghost" onclick="switchDashboardTab('meetings')">📅 Schedule consultation</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderClientProjects(target) {
+      const myProjs = RDK_State.projects.filter(p => p.client === RDK_State.currentUser.email);
+
+      target.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;">
+          <div style="font-size:1.25rem;font-weight:800">My Software Projects</div>
+          <button class="btn btn-primary" onclick="toggleElement('projRequestForm')">➕ Request New Project</button>
+        </div>
+        
+        <!-- New Project Form -->
+        <div id="projRequestForm" class="hidden" style="background:var(--bg2);padding:1.5rem;border-radius:12px;border:1px solid var(--border);margin-bottom:2rem;">
+          <h3 style="font-size:1rem;font-weight:800;margin-bottom:1rem">Request a New Development Project</h3>
+          <form onsubmit="handleClientRequestProject(event)">
+            <div class="form-row">
+              <div class="form-group"><label>Project Name</label><input type="text" id="reqProjName" placeholder="My SaaS app" required></div>
+              <div class="form-group">
+                <label>Project Type</label>
+                <select id="reqProjType">
+                  <option>Website development</option>
+                  <option>Mobile app</option>
+                  <option>Full-stack development</option>
+                  <option>AI solutions</option>
+                  <option>Discord development</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label>Budget ($)</label><input type="number" id="reqProjBudget" placeholder="5000" required></div>
+              <div class="form-group"><label>Desired Deadline</label><input type="date" id="reqProjDeadline" required></div>
+            </div>
+            <div class="form-group"><label>Brief Description</label><textarea id="reqProjDesc" placeholder="Describe the application features and stack..." required></textarea></div>
+            <div style="display:flex;gap:.5rem">
+              <button type="submit" class="btn btn-primary">Submit Request</button>
+              <button type="button" class="btn btn-ghost" onclick="toggleElement('projRequestForm')">Cancel</button>
+            </div>
+          </form>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:1.5rem;">
+          ${myProjs.map(p => `
+            <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;box-shadow:var(--shadow)">
+              <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:1rem">
+                <div>
+                  <h3 style="font-size:1.1rem;font-weight:800">${p.name}</h3>
+                  <span style="font-size:.78rem;color:var(--text2)">Project ID: ${p.id}</span>
+                </div>
+                <span class="status-badge status-active">${p.status}</span>
+              </div>
+              <p style="font-size:.85rem;color:var(--text2);margin-bottom:1rem;">${p.desc}</p>
+              
+              <!-- Progress -->
+              <div style="margin-bottom:1.5rem">
+                <div style="display:flex;justify-content:space-between;font-size:.8rem;font-weight:700;margin-bottom:.3rem">
+                  <span>Development Milestones</span>
+                  <span>${p.progress}% Done</span>
+                </div>
+                <div class="progress-bar" style="height:10px;border-radius:5px;"><div class="progress-fill" style="width:${p.progress}%"></div></div>
+              </div>
+              
+              <div style="display:grid;grid-template-columns:1.2fr 1fr;gap:2rem">
+                <div>
+                  <h4 style="font-size:.85rem;font-weight:700;margin-bottom:.5rem;color:var(--text2)">Milestone Tracker</h4>
+                  <ul style="list-style:none;font-size:.8rem;padding:0;margin:0;display:flex;flex-direction:column;gap:.35rem">
+                    ${p.milestones.map(m => `
+                      <li style="display:flex;align-items:center;gap:.5rem">
+                        <span>${m.completed ? '🟢' : '⚪'}</span>
+                        <span style="${m.completed ? 'text-decoration:line-through;color:var(--text3)' : ''}">${m.name}</span>
+                      </li>
+                    `).join('')}
+                  </ul>
+                </div>
+                <div>
+                  <h4 style="font-size:.85rem;font-weight:700;margin-bottom:.5rem;color:var(--text2)">Project Deliverables</h4>
+                  ${p.deliverables.map(d => `
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding:.5rem;background:var(--bg2);border:1px solid var(--border);border-radius:6px;font-size:.8rem">
+                      <div>
+                        <strong>${d.name}</strong>
+                        <div style="font-size:.7rem;color:var(--text3)">${d.size} · Uploaded ${d.date}</div>
+                      </div>
+                      <button class="btn btn-outline" style="padding:.2rem .5rem;font-size:.7rem" onclick="simulateDownload('${d.name}')">Download</button>
+                    </div>
+                  `).join('')}
+                  ${p.deliverables.length === 0 ? '<p style="font-size:.8rem;color:var(--text3)">No files uploaded yet.</p>' : ''}
+                </div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function renderClientTickets(target) {
+      const myTickets = RDK_State.tickets.filter(t => t.client === RDK_State.currentUser.email);
+
+      target.innerHTML = `
+        <div style="display:grid;grid-template-columns:1fr 1.5fr;gap:2rem">
+          <div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+              <h3 style="font-size:1.1rem;font-weight:800">Support Tickets</h3>
+              <button class="btn btn-primary" style="padding:.4rem .75rem;font-size:.8rem" onclick="toggleElement('newTicketForm')">Create</button>
+            </div>
+            
+            <div id="newTicketForm" class="hidden" style="background:var(--bg2);padding:1rem;border-radius:8px;border:1px solid var(--border);margin-bottom:1rem">
+              <form onsubmit="handleCreateTicket(event)">
+                <div class="form-group"><label>Subject</label><input type="text" id="tTitle" placeholder="Bug in cart checkout" required></div>
+                <div class="form-group">
+                  <label>Priority</label>
+                  <select id="tPriority">
+                    <option>Low</option>
+                    <option>Medium</option>
+                    <option>High</option>
+                    <option>Critical</option>
+                  </select>
+                </div>
+                <div class="form-group"><label>Category</label><input type="text" id="tCat" placeholder="Website Dev" required></div>
+                <div class="form-group"><label>Description</label><textarea id="tDesc" placeholder="Details of the bug..." required></textarea></div>
+                <div style="display:flex;gap:.5rem">
+                  <button type="submit" class="btn btn-primary" style="padding:.4rem .8rem;font-size:.8rem">Submit</button>
+                  <button type="button" class="btn btn-ghost" style="padding:.4rem .8rem;font-size:.8rem" onclick="toggleElement('newTicketForm')">Cancel</button>
+                </div>
+              </form>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:.75rem" id="clientTicketListContainer">
+              ${myTickets.map(t => `
+                <div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1rem;cursor:pointer;" onclick="openTicketWorkspace('${t.id}')">
+                  <div style="display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:.25rem">
+                    <span style="font-family:monospace;font-weight:700">${t.id}</span>
+                    <span class="status-badge status-active" style="padding:.1rem .4rem;font-size:.7rem">${t.status}</span>
+                  </div>
+                  <h4 style="font-size:.9rem;font-weight:700;margin-bottom:.25rem">${t.title}</h4>
+                  <div style="display:flex;justify-content:space-between;font-size:.72rem;color:var(--text3)">
+                    <span>${t.category}</span>
+                    <span style="color:#DC2626">${t.priority}</span>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+          
+          <div id="ticketWorkspace" style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:400px;">
+            <span style="font-size:2.5rem">🎫</span>
+            <h3 style="font-size:1.05rem;font-weight:800;margin-top:.5rem">Select a support ticket to enter chat workspace</h3>
+          </div>
+        </div>
+      `;
+    }
+
+    let activeTicketId = null;
+    function openTicketWorkspace(id) {
+      activeTicketId = id;
+      const t = RDK_State.tickets.find(tick => tick.id === id);
+      const ws = document.getElementById('ticketWorkspace');
+
+      ws.innerHTML = `
+        <div style="display:flex;justify-content:space-between;border-bottom:1px solid var(--border);padding-bottom:.75rem;margin-bottom:1rem">
+          <div>
+            <h3 style="font-size:1rem;font-weight:800;">${t.title}</h3>
+            <span style="font-size:.75rem;color:var(--text3)">ID: ${t.id} · Priority: ${t.priority}</span>
+          </div>
+          <div style="text-align:right">
+            <span class="status-badge status-active">${t.status}</span>
+          </div>
+        </div>
+        <div style="font-size:.82rem;background:var(--bg2);padding:.75rem;border-radius:8px;border:1px solid var(--border);margin-bottom:1rem;color:var(--text2)">
+          <strong>Description:</strong> ${t.description}
+        </div>
+        
+        <!-- Chat History -->
+        <div class="chat-container">
+          <div class="chat-msg-list" id="ticketChatMsgList">
+            ${t.messages.map(m => `
+              <div class="msg ${m.sender === 'client' ? 'msg-out' : 'msg-in'}" style="max-width:75%;padding:.6rem .9rem;border-radius:12px;font-size:.85rem;line-height:1.5;${m.sender === 'client' ? 'align-self:flex-end;background:var(--blue);color:#fff;border-bottom-right-radius:4px' : 'align-self:flex-start;background:var(--bg2);border:1px solid var(--border);border-bottom-left-radius:4px'}">
+                <div style="font-size:.7rem;font-weight:700;margin-bottom:.15rem;opacity:.9">${m.senderName}</div>
+                <div>${m.text}</div>
+                <div class="msg-time" style="font-size:.7rem;margin-top:.3rem;opacity:.6;text-align:${m.sender === 'client' ? 'right' : 'left'}">${m.time}</div>
+              </div>
+            `).join('')}
+          </div>
+          
+          <div class="chat-footer" style="padding:.75rem;border-top:1px solid var(--border);display:flex;gap:.5rem">
+            <input class="chat-input" id="ticketChatInput" type="text" placeholder="Type message to developers..." style="flex:1;padding:.5rem .9rem;border:1px solid var(--border);border-radius:20px;font-size:.85rem;outline:none;" onkeydown="if(event.key==='Enter') sendTicketMessage()">
+            <button class="send-btn" style="padding:.5rem 1rem;background:var(--blue);color:#fff;border:none;border-radius:20px;cursor:pointer;font-size:.85rem;font-weight:500;" onclick="sendTicketMessage()">Send</button>
+          </div>
+        </div>
+      `;
+      // Scroll to bottom
+      const list = document.getElementById('ticketChatMsgList');
+      list.scrollTop = list.scrollHeight;
+    }
+
+    async function sendTicketMessage() {
+      const input = document.getElementById('ticketChatInput');
+      const text = input.value.trim();
+      if (!text) return;
+      input.value = '';
+      await apiAction('send_ticket_message', {
+        ticketId: activeTicketId,
+        sender: 'client',
+        senderName: RDK_State.currentUser.name,
+        text
+      });
+      // SSE will re-render via UPDATE_STATE; also update locally immediately
+      const t = RDK_State.tickets.find(tk => tk.id === activeTicketId);
+      if (t) {
+        t.messages.push({ sender: 'client', senderName: RDK_State.currentUser.name, text, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) });
+        openTicketWorkspace(activeTicketId);
+      }
+    }
+
+    function renderClientChat(target) {
+      target.innerHTML = `
+        <div style="max-width:600px;margin: 0 auto;">
+          <h3 style="font-size:1.1rem;font-weight:800;margin-bottom:1rem">RDK Direct Support Chat</h3>
+          <div class="chat-container" style="height:500px;">
+            <div class="chat-msg-list" id="clientDirectChatList">
+              ${RDK_State.chatMessages.map(m => `
+                <div class="msg ${m.sender === 'out' ? 'msg-out' : 'msg-in'}" style="max-width:75%;padding:.6rem .9rem;border-radius:12px;font-size:.85rem;line-height:1.5;${m.sender === 'out' ? 'align-self:flex-end;background:var(--blue);color:#fff;border-bottom-right-radius:4px' : 'align-self:flex-start;background:var(--bg2);border:1px solid var(--border);border-bottom-left-radius:4px'}">
+                  <div>${m.text}</div>
+                  <div class="msg-time" style="font-size:.7rem;margin-top:.3rem;opacity:.6;text-align:${m.sender === 'out' ? 'right' : 'left'}">${m.time}</div>
+                </div>
+              `).join('')}
+            </div>
+            <div class="chat-footer" style="padding:.75rem;border-top:1px solid var(--border);display:flex;gap:.5rem">
+              <input class="chat-input" id="clientDirectInput" type="text" placeholder="Type a message to RDK..." style="flex:1;padding:.5rem .9rem;border:1px solid var(--border);border-radius:20px;font-size:.85rem;outline:none;" onkeydown="if(event.key==='Enter') sendDirectMessage()">
+              <button class="send-btn" style="padding:.5rem 1rem;background:var(--blue);color:#fff;border:none;border-radius:20px;cursor:pointer;font-size:.85rem;font-weight:500;" onclick="sendDirectMessage()">Send</button>
+            </div>
+          </div>
+        </div>
+      `;
+      const list = document.getElementById('clientDirectChatList');
+      list.scrollTop = list.scrollHeight;
+    }
+
+    async function sendDirectMessage() {
+      const input = document.getElementById('clientDirectInput');
+      const text = input.value.trim();
+      if (!text) return;
+      input.value = '';
+      // Optimistic local update
+      RDK_State.chatMessages.push({ sender: 'out', senderName: RDK_State.currentUser.name, text, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) });
+      renderClientChat(document.getElementById('dashContentArea'));
+      // Persist to server (server will auto-reply via SSE)
+      await apiAction('send_chat_message', { sender: 'out', senderName: RDK_State.currentUser.name, text });
+    }
+
+    function renderClientInvoices(target) {
+      const myInvoices = RDK_State.invoices.filter(i => i.client === RDK_State.currentUser.email);
+
+      target.innerHTML = `
+        <h3 style="font-size:1.1rem;font-weight:800;margin-bottom:1rem">Invoices & Statements</h3>
+        <table style="width:100%;border-collapse:collapse;text-align:left;font-size:.9rem">
+          <thead>
+            <tr style="border-bottom:2px solid var(--border);color:var(--text2)">
+              <th style="padding:.75rem">Invoice ID</th>
+              <th style="padding:.75rem">Project</th>
+              <th style="padding:.75rem">Date</th>
+              <th style="padding:.75rem">Amount</th>
+              <th style="padding:.75rem">Status</th>
+              <th style="padding:.75rem">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${myInvoices.map(i => `
+              <tr style="border-bottom:1px solid var(--border)">
+                <td style="padding:.75rem;font-family:monospace;font-weight:700">${i.id}</td>
+                <td style="padding:.75rem">${i.project}</td>
+                <td style="padding:.75rem">${i.date}</td>
+                <td style="padding:.75rem;font-weight:700">$${i.amount}</td>
+                <td style="padding:.75rem">
+                  <span class="status-badge ${i.status === 'Paid' ? 'status-active' : 'status-open'}">${i.status}</span>
+                </td>
+                <td style="padding:.75rem">
+                  ${i.status === 'Unpaid' ? `<button class="btn btn-primary" style="padding:.3rem .75rem;font-size:.78rem" onclick="openPaymentModal('${i.id}')">Pay Now</button>` : `<button class="btn btn-ghost" style="padding:.3rem .75rem;font-size:.78rem" onclick="simulateInvoiceDownload('${i.id}')">PDF Receipt</button>`}
+                </td>
+              </tr>
+            `).join('')}
+            ${myInvoices.length === 0 ? '<tr><td colspan="6" style="text-align:center;padding:1.5rem;color:var(--text3)">No invoices generated.</td></tr>' : ''}
+          </tbody>
+        </table>
+      `;
+    }
+
+    let activeInvoiceId = null;
+    function openPaymentModal(invId) {
+      activeInvoiceId = invId;
+      const inv = RDK_State.invoices.find(i => i.id === invId);
+
+      const info = document.getElementById('paymentInvoiceInfo');
+      info.innerHTML = `
+        <div style="display:flex;justify-content:space-between"><span><strong>Invoice:</strong></span> <span>${inv.id}</span></div>
+        <div style="display:flex;justify-content:space-between;margin-top:.25rem"><span><strong>Project:</strong></span> <span>${inv.project}</span></div>
+        <div style="display:flex;justify-content:space-between;margin-top:.25rem;font-size:1.1rem;font-weight:800;color:var(--blue)"><span><strong>Amount Due:</strong></span> <span>$${inv.amount}</span></div>
+      `;
+
+      document.getElementById('paymentModal').classList.add('open');
+    }
+
+    function closePaymentModal() {
+      document.getElementById('paymentModal').classList.remove('remove');
+      document.getElementById('paymentModal').classList.remove('open');
+    }
+
+    async function handlePaymentSubmit(e) {
+      e.preventDefault();
+      const btn = document.getElementById('paySubmitBtn');
+      btn.textContent = 'Processing Payment...';
+      btn.disabled = true;
+      await new Promise(r => setTimeout(r, 2000));
+      const result = await apiAction('pay_invoice', { invoiceId: activeInvoiceId });
+      closePaymentModal();
+      btn.textContent = 'Pay Invoice';
+      btn.disabled = false;
+      if (result.success) {
+        showToast('Payment completed successfully! Invoice marked as Paid.', 'success');
+      } else {
+        showToast('Payment failed: ' + result.message, 'error');
+      }
+    }
+
+    function renderClientMeetings(target) {
+      const myMeets = RDK_State.meetings.filter(m => m.client === RDK_State.currentUser.email);
+
+      target.innerHTML = `
+        <div style="display:grid;grid-template-columns:1fr 1.3fr;gap:2rem">
+          <div>
+            <h3 style="font-size:1.1rem;font-weight:800;margin-bottom:1rem">Schedule Video Call</h3>
+            <form onsubmit="handleScheduleMeeting(event)" style="background:var(--bg2);padding:1.25rem;border-radius:10px;border:1px solid var(--border)">
+              <div class="form-group">
+                <label>Meeting Format</label>
+                <select id="mFormat">
+                  <option>Google Meet</option>
+                  <option>Zoom call</option>
+                  <option>Discord voice</option>
+                  <option>Phone call</option>
+                </select>
+              </div>
+              <div class="form-group"><label>Choose Date</label><input type="date" id="mDate" required></div>
+              <div class="form-group"><label>Choose Time</label><input type="time" id="mTime" required></div>
+              <div class="form-group">
+                <label>Duration</label>
+                <select id="mDuration">
+                  <option>15 min check-in</option>
+                  <option>30 min consultation</option>
+                  <option>60 min detailed planning</option>
+                </select>
+              </div>
+              <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;margin-top:1rem">Schedule Meeting</button>
+            </form>
+          </div>
+          <div>
+            <h3 style="font-size:1.1rem;font-weight:800;margin-bottom:1rem">Scheduled Consultations</h3>
+            <div style="display:flex;flex-direction:column;gap:.75rem">
+              ${myMeets.map(m => `
+                <div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1rem;display:flex;justify-content:space-between;align-items:center;">
+                  <div>
+                    <div style="font-size:.9rem;font-weight:700">${m.type} (${m.duration})</div>
+                    <div style="font-size:.78rem;color:var(--text2);margin-top:.2rem">Date: ${m.date} · Time: ${m.time}</div>
+                  </div>
+                  <span class="status-badge status-active">${m.status}</span>
+                </div>
+              `).join('')}
+              ${myMeets.length === 0 ? '<p style="color:var(--text3);font-size:.9rem">No scheduled video calls. Book a slot above.</p>' : ''}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // ----------------------------------------------------
+    // 7. EMPLOYEE PORTAL RENDERS
+    // ----------------------------------------------------
+    function renderEmployeeOverview(target) {
+      const assigned = RDK_State.projects.filter(p => p.assignedTo === RDK_State.currentUser.email);
+      const tickets = RDK_State.tickets.filter(t => t.assignedTo === RDK_State.currentUser.email);
+
+      target.innerHTML = `
+        <div style="font-size:1.3rem;font-weight:800;margin-bottom:1.5rem">Developer Dashboard: ${RDK_State.currentUser.name} 💻</div>
+        
+        <div class="dash-card-grid" style="margin-bottom: 2rem;">
+          <div class="dash-card">
+            <div class="dc-num">${assigned.length}</div>
+            <div class="dc-label">Assigned Projects</div>
+          </div>
+          <div class="dash-card">
+            <div class="dc-num">${tickets.length}</div>
+            <div class="dc-label">Open Tickets</div>
+          </div>
+          <div class="dash-card">
+            <div class="dc-num" id="totalTimeLogged">12h 45m</div>
+            <div class="dc-label">Total Time Tracked</div>
+          </div>
+          <div class="dash-card">
+            <div class="dc-num">A+</div>
+            <div class="dc-label">Code Quality Rating</div>
+          </div>
+        </div>
+        
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;">
+          <div>
+            <h3 style="font-size:1.05rem;font-weight:700;margin-bottom:.75rem">Assigned Gigs & Progress</h3>
+            ${assigned.map(p => `
+              <div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1rem;margin-bottom:.75rem">
+                <div style="display:flex;justify-content:space-between;margin-bottom:.5rem">
+                  <strong style="font-size:.85rem">${p.name}</strong>
+                  <span class="status-badge status-active" style="font-size:.7rem">${p.status}</span>
+                </div>
+                <div class="progress-bar"><div class="progress-fill" style="width:${p.progress}%"></div></div>
+              </div>
+            `).join('')}
+          </div>
+          <div>
+            <h3 style="font-size:1.05rem;font-weight:700;margin-bottom:.75rem">Quick Launch Panel</h3>
+            <div style="display:flex;flex-direction:column;gap:.5rem">
+              <button class="btn btn-primary" onclick="switchDashboardTab('kanban')">📋 View Kanban Board</button>
+              <button class="btn btn-outline" onclick="switchDashboardTab('tracker')">⏱ Access Stopwatch Timer</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderEmployeeKanban(target) {
+      const assigned = RDK_State.projects.filter(p => p.assignedTo === RDK_State.currentUser.email);
+      let allTasks = [];
+      assigned.forEach(p => {
+        p.tasks.forEach(t => {
+          allTasks.push({ ...t, projId: p.id, projName: p.name });
+        });
+      });
+
+      const todo = allTasks.filter(t => t.status === 'To Do');
+      const inprogress = allTasks.filter(t => t.status === 'In Progress');
+      const review = allTasks.filter(t => t.status === 'In Review');
+      const done = allTasks.filter(t => t.status === 'Done');
+
+      target.innerHTML = `
+        <h3 style="font-size:1.15rem;font-weight:800;margin-bottom:1rem">Interactive Sprint Kanban</h3>
+        <p style="font-size:.82rem;color:var(--text2);margin-bottom:1.5rem">Organize, track, and update active project tasks. Move items to change status.</p>
+        
+        <div class="kanban-board">
+          <div class="kanban-col">
+            <h3><span>To Do</span> <span>${todo.length}</span></h3>
+            ${todo.map(t => renderKanbanCardMarkup(t)).join('')}
+          </div>
+          <div class="kanban-col">
+            <h3><span>In Progress</span> <span>${inprogress.length}</span></h3>
+            ${inprogress.map(t => renderKanbanCardMarkup(t)).join('')}
+          </div>
+          <div class="kanban-col">
+            <h3><span>In Review</span> <span>${review.length}</span></h3>
+            ${review.map(t => renderKanbanCardMarkup(t)).join('')}
+          </div>
+          <div class="kanban-col">
+            <h3><span>Done</span> <span>${done.length}</span></h3>
+            ${done.map(t => renderKanbanCardMarkup(t)).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderKanbanCardMarkup(t) {
+      return `
+        <div class="kanban-card">
+          <div class="kanban-card-title">${t.title}</div>
+          <div class="kanban-card-desc">Project: ${t.projName}</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.5rem">
+            <select style="padding:.2rem;font-size:.7rem;width:95px" onchange="moveKanbanTask(${t.id}, '${t.projId}', this.value)">
+              <option ${t.status === 'To Do' ? 'selected' : ''}>To Do</option>
+              <option ${t.status === 'In Progress' ? 'selected' : ''}>In Progress</option>
+              <option ${t.status === 'In Review' ? 'selected' : ''}>In Review</option>
+              <option ${t.status === 'Done' ? 'selected' : ''}>Done</option>
+            </select>
+            <span style="font-size:.7rem;color:var(--text3)">ID: #${t.id}</span>
+          </div>
+        </div>
+      `;
+    }
+
+    function moveKanbanTask(taskId, projId, newStatus) {
+      const proj = RDK_State.projects.find(p => p.id === projId);
+      const t = proj.tasks.find(tk => tk.id === taskId);
+      t.status = newStatus;
+
+      // Update overall progress dynamically
+      const completed = proj.tasks.filter(tk => tk.status === 'Done').length;
+      proj.progress = Math.round((completed / proj.tasks.length) * 100);
+      saveState();
+
+      showToast(`Task #${taskId} status updated to ${newStatus}`, 'success');
+      renderEmployeeKanban(document.getElementById('dashContentArea'));
+    }
+
+    let trackerInterval = null;
+    let secondsLogged = 0;
+    let isTracking = false;
+    let selectedTrackerProj = '';
+
+    function renderEmployeeTracker(target) {
+      const assigned = RDK_State.projects.filter(p => p.assignedTo === RDK_State.currentUser.email);
+
+      target.innerHTML = `
+        <div style="display:grid;grid-template-columns:1fr 1.3fr;gap:2rem">
+          <div>
+            <h3 style="font-size:1.1rem;font-weight:800;margin-bottom:1rem">Stopwatch Work Tracker</h3>
+            <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:2rem;text-align:center;box-shadow:var(--shadow)">
+              <div class="form-group" style="text-align:left">
+                <label>Select Project</label>
+                <select id="trackerProjSelect" ${isTracking ? 'disabled' : ''}>
+                  ${assigned.map(p => `<option value="${p.id}" ${selectedTrackerProj === p.id ? 'selected' : ''}>${p.name}</option>`).join('')}
+                </select>
+              </div>
+              <div class="form-group" style="text-align:left">
+                <label>Task Description</label>
+                <input type="text" id="trackerTaskDesc" placeholder="e.g. Fixing webhook latency issues" ${isTracking ? 'disabled' : ''}>
+              </div>
+              
+              <div style="font-size:3rem;font-family:monospace;font-weight:700;margin:1.5rem 0;" id="timerDisplay">
+                ${formatTime(secondsLogged)}
+              </div>
+              
+              <div style="display:flex;justify-content:center;gap:.75rem">
+                ${!isTracking ? `
+                  <button class="btn btn-primary" onclick="startTimer()">▶ Start Timer</button>
+                ` : `
+                  <button class="btn btn-outline" style="border-color:#EF4444;color:#EF4444" onclick="pauseTimer()">⏸ Pause</button>
+                  <button class="btn btn-primary" style="background:#10B981" onclick="saveTimerSession()">💾 Save Session</button>
+                `}
+              </div>
+            </div>
+          </div>
+          <div>
+            <h3 style="font-size:1.1rem;font-weight:800;margin-bottom:1rem">Logged Work Sessions</h3>
+            <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.25rem;max-height:400px;overflow-y:auto;" id="loggedSessionsList">
+              <p style="color:var(--text3);font-size:.9rem;text-align:center;">No sessions logged today.</p>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function formatTime(totalSec) {
+      const h = Math.floor(totalSec / 3600);
+      const m = Math.floor((totalSec % 3600) / 60);
+      const s = totalSec % 60;
+      return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    }
+
+    function startTimer() {
+      const select = document.getElementById('trackerProjSelect');
+      if (!select) return;
+      selectedTrackerProj = select.value;
+      isTracking = true;
+
+      trackerInterval = setInterval(() => {
+        secondsLogged++;
+        const disp = document.getElementById('timerDisplay');
+        if (disp) disp.textContent = formatTime(secondsLogged);
+      }, 1000);
+
+      renderEmployeeTracker(document.getElementById('dashContentArea'));
+      showToast("Time tracking session started.", "info");
+    }
+
+    function pauseTimer() {
+      clearInterval(trackerInterval);
+      isTracking = false;
+      renderEmployeeTracker(document.getElementById('dashContentArea'));
+      showToast("Time tracking session paused.", "warning");
+    }
+
+    function saveTimerSession() {
+      clearInterval(trackerInterval);
+      isTracking = false;
+      const desc = document.getElementById('trackerTaskDesc').value || "Core development sprint";
+      const proj = RDK_State.projects.find(p => p.id === selectedTrackerProj);
+
+      showToast(`Logged ${formatTime(secondsLogged)} for ${proj.name}`, "success");
+
+      // Reset
+      secondsLogged = 0;
+      renderEmployeeTracker(document.getElementById('dashContentArea'));
+
+      // Update logged list
+      const list = document.getElementById('loggedSessionsList');
+      if (list) {
+        list.innerHTML = `
+          <div style="padding:.75rem;background:var(--bg2);border:1px solid var(--border);border-radius:8px;margin-bottom:.5rem;display:flex;justify-content:space-between;align-items:center;font-size:.85rem">
+            <div>
+              <strong>${proj.name}</strong>
+              <div style="font-size:.72rem;color:var(--text3)">${desc}</div>
+            </div>
+            <span style="font-family:monospace;font-weight:700">${formatTime(secondsLogged)}</span>
+          </div>
+        `;
+      }
+    }
+
+    function renderEmployeeTickets(target) {
+      const myTickets = RDK_State.tickets.filter(t => t.assignedTo === RDK_State.currentUser.email);
+
+      target.innerHTML = `
+        <div style="display:grid;grid-template-columns:1fr 1.5fr;gap:2rem">
+          <div>
+            <h3 style="font-size:1.1rem;font-weight:800;margin-bottom:1rem">My Assigned Tickets</h3>
+            <div style="display:flex;flex-direction:column;gap:.75rem">
+              ${myTickets.map(t => `
+                <div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1rem;cursor:pointer;" onclick="openTicketWorkspace('${t.id}')">
+                  <div style="display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:.25rem">
+                    <span style="font-family:monospace;font-weight:700">${t.id}</span>
+                    <span class="status-badge status-active">${t.status}</span>
+                  </div>
+                  <h4 style="font-size:.9rem;font-weight:700;margin-bottom:.25rem">${t.title}</h4>
+                  <div style="display:flex;justify-content:space-between;font-size:.72rem;color:var(--text3)">
+                    <span>Client: ${t.client}</span>
+                    <span style="color:#DC2626">${t.priority}</span>
+                  </div>
+                </div>
+              `).join('')}
+              ${myTickets.length === 0 ? '<p style="color:var(--text3);font-size:.9rem">No client tickets assigned to you.</p>' : ''}
+            </div>
+          </div>
+          <div id="ticketWorkspace" style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:400px;">
+            <span style="font-size:2.5rem">🎫</span>
+            <h3 style="font-size:1.05rem;font-weight:800;margin-top:.5rem">Select a client ticket to enter conversation channel</h3>
+          </div>
+        </div>
+      `;
+    }
+
+    // ----------------------------------------------------
+    // 8. FREELANCER PORTAL RENDERS
+    // ----------------------------------------------------
+    function renderFreelancerOverview(target) {
+      const activeContracts = RDK_State.projects.filter(p => p.assignedTo === RDK_State.currentUser.email);
+      target.innerHTML = `
+        <div style="font-size:1.3rem;font-weight:800;margin-bottom:1.5rem">Freelance Hub: ${RDK_State.currentUser.name} 💼</div>
+        <div class="dash-card-grid" style="margin-bottom: 2rem;">
+          <div class="dash-card">
+            <div class="dc-num">${activeContracts.length}</div>
+            <div class="dc-label">Active Contracts</div>
+          </div>
+          <div class="dash-card">
+            <div class="dc-num">$2,400</div>
+            <div class="dc-label">Total Earnings</div>
+          </div>
+          <div class="dash-card">
+            <div class="dc-num">Active</div>
+            <div class="dc-label">Availability Status</div>
+          </div>
+          <div class="dash-card">
+            <div class="dc-num">4.9/5</div>
+            <div class="dc-label">Performance Rating</div>
+          </div>
+        </div>
+        
+        <div style="display:grid;grid-template-columns:1.2fr 1fr;gap:2rem">
+          <div>
+            <h3 style="font-size:1.05rem;font-weight:800;margin-bottom:.75rem">Active Contracts Progress</h3>
+            ${activeContracts.map(c => `
+              <div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1rem;margin-bottom:.75rem">
+                <div style="display:flex;justify-content:space-between;margin-bottom:.5rem">
+                  <strong style="font-size:.85rem">${c.name}</strong>
+                  <span style="font-size:.7rem" class="status-badge status-active">${c.status}</span>
+                </div>
+                <div class="progress-bar"><div class="progress-fill" style="width:${c.progress}%"></div></div>
+              </div>
+            `).join('')}
+            ${activeContracts.length === 0 ? '<p style="color:var(--text3);font-size:.9rem">No active contract gigs.</p>' : ''}
+          </div>
+          <div>
+            <h3 style="font-size:1.05rem;font-weight:800;margin-bottom:.75rem">Profile Summary</h3>
+            <div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1rem;font-size:.85rem">
+              <p><strong>Bio:</strong> Lead designer for Flutter apps and responsive mockups.</p>
+              <p style="margin-top:.5rem"><strong>Skills:</strong> Flutter, Figma, Dart, Firebase</p>
+              <button class="btn btn-outline" style="width:100%;margin-top:1rem;font-size:.8rem" onclick="switchDashboardTab('skills')">Edit Profile Details</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderFreelancerContracts(target) {
+      const activeContracts = RDK_State.projects.filter(p => p.assignedTo === RDK_State.currentUser.email);
+
+      target.innerHTML = `
+        <h3 style="font-size:1.15rem;font-weight:800;margin-bottom:1rem">Gig Contracts & Submissions</h3>
+        <div style="display:flex;flex-direction:column;gap:1.5rem">
+          ${activeContracts.map(c => `
+            <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;box-shadow:var(--shadow)">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem">
+                <h4 style="font-size:1.05rem;font-weight:800">${c.name}</h4>
+                <span class="status-badge status-active">${c.status}</span>
+              </div>
+              <p style="font-size:.85rem;color:var(--text2);margin-bottom:1rem">${c.desc}</p>
+              
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;border-top:1px solid var(--border);padding-top:1rem">
+                <div>
+                  <h5 style="font-size:.85rem;font-weight:700;margin-bottom:.5rem;color:var(--text2)">Submit Work Deliverables</h5>
+                  <form onsubmit="handleFreelancerSubmitDeliverable(event, '${c.id}')">
+                    <div class="form-group">
+                      <label>Upload File Name</label>
+                      <input type="text" id="delivFileName-${c.id}" placeholder="my-release-v1.zip" required>
+                    </div>
+                    <div class="form-group">
+                      <label>Comments / Release Notes</label>
+                      <textarea id="delivComments-${c.id}" placeholder="Release details, bugfixes included..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="font-size:.8rem;padding:.4rem .85rem">Submit Deliverable</button>
+                  </form>
+                </div>
+                <div>
+                  <h5 style="font-size:.85rem;font-weight:700;margin-bottom:.5rem;color:var(--text2)">Submitted Files</h5>
+                  ${c.deliverables.map(d => `
+                    <div style="background:var(--bg2);padding:.5rem;border:1px solid var(--border);border-radius:6px;font-size:.8rem;margin-bottom:.5rem">
+                      <div style="font-weight:700">${d.name}</div>
+                      <div style="font-size:.7rem;color:var(--text3)">Size: ${d.size} · Date: ${d.date}</div>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function handleFreelancerSubmitDeliverable(e, projId) {
+      e.preventDefault();
+      const name = document.getElementById(`delivFileName-${projId}`).value.trim();
+      const comment = document.getElementById(`delivComments-${projId}`).value.trim();
+
+      const proj = RDK_State.projects.find(p => p.id === projId);
+      proj.deliverables.push({
+        name,
+        size: "4.8 MB",
+        date: new Date().toISOString().split('T')[0]
+      });
+      proj.status = 'Review';
+      saveState();
+
+      showToast("Deliverable submitted and project status updated to In Review", "success");
+      renderFreelancerContracts(document.getElementById('dashContentArea'));
+    }
+
+    function renderFreelancerSkills(target) {
+      target.innerHTML = `
+        <h3 style="font-size:1.15rem;font-weight:800;margin-bottom:1rem">Professional Profile & Freelancer Skills</h3>
+        <form onsubmit="handleSaveFreelancerProfile(event)" style="background:var(--bg2);padding:1.5rem;border-radius:12px;border:1px solid var(--border);max-width:550px">
+          <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" id="freeName" value="${RDK_State.currentUser.name}" required>
+          </div>
+          <div class="form-group">
+            <label>Portfolio Link</label>
+            <input type="url" id="freePortfolio" value="https://github.com/jackfrost" required>
+          </div>
+          <div class="form-group">
+            <label>Primary Tech Skills (comma separated)</label>
+            <input type="text" id="freeSkills" value="Flutter, Dart, Firebase, iOS development" required>
+          </div>
+          <div class="form-group">
+            <label>Availability status</label>
+            <select id="freeAvail">
+              <option>Available full-time</option>
+              <option>Available part-time</option>
+              <option>Not accepting contracts</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary" style="margin-top:1rem">Save Profile Information</button>
+        </form>
+      `;
+    }
+
+    function handleSaveFreelancerProfile(e) {
+      e.preventDefault();
+      const name = document.getElementById('freeName').value.trim();
+
+      RDK_State.currentUser.name = name;
+      saveState();
+
+      // Update sidebar footer
+      document.getElementById('userProfileName').textContent = name;
+      showToast("Freelancer profile updated successfully!", "success");
+    }
+
+    // ----------------------------------------------------
+    // 9. ADMIN COMMAND CENTER RENDERS
+    // ----------------------------------------------------
+    function renderAdminOverview(target) {
+      const revenue = RDK_State.invoices.filter(i => i.status === 'Paid').reduce((sum, inv) => sum + inv.amount, 0);
+      const activeP = RDK_State.projects.filter(p => p.status === 'In progress').length;
+      const openT = RDK_State.tickets.filter(t => t.status === 'Active').length;
+
+      target.innerHTML = `
+        <div style="font-size:1.35rem;font-weight:800;margin-bottom:1.5rem">Executive Admin Console 👑</div>
+        
+        <div class="admin-analytics">
+          <div class="dash-card">
+            <div class="dc-num">$${revenue}</div>
+            <div class="dc-label">Total Paid Revenue</div>
+          </div>
+          <div class="dash-card">
+            <div class="dc-num">${activeP}</div>
+            <div class="dc-label">Active Projects</div>
+          </div>
+          <div class="dash-card">
+            <div class="dc-num">${openT}</div>
+            <div class="dc-label">Open Tickets</div>
+          </div>
+          <div class="dash-card">
+            <div class="dc-num">${RDK_State.applications.length}</div>
+            <div class="dc-label">Job Applicants</div>
+          </div>
+          <div class="dash-card">
+            <div class="dc-num">100%</div>
+            <div class="dc-label">System Integrity</div>
+          </div>
+        </div>
+        
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem">
+          <div>
+            <h3 style="font-size:1.05rem;font-weight:700;margin-bottom:.75rem">Operational Health Metrics</h3>
+            <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1.25rem;">
+              <div style="margin-bottom:1rem">
+                <div style="display:flex;justify-content:space-between;font-size:.78rem;font-weight:600;margin-bottom:.3rem">
+                  <span>Server Infrastructure (AWS)</span>
+                  <span>Healthy</span>
+                </div>
+                <div class="progress-bar"><div class="progress-fill" style="width:98%;background:#10B981"></div></div>
+              </div>
+              <div style="margin-bottom:1rem">
+                <div style="display:flex;justify-content:space-between;font-size:.78rem;font-weight:600;margin-bottom:.3rem">
+                  <span>Developer Resource Allocation</span>
+                  <span>75% Capacity</span>
+                </div>
+                <div class="progress-bar"><div class="progress-fill" style="width:75%"></div></div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <h3 style="font-size:1.05rem;font-weight:700;margin-bottom:.75rem">Global Administrative Shortcuts</h3>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem">
+              <button class="btn btn-outline" onclick="switchDashboardTab('projects')">📁 Manage Projects</button>
+              <button class="btn btn-outline" onclick="switchDashboardTab('invoices')">💳 Generate Invoices</button>
+              <button class="btn btn-outline" onclick="switchDashboardTab('careers')">💼 Review Applicants</button>
+              <button class="btn btn-outline" onclick="switchDashboardTab('cms')">⚙️ Web CMS Config</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderAdminProjects(target) {
+      target.innerHTML = `
+        <h3 style="font-size:1.15rem;font-weight:800;margin-bottom:1rem">Master Project controller</h3>
+        
+        <table style="width:100%;border-collapse:collapse;text-align:left;font-size:.9rem;margin-bottom:2rem">
+          <thead>
+            <tr style="border-bottom:2px solid var(--border);color:var(--text2)">
+              <th style="padding:.75rem">Project ID</th>
+              <th style="padding:.75rem">Project Name</th>
+              <th style="padding:.75rem">Client Account</th>
+              <th style="padding:.75rem">Assigned Dev</th>
+              <th style="padding:.75rem">Progress Bar</th>
+              <th style="padding:.75rem">Milestone / Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${RDK_State.projects.map(p => `
+              <tr style="border-bottom:1px solid var(--border)">
+                <td style="padding:.75rem;font-family:monospace;font-weight:700">${p.id}</td>
+                <td style="padding:.75rem;font-weight:600">${p.name}</td>
+                <td style="padding:.75rem">${p.client}</td>
+                <td style="padding:.75rem">
+                  <select style="font-size:.8rem;padding:.2rem" onchange="assignProjectStaff('${p.id}', this.value)">
+                    <option value="">-- Unassigned --</option>
+                    <option value="employee@rdk.com" ${p.assignedTo === 'employee@rdk.com' ? 'selected' : ''}>Sarah K. (Dev)</option>
+                    <option value="freelancer@rdk.com" ${p.assignedTo === 'freelancer@rdk.com' ? 'selected' : ''}>Jack Frost (Freelancer)</option>
+                  </select>
+                </td>
+                <td style="padding:.75rem">
+                  <div style="display:flex;align-items:center;gap:.5rem">
+                    <div class="progress-bar" style="width:100px;margin:0"><div class="progress-fill" style="width:${p.progress}%"></div></div>
+                    <span>${p.progress}%</span>
+                  </div>
+                </td>
+                <td style="padding:.75rem">
+                  <button class="btn btn-outline" style="padding:.2rem .5rem;font-size:.7rem" onclick="adminIncrementMilestone('${p.id}')">+ Milestone</button>
+                </td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      `;
+    }
+
+    function assignProjectStaff(projId, staffEmail) {
+      const proj = RDK_State.projects.find(p => p.id === projId);
+      proj.assignedTo = staffEmail;
+      saveState();
+      showToast(`Assigned project ${projId} to developer ${staffEmail}`, 'success');
+    }
+
+    function adminIncrementMilestone(projId) {
+      const proj = RDK_State.projects.find(p => p.id === projId);
+
+      const nextM = proj.milestones.find(m => !m.completed);
+      if (nextM) {
+        nextM.completed = true;
+
+        // Recalculate progress based on task updates
+        const completeCount = proj.milestones.filter(m => m.completed).length;
+        proj.progress = Math.round((completeCount / proj.milestones.length) * 100);
+        saveState();
+
+        showToast(`Milestone "${nextM.name}" marked complete! Progress is now ${proj.progress}%`, 'success');
+        renderAdminProjects(document.getElementById('dashContentArea'));
+      } else {
+        showToast("All milestones already completed!", "warning");
+      }
+    }
+
+    function renderAdminTickets(target) {
+      target.innerHTML = `
+        <h3 style="font-size:1.15rem;font-weight:800;margin-bottom:1rem">Global Tickets Dispatcher</h3>
+        
+        <table style="width:100%;border-collapse:collapse;text-align:left;font-size:.9rem">
+          <thead>
+            <tr style="border-bottom:2px solid var(--border);color:var(--text2)">
+              <th style="padding:.75rem">Ticket ID</th>
+              <th style="padding:.75rem">Title</th>
+              <th style="padding:.75rem">Client</th>
+              <th style="padding:.75rem">Category</th>
+              <th style="padding:.75rem">Priority</th>
+              <th style="padding:.75rem">Assigned Staff</th>
+              <th style="padding:.75rem">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${RDK_State.tickets.map(t => `
+              <tr style="border-bottom:1px solid var(--border)">
+                <td style="padding:.75rem;font-family:monospace;font-weight:700">${t.id}</td>
+                <td style="padding:.75rem;font-weight:600">${t.title}</td>
+                <td style="padding:.75rem">${t.client}</td>
+                <td style="padding:.75rem">${t.category}</td>
+                <td style="padding:.75rem;color:#DC2626">${t.priority}</td>
+                <td style="padding:.75rem">
+                  <select style="font-size:.8rem;padding:.2rem" onchange="assignTicketStaff('${t.id}', this.value)">
+                    <option value="">-- Select Staff --</option>
+                    <option value="employee@rdk.com" ${t.assignedTo === 'employee@rdk.com' ? 'selected' : ''}>Sarah K. (Dev)</option>
+                    <option value="freelancer@rdk.com" ${t.assignedTo === 'freelancer@rdk.com' ? 'selected' : ''}>Jack Frost (Freelancer)</option>
+                  </select>
+                </td>
+                <td style="padding:.75rem">
+                  <button class="btn btn-outline" style="padding:.2rem .5rem;font-size:.7rem" onclick="adminCloseTicket('${t.id}')">Close / Resolve</button>
+                </td>
+              </tr>
+            `).join('')}
+            ${RDK_State.tickets.length === 0 ? '<tr><td colspan="7" style="text-align:center;color:var(--text3);padding:1rem;">No tickets logged</td></tr>' : ''}
+          </tbody>
+        </table>
+      `;
+    }
+
+    function assignTicketStaff(tid, staff) {
+      const t = RDK_State.tickets.find(tick => tick.id === tid);
+      t.assignedTo = staff;
+      saveState();
+      showToast(`Assigned Ticket ${tid} to ${staff}`, 'success');
+    }
+
+    function adminCloseTicket(tid) {
+      RDK_State.tickets = RDK_State.tickets.filter(t => t.id !== tid);
+      saveState();
+      showToast(`Ticket ${tid} closed and archived.`, 'success');
+      renderAdminTickets(document.getElementById('dashContentArea'));
+    }
+
+    function renderAdminInvoices(target) {
+      target.innerHTML = `
+        <div style="display:grid;grid-template-columns:1fr 1.3fr;gap:2rem">
+          <div>
+            <h3 style="font-size:1.1rem;font-weight:800;margin-bottom:1rem">Generate Invoice Statement</h3>
+            <form onsubmit="handleAdminGenerateInvoice(event)" style="background:var(--bg2);padding:1.25rem;border-radius:10px;border:1px solid var(--border)">
+              <div class="form-group">
+                <label>Client Email</label>
+                <input type="email" id="invClientEmail" placeholder="client@rdk.com" required>
+              </div>
+              <div class="form-group">
+                <label>Project Name</label>
+                <input type="text" id="invProjName" placeholder="Mobile App Redesign" required>
+              </div>
+              <div class="form-group">
+                <label>Billing Description</label>
+                <input type="text" id="invBillDesc" placeholder="Milestone payment, hosting" required>
+              </div>
+              <div class="form-group">
+                <label>Total Invoice Value ($)</label>
+                <input type="number" id="invBillAmount" placeholder="3500" required>
+              </div>
+              <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;margin-top:1rem">Generate Invoice</button>
+            </form>
+          </div>
+          <div>
+            <h3 style="font-size:1.1rem;font-weight:800;margin-bottom:1rem">Invoicing Logs</h3>
+            <div style="display:flex;flex-direction:column;gap:.5rem">
+              ${RDK_State.invoices.map(i => `
+                <div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1rem;display:flex;justify-content:space-between;align-items:center">
+                  <div>
+                    <div style="font-weight:700;font-size:.9rem">${i.id} - ${i.project}</div>
+                    <div style="font-size:.78rem;color:var(--text2)">To: ${i.client} · Amount: $${i.amount}</div>
+                  </div>
+                  <span class="status-badge ${i.status === 'Paid' ? 'status-active' : 'status-open'}">${i.status}</span>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function handleAdminGenerateInvoice(e) {
+      e.preventDefault();
+      const email = document.getElementById('invClientEmail').value.trim();
+      const project = document.getElementById('invProjName').value.trim();
+      const desc = document.getElementById('invBillDesc').value.trim();
+      const amount = parseInt(document.getElementById('invBillAmount').value.trim());
+
+      const newInv = {
+        id: `INV-2026-${String(RDK_State.invoices.length + 1).padStart(3, '0')}`,
+        client: email,
+        project,
+        amount,
+        status: "Unpaid",
+        items: [desc],
+        date: new Date().toISOString().split('T')[0]
+      };
+
+      RDK_State.invoices.push(newInv);
+      saveState();
+
+      showToast(`Generated Invoice ${newInv.id}`, 'success');
+      renderAdminInvoices(document.getElementById('dashContentArea'));
+    }
+
+    function renderAdminCareers(target) {
+      target.innerHTML = `
+        <h3 style="font-size:1.15rem;font-weight:800;margin-bottom:1rem">Recruitment Applications Tracker</h3>
+        
+        <table style="width:100%;border-collapse:collapse;text-align:left;font-size:.9rem">
+          <thead>
+            <tr style="border-bottom:2px solid var(--border);color:var(--text2)">
+              <th style="padding:.75rem">Applicant</th>
+              <th style="padding:.75rem">Email</th>
+              <th style="padding:.75rem">Applying Position</th>
+              <th style="padding:.75rem">Files</th>
+              <th style="padding:.75rem">Status</th>
+              <th style="padding:.75rem">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${RDK_State.applications.map(a => `
+              <tr style="border-bottom:1px solid var(--border)">
+                <td style="padding:.75rem;font-weight:700">${a.name}</td>
+                <td style="padding:.75rem">${a.email}</td>
+                <td style="padding:.75rem">${a.position}</td>
+                <td style="padding:.75rem;color:var(--blue);text-decoration:underline;cursor:pointer" onclick="simulateDownload('${a.resume}')">${a.resume}</td>
+                <td style="padding:.75rem">
+                  <span class="status-badge ${a.status === 'Hired' ? 'status-active' : a.status === 'Rejected' ? 'status-open' : 'status-done'}">${a.status}</span>
+                </td>
+                <td style="padding:.75rem;display:flex;gap:.25rem">
+                  <button class="btn btn-outline" style="padding:.2rem .4rem;font-size:.72rem" onclick="updateAppStatus(${a.id}, 'Interviewing')">Interview</button>
+                  <button class="btn btn-primary" style="padding:.2rem .4rem;font-size:.72rem;background:#10B981" onclick="updateAppStatus(${a.id}, 'Hired')">Hire</button>
+                  <button class="btn btn-ghost" style="padding:.2rem .4rem;font-size:.72rem" onclick="updateAppStatus(${a.id}, 'Rejected')">Reject</button>
+                </td>
+              </tr>
+            `).join('')}
+            ${RDK_State.applications.length === 0 ? '<tr><td colspan="6" style="text-align:center;padding:1rem;color:var(--text3)">No applications found</td></tr>' : ''}
+          </tbody>
+        </table>
+      `;
+    }
+
+    function updateAppStatus(appId, newStatus) {
+      const app = RDK_State.applications.find(a => a.id === appId);
+      app.status = newStatus;
+      saveState();
+
+      showToast(`Application #${appId} set to ${newStatus}`, 'success');
+      renderAdminCareers(document.getElementById('dashContentArea'));
+    }
+
+    function renderAdminCMS(target) {
+      target.innerHTML = `
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem">
+          <div>
+            <h3 style="font-size:1.1rem;font-weight:800;margin-bottom:1rem">Add New Service Card</h3>
+            <form onsubmit="handleCMSAddService(event)" style="background:var(--bg2);padding:1.25rem;border-radius:10px;border:1px solid var(--border);margin-bottom:2rem">
+              <div class="form-group"><label>Service Name</label><input type="text" id="cmsSvcName" placeholder="API Development" required></div>
+              <div class="form-group"><label>Emoji Icon</label><input type="text" id="cmsSvcIcon" placeholder="🔌" required></div>
+              <div class="form-group"><label>Brief Description</label><textarea id="cmsSvcDesc" placeholder="Custom REST APIs and microservice structures..." required></textarea></div>
+              <div class="form-group"><label>Keywords / Tags (comma separated)</label><input type="text" id="cmsSvcTags" placeholder="FastAPI, Express, Node.js" required></div>
+              <div class="form-group"><label>Estimated Delivery</label><input type="text" id="cmsSvcDelivery" placeholder="⏱ 2-4 weeks" required></div>
+              <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center">Add Live Service</button>
+            </form>
+          </div>
+          <div>
+            <h3 style="font-size:1.1rem;font-weight:800;margin-bottom:1rem">Add Portfolio Case Study</h3>
+            <form onsubmit="handleCMSAddPortfolio(event)" style="background:var(--bg2);padding:1.25rem;border-radius:10px;border:1px solid var(--border)">
+              <div class="form-group"><label>Project Title</label><input type="text" id="cmsPortTitle" placeholder="Apex Cloud Migration" required></div>
+              <div class="form-group">
+                <label>Category</label>
+                <select id="cmsPortCat">
+                  <option value="web">Website / Web Platform</option>
+                  <option value="mobile">Mobile App</option>
+                  <option value="discord">Discord Bot</option>
+                  <option value="ai">AI / Automation Solution</option>
+                </select>
+              </div>
+              <div class="form-group"><label>Summary</label><textarea id="cmsPortDesc" placeholder="Migrated legacy databases to AWS with zero downtime..." required></textarea></div>
+              <div class="form-group"><label>Tech Tags (comma separated)</label><input type="text" id="cmsPortTags" placeholder="AWS, Docker, PostgreSQL" required></div>
+              <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center">Add Case Study</button>
+            </form>
+          </div>
+        </div>
+      `;
+    }
+
+    function handleCMSAddService(e) {
+      e.preventDefault();
+      const name = document.getElementById('cmsSvcName').value.trim();
+      const icon = document.getElementById('cmsSvcIcon').value.trim();
+      const desc = document.getElementById('cmsSvcDesc').value.trim();
+      const tags = document.getElementById('cmsSvcTags').value.split(',').map(s => s.trim());
+      const delivery = document.getElementById('cmsSvcDelivery').value.trim();
+
+      const newSvc = {
+        id: RDK_State.services.length + 1,
+        name, icon, desc, tags, delivery,
+        themeClass: "icon-blue"
+      };
+
+      RDK_State.services.push(newSvc);
+      saveState();
+
+      showToast("Service added successfully! Updating homepage...", "success");
+      renderPublicCMS();
+      renderAdminCMS(document.getElementById('dashContentArea'));
+    }
+
+    function handleCMSAddPortfolio(e) {
+      e.preventDefault();
+      const title = document.getElementById('cmsPortTitle').value.trim();
+      const cat = document.getElementById('cmsPortCat').value;
+      const desc = document.getElementById('cmsPortDesc').value.trim();
+      const tags = document.getElementById('cmsPortTags').value.split(',').map(s => s.trim());
+
+      const newPort = {
+        id: RDK_State.portfolio.length + 1,
+        cat, title, desc, tags,
+        date: new Date().toLocaleDateString('en-US', { month: 'short', year: 'numeric' }),
+        icon: "⚡",
+        bg: "linear-gradient(135deg,#EFF6FF,#F3F4F6)"
+      };
+
+      RDK_State.portfolio.push(newPort);
+      saveState();
+
+      showToast("Portfolio item added successfully! Updating homepage...", "success");
+      renderPublicCMS();
+      renderAdminCMS(document.getElementById('dashContentArea'));
+    }
+
+    // ----------------------------------------------------
+    // 10. PUBLIC PAGES CMS INTEGRATIONS
+    // ----------------------------------------------------
+    function renderPublicCMS() {
+      // Services Grid Rendering
+      const svcContainer = document.querySelector('.services-grid');
+      if (svcContainer) {
+        svcContainer.innerHTML = RDK_State.services.map(s => `
+          <div class="svc-card fade-in visible">
+            <div class="svc-icon ${s.themeClass || 'icon-blue'}">${s.icon}</div>
+            <div class="svc-name">${s.name}</div>
+            <div class="svc-desc">${s.desc}</div>
+            <div class="svc-tags">${s.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
+            <div class="svc-footer">
+              <span class="svc-delivery">${s.delivery}</span>
+              <span class="svc-link" onclick="openAuthModal()">Learn more →</span>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // Portfolio Grid Rendering
+      const portContainer = document.getElementById('portfolioGrid');
+      if (portContainer) {
+        portContainer.innerHTML = RDK_State.portfolio.map(p => `
+          <div class="port-card fade-in visible" data-cat="${p.cat}">
+            <div class="port-img" style="background:${p.bg}">${p.icon}</div>
+            <div class="port-body">
+              <div class="port-cat">${p.cat.toUpperCase()}</div>
+              <div class="port-title">${p.title}</div>
+              <div class="port-desc">${p.desc}</div>
+              <div class="port-stack">${p.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
+              <div class="port-footer">
+                <span class="port-date">${p.date}</span>
+                <a href="javascript:void(0)" onclick="openAuthModal()" class="btn btn-outline" style="padding:.3rem .85rem;font-size:.8rem">Case study</a>
+              </div>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // Careers Grid Rendering
+      const careerContainer = document.querySelector('.careers-grid');
+      if (careerContainer) {
+        careerContainer.innerHTML = RDK_State.careers.map(c => `
+          <div class="job-card fade-in visible">
+            <div class="job-top">
+              <div class="job-title">${c.title}</div>
+              <span class="job-type">${c.type}</span>
+            </div>
+            <div class="job-dept">${c.dept}</div>
+            <div class="job-tags">${c.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
+            <div class="job-footer">
+              <span class="salary">${c.salary}</span>
+              <a href="javascript:void(0)" onclick="openApplyModal('${c.title}')" class="btn btn-primary" style="padding:.35rem .9rem;font-size:.83rem">Apply now</a>
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+
+    // ----------------------------------------------------
+    // 11. GENERAL FORMS AND SUBMISSIONS HANDLERS
+    // ----------------------------------------------------
+    function handleClientRequestProject(e) {
+      e.preventDefault();
+      const name = document.getElementById('reqProjName').value.trim();
+      const type = document.getElementById('reqProjType').value;
+      const budget = document.getElementById('reqProjBudget').value.trim();
+      const deadline = document.getElementById('reqProjDeadline').value;
+      const desc = document.getElementById('reqProjDesc').value.trim();
+
+      apiAction('request_project', {
+        name,
+        client: RDK_State.currentUser.email,
+        budget,
+        deadline,
+        desc
+      }).then(res => {
+        if (res.success) {
+          toggleElement('projRequestForm');
+          showToast(`Submitted project proposal: ${name}. Assigning developers!`, "success");
+        } else {
+          showToast(res.message, "error");
+        }
+      });
+    }
+
+    function handleCreateTicket(e) {
+      e.preventDefault();
+      const title = document.getElementById('tTitle').value.trim();
+      const priority = document.getElementById('tPriority').value;
+      const category = document.getElementById('tCat').value.trim();
+      const description = document.getElementById('tDesc').value.trim();
+
+      apiAction('add_ticket', {
+        client: RDK_State.currentUser.email,
+        clientName: RDK_State.currentUser.name,
+        title,
+        priority,
+        category,
+        description
+      }).then(res => {
+        if (res.success) {
+          toggleElement('newTicketForm');
+          showToast("Support ticket created successfully!", "success");
+        } else {
+          showToast(res.message, "error");
+        }
+      });
+    }
+
+    async function handleScheduleMeeting(e) {
+      e.preventDefault();
+      const type = document.getElementById('mFormat').value;
+      const date = document.getElementById('mDate').value;
+      const time = document.getElementById('mTime').value;
+      const res = await apiAction('schedule_meeting', { client: RDK_State.currentUser.email, type, date, time });
+      if (res.success) {
+        showToast(`Meeting scheduled for ${date} at ${time}. Invitation sent to email.`, 'success');
+      } else {
+        showToast(res.message, 'error');
+      }
+    }
+
+    // Careers Application Submission via Supabase
+    function openApplyModal(position) {
+      const name = prompt(`Enter your Full Name to apply for "${position}":`);
+      if (!name) return;
+      const email = prompt("Enter your Email address:");
+      if (!email) return;
+
+      apiAction('apply_job', {
+        name,
+        email,
+        position,
+        resume: `${name.toLowerCase().replace(/ /g, '_')}_resume.pdf`
+      }).then(res => {
+        if (res.success) {
+          showToast(`Application for ${position} successfully submitted!`, "success");
+        } else {
+          showToast(res.message, "error");
+        }
+      });
+    }
+
+    // ----------------------------------------------------
+    // 12. UTILITY ACTIONS
+    // ----------------------------------------------------
+    function toggleElement(id) {
+      document.getElementById(id).classList.toggle('hidden');
+    }
+
+    function toggleNotificationDropdown() {
+      document.getElementById('notifDropdown').classList.toggle('hidden');
+    }
+
+    function simulateDownload(filename) {
+      showToast(`Downloading secure artifact: ${filename}`, 'info');
+    }
+
+    function simulateInvoiceDownload(invId) {
+      showToast(`Downloading PDF Statement: ${invId}`, 'info');
+    }
+
+    function simulateInvoiceReceipt(invId) {
+      showToast(`Downloading Paid Receipt: ${invId}`, 'info');
+    }
+
+    // Helper stopwatches
+    function formatTime(sec) {
+      const h = Math.floor(sec / 3600);
+      const m = Math.floor((sec % 3600) / 60);
+      const s = sec % 60;
+      return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    }
+
+    // ----------------------------------------------------
+    // 13. INITIAL SCROLL & ANCHORS LISTENER
+    // ----------------------------------------------------
+    window.addEventListener('scroll', () => {
+      const nav = document.getElementById('navbar');
+      const st = document.getElementById('scrollTop');
+      if (window.scrollY > 50) { nav.classList.add('solid') } else { nav.classList.remove('solid') }
+      if (window.scrollY > 300) { st.classList.add('show') } else { st.classList.remove('show') }
+    });
+
+    function toggleMenu() { document.getElementById('mobileMenu').classList.toggle('open') }
+
+    const targets = [500, 200, 42, 8, 35];
+    const ids = ['stat1', 'stat2', 'stat3', 'stat4', 'stat5'];
+    const suffixes = ['+', '+', '', '', '+'];
+    let animated = false;
+
+    function animateCounters() {
+      if (animated) return; animated = true;
+      targets.forEach((t, i) => {
+        let c = 0; const el = document.getElementById(ids[i]); const step = Math.ceil(t / 60);
+        const timer = setInterval(() => { c = Math.min(c + step, t); el.textContent = c + suffixes[i]; if (c >= t) clearInterval(timer); }, 30);
+      });
+    }
+
+    const observer = new IntersectionObserver((entries) => { entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible') } }); }, { threshold: .15 });
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+    const statsObs = new IntersectionObserver((entries) => { entries.forEach(e => { if (e.isIntersecting) animateCounters() }); }, { threshold: .3 });
+    const statsSec = document.querySelector('.stats-section');
+    if (statsSec) statsObs.observe(statsSec);
+
+    function filterPortfolio(btn, cat) {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active');
+      document.querySelectorAll('.port-card').forEach(card => { card.style.display = (cat === 'all' || card.dataset.cat === cat) ? 'block' : 'none'; });
+    }
+
+    // Integrated contact form
+    function submitForm(btn) {
+      const parent = btn.closest('.contact-form');
+      const name = parent.querySelector('input[type="text"]').value.trim();
+      const email = parent.querySelector('input[type="email"]').value.trim();
+      const desc = parent.querySelector('textarea').value.trim();
+
+      if (!name || !email || !desc) {
+        showToast("Please fill in name, email, and description fields.", "error");
+        return;
+      }
+
+      btn.textContent = 'Sending...'; btn.disabled = true;
+
+      apiAction('request_project', {
+        name: "Website Consultation Request",
+        client: email,
+        budget: "$1,000 - $5,000",
+        deadline: new Date(Date.now() + 14 * 24 * 3600 * 1000).toISOString().split('T')[0],
+        desc: `Contact Form Submission by ${name}. Message: ${desc}`
+      }).then(res => {
+        if (res.success) {
+          btn.textContent = '✓ Request sent! The RDK team will be in touch within 24h'; btn.style.background = '#059669';
+          showToast("Logged contact submission in Supabase!", "success");
+        } else {
+          btn.textContent = 'Send Message'; btn.disabled = false;
+          showToast(res.message, "error");
+        }
+      });
+    }
+
+    document.querySelectorAll('.hero > *').forEach(el => { el.style.opacity = '0'; el.style.transform = 'translateY(20px)'; el.style.transition = 'all .7s ease'; });
+    setTimeout(() => { document.querySelectorAll('.hero > *').forEach((el, i) => { setTimeout(() => { el.style.opacity = '1'; el.style.transform = 'translateY(0)'; }, i * 100); }); }, 100);
+
+    // Initial load configurations
+    loadState();
+    renderPublicCMS();
+  </script>

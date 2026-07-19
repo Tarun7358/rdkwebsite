@@ -1,0 +1,4 @@
+# Ignore secrets and dependencies
+.env
+node_modules/
+database.json
