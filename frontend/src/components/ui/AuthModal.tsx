@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useDashboardStore } from '../../store/dashboardStore';
 import { useAppStore } from '../../store/appStore';
 import { useAuthStore } from '../../store/authStore';
-import { authApi, setUserRole } from '../../api/auth';
-import { Lock, Mail, User, Building2, Briefcase, Rocket, Settings, ShieldCheck, CheckCircle2, Globe, Eye, EyeOff, X } from 'lucide-react';
+import { authApi } from '../../api/auth';
+import { Lock, Mail, User, ShieldCheck, CheckCircle2, Globe, Eye, EyeOff, X } from 'lucide-react';
 
 export const AuthModal: React.FC = () => {
   const navigate = useNavigate();
@@ -16,7 +16,6 @@ export const AuthModal: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
-  const [role, setRole] = useState<'client' | 'employee' | 'freelancer' | 'admin'>('client');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPwd, setShowPwd] = useState(false);
 
@@ -47,7 +46,7 @@ export const AuthModal: React.FC = () => {
           useAuthStore.getState().setUser({
             email: u.email!,
             name: u.user_metadata?.full_name ?? u.email?.split('@')[0] ?? 'User',
-            role: (u.user_metadata?.role as any) || 'client',
+            role: 'client',
             details: 'Enterprise Partner'
           });
         }
@@ -62,7 +61,6 @@ export const AuthModal: React.FC = () => {
     }
   };
 
-
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password || !name) return;
@@ -72,7 +70,6 @@ export const AuthModal: React.FC = () => {
       if (error) {
         addToast(error.message, 'error');
       } else {
-        if (role !== 'client') await setUserRole(email, role);
         addToast('Account created! Please check your email to confirm registration.', 'success');
         setTab('login');
       }
@@ -82,13 +79,6 @@ export const AuthModal: React.FC = () => {
       setIsSubmitting(false);
     }
   };
-
-  const roleOptions = [
-    { value: 'client', icon: <Building2 size={18} color="#ea580c" />, label: 'Client', sub: 'Commission & oversee software builds' },
-    { value: 'employee', icon: <Briefcase size={18} color="#ea580c" />, label: 'Employee', sub: 'Execute production sprints' },
-    { value: 'freelancer', icon: <Rocket size={18} color="#ea580c" />, label: 'Contractor', sub: 'Specialized module engineering' },
-    { value: 'admin', icon: <Settings size={18} color="#ea580c" />, label: 'Administrator', sub: 'System oversight & governance' },
-  ];
 
   return (
     <>
@@ -320,38 +310,7 @@ export const AuthModal: React.FC = () => {
                   />
                 </Field>
 
-                {/* Role selector */}
-                <div>
-                  <label style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--text3, #9ca3af)', textTransform: 'uppercase', letterSpacing: '0.06em', display: 'block', marginBottom: '0.6rem' }}>
-                    Select Access Role
-                  </label>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
-                    {roleOptions.map((r) => (
-                      <button
-                        key={r.value}
-                        type="button"
-                        onClick={() => setRole(r.value as any)}
-                        style={{
-                          background: role === r.value
-                            ? 'rgba(234, 88, 12, 0.15)'
-                            : 'var(--surface, #1f2937)',
-                          border: role === r.value
-                            ? '1px solid #ea580c'
-                            : '1px solid var(--border, #374151)',
-                          borderRadius: '10px',
-                          padding: '0.65rem 0.75rem',
-                          cursor: 'pointer',
-                          textAlign: 'left',
-                          transition: 'all 0.2s',
-                        }}
-                      >
-                        <div style={{ fontSize: '1rem', marginBottom: '0.2rem' }}>{r.icon}</div>
-                        <div style={{ fontSize: '0.8rem', fontWeight: 700, color: role === r.value ? '#ea580c' : '#D1D5DB' }}>{r.label}</div>
-                        <div style={{ fontSize: '0.7rem', color: 'var(--text3, #9ca3af)', lineHeight: 1.3 }}>{r.sub}</div>
-                      </button>
-                    ))}
-                  </div>
-                </div>
+
 
                 <SubmitButton loading={isSubmitting} label="Create Enterprise Account" loadingLabel="Creating account…" />
 
