@@ -317,18 +317,134 @@ const server = http.createServer(async (req, res) => {
             break;
           }
 
+// ─────────────────────────────────────────────
+// AI REQUIREMENT SCOPING BOT ENGINE
+// ─────────────────────────────────────────────
+async function generateAiRequirementReply(userText, userName) {
+  const lower = (userText || '').toLowerCase();
+
+  let extractedBudget = null;
+  const budgetMatch = userText.match(/\$?\s?(\d+[\d,]*\s*k|\d+[\d,]*)/i);
+  if (budgetMatch) {
+    let numStr = budgetMatch[1].toLowerCase().replace(',', '');
+    if (numStr.endsWith('k')) {
+      numStr = (parseFloat(numStr) * 1000).toString();
+    }
+    const val = parseInt(numStr);
+    if (!isNaN(val) && val > 50) {
+      extractedBudget = `$${val.toLocaleString()}`;
+    }
+  }
+
+  let category = null;
+  if (/mobile|app|ios|android|flutter|react native/i.test(lower)) {
+    category = 'Mobile Application (iOS / Android)';
+  } else if (/e-?commerce|store|shop|stripe|cart|checkout/i.test(lower)) {
+    category = 'E-Commerce Platform';
+  } else if (/ai|bot|automation|chatgpt|openai|llm|discord|security/i.test(lower)) {
+    category = 'AI & Automation System';
+  } else if (/website|web|landing|frontend|react|next/i.test(lower)) {
+    category = 'Web Platform / Web Application';
+  } else if (/saas|crm|dashboard|enterprise|system|portal/i.test(lower)) {
+    category = 'Enterprise SaaS Workspace';
+  }
+
+  const isRequirementQuery = category || lower.length > 20 || /build|create|need|want|develop|requirement|spec|feature|budget|cost|estimate|quote|project/i.test(lower);
+
+  if (isRequirementQuery) {
+    const projCategory = category || 'Custom Software Solution';
+    const finalBudget = extractedBudget || '$3,500 - $6,000';
+    const estimatedTimeline = lower.includes('urgent') || lower.includes('fast') ? '2 Weeks (Sprint Mode)' : '3 - 4 Weeks';
+
+    const features = [];
+    if (/auth|login|signup|user|role/i.test(lower)) features.push('Role-Based Auth & User Management');
+    if (/payment|stripe|pay|invoice|billing/i.test(lower)) features.push('Stripe Payment & Automated Invoicing');
+    if (/chat|realtime|live|stream|message/i.test(lower)) features.push('Real-time Messaging & Database Sync');
+    if (/dashboard|admin|analytics|panel|stats/i.test(lower)) features.push('Executive Control Dashboard & Analytics');
+    if (/mobile|responsive|design|ui/i.test(lower)) features.push('Modern Glassmorphic Responsive UI/UX');
+    if (features.length === 0) {
+      features.push(
+        'User Authentication & Security',
+        'Interactive Control Dashboard',
+        'Real-time Supabase Database Integration',
+        'REST & Event Stream API Services'
+      );
+    }
+
+    const botReply = `🤖 **RDK Requirement Analysis & Project Scope**
+━━━━━━━━━━━━━━━━━━━━━━━
+📌 **Project Type**: ${projCategory}
+🛠️ **Tech Architecture**: React.js + Node.js + Supabase Real-Time DB
+⚡ **Core Requirements & Features**:
+${features.map(f => `  • ${f}`).join('\n')}
+
+⏱️ **Recommended Timeline**: ${estimatedTimeline}
+💰 **Estimated Investment**: ${finalBudget}
+
+✅ **Requirement Registered!**
+I have automatically submitted this project scope under your profile (${userName || 'Client'}). You can track real-time sprint milestones and deliverables directly in the **Projects** tab.`;
+
+    // Auto-register project in database
+    const projId = 'PROJ-' + Math.floor(1000 + Math.random() * 9000);
+    const clientIdentifier = (userName && userName !== 'Visitor Client' && userName !== 'Client Partner') ? userName : 'client@rdk.com';
+    try {
+      await supabase.from('projects').insert({
+        id: projId,
+        name: `${projCategory} (${userName || 'Client'})`,
+        client: clientIdentifier,
+        assigned_to: 'engineering@rdk.com',
+        status: 'Proposed',
+        progress: 10,
+        description: `[AI Requirement Scoping Intake]\nRaw Input: ${userText}\nFeatures: ${features.join(', ')}`,
+        milestones: [
+          { name: 'AI Scope Analysis & Intake', completed: true },
+          { name: 'Architecture Review & Budget Approval', completed: false },
+          { name: 'Sprint 1 Core Build', completed: false },
+          { name: 'QA Testing & Production Launch', completed: false }
+        ],
+        tasks: [{ id: 1, title: 'Scope Verification with Engineering', status: 'To Do' }],
+        deliverables: [],
+        budget: finalBudget,
+        deadline: estimatedTimeline
+      });
+    } catch (e) {
+      console.warn('Auto-create project warning:', e.message);
+    }
+
+    return botReply;
+  } else {
+    return `Hello ${userName || 'there'}! 👋 I am the **RDK AI Project Architect**.
+
+I can instantly analyze your project requirements, estimate cost & completion timeline, and register your project with our engineering team.
+
+To get started, tell me:
+1️⃣ **What kind of project do you want to build?** (e.g. Website, Mobile App, AI Bot, SaaS Platform)
+2️⃣ **What are the main features required?** (e.g. User Accounts, Payment Gateway, Real-time Chat)
+3️⃣ **What is your budget or target deadline?**`;
+  }
+}
+
           // ── Chat ──
           case 'send_chat_message': {
             const { sender, senderName, text } = data;
             const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
             await supabase.from('chat_messages').insert({ sender, sender_name: senderName, text, time });
             await broadcastUpdate();
-            if (sender === 'out') {
-              setTimeout(async () => {
-                await supabase.from('chat_messages').insert({ sender: 'in', sender_name: 'RDK Support', text: 'Got your message! A project manager will connect with you here shortly.', time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) });
-                broadcastUpdate();
-              }, 1500);
-            }
+            
+            // Trigger AI Bot Requirement Engine response
+            setTimeout(async () => {
+              const botReplyText = await generateAiRequirementReply(text, senderName);
+              const replyTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+              const botSender = sender === 'in' ? 'out' : 'in';
+              await supabase.from('chat_messages').insert({
+                sender: botSender,
+                sender_name: 'RDK AI Assistant',
+                text: botReplyText,
+                time: replyTime
+              });
+              broadcastUpdate();
+            }, 1000);
+
             message = 'Message sent';
             break;
           }

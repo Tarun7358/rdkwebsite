@@ -124,6 +124,11 @@ export const ClientDashboard: React.FC = () => {
     setChatText('');
     setIsSubmittingChat(true);
 
+    const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const localMsg = { sender: 'in' as const, senderName: user.name, text: txt, time: timeStr };
+    const currentMsgs = useAppStore.getState().chatMessages ?? [];
+    useAppStore.getState().setState({ chatMessages: [...currentMsgs, localMsg] });
+
     try {
       const res = await chatApi.send({
         sender: 'in',
@@ -132,7 +137,7 @@ export const ClientDashboard: React.FC = () => {
       });
       if (!res.success) addToast(res.message || 'Failed to send message', 'error');
     } catch (err: any) {
-      addToast(err.message, 'error');
+      addToast(err.message || 'Failed to send message', 'error');
     } finally {
       setIsSubmittingChat(false);
     }
@@ -495,6 +500,38 @@ export const ClientDashboard: React.FC = () => {
               </div>
             );
           })}
+        </div>
+
+        {/* Quick Requirement Scoping Prompts */}
+        <div style={{ padding: '0.6rem 1rem', borderTop: '1px solid var(--border)', background: 'var(--bg2)', display: 'flex', gap: '0.4rem', overflowX: 'auto' }}>
+          {[
+            '📋 Get Project Requirement Estimate',
+            '🛒 Need E-Commerce Website with Auth & Payments',
+            '📱 Need Mobile App with Real-time DB',
+            '🤖 Need AI & Automation System'
+          ].map((prompt, idx) => (
+            <button
+              key={idx}
+              type="button"
+              onClick={() => {
+                setChatText(prompt);
+              }}
+              style={{
+                whiteSpace: 'nowrap',
+                background: 'var(--card)',
+                border: '1px solid var(--border)',
+                color: 'var(--text)',
+                padding: '0.35rem 0.75rem',
+                borderRadius: '16px',
+                fontSize: '0.75rem',
+                fontWeight: 600,
+                cursor: 'pointer',
+                transition: 'all 0.2s',
+              }}
+            >
+              {prompt}
+            </button>
+          ))}
         </div>
 
         {/* Chat Send Form */}
