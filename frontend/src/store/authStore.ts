@@ -35,12 +35,24 @@ export const useAuthStore = create<AuthState>((set) => ({
         if (session?.user) {
           const u = session.user;
           const name = u.user_metadata?.full_name ?? u.email?.split('@')[0] ?? 'User';
-          const res = await getOrCreateProfile(u.id, u.email!, name);
-          if (res.success && res.data) {
-            set({ user: res.data, isAuthenticated: true, isLoading: false });
-          } else {
-            set({ isLoading: false });
+          
+          let profile: UserProfile = {
+            email: u.email!,
+            name,
+            role: (u.user_metadata?.role as any) || 'client',
+            details: 'Enterprise Partner'
+          };
+
+          try {
+            const res = await getOrCreateProfile(u.id, u.email!, name);
+            if (res && res.success && res.data) {
+              profile = res.data;
+            }
+          } catch (e) {
+            console.warn('Profile fetch fallback to session user:', e);
           }
+
+          set({ user: profile, isAuthenticated: true, isLoading: false });
         } else {
           set({ user: null, isAuthenticated: false, isLoading: false });
         }

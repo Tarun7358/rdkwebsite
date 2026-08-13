@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDashboardStore } from '../../store/dashboardStore';
 import { useAppStore } from '../../store/appStore';
+import { useAuthStore } from '../../store/authStore';
 import { authApi, setUserRole } from '../../api/auth';
 import { Lock, Mail, User, Building2, Briefcase, Rocket, Settings, ShieldCheck, CheckCircle2, Globe, Eye, EyeOff, X } from 'lucide-react';
 
@@ -37,10 +38,19 @@ export const AuthModal: React.FC = () => {
     if (!email || !password) return;
     setIsSubmitting(true);
     try {
-      const { error } = await authApi.signInWithPassword(email, password);
+      const { data, error } = await authApi.signInWithPassword(email, password);
       if (error) {
         addToast(error.message, 'error');
       } else {
+        const u = data?.user;
+        if (u) {
+          useAuthStore.getState().setUser({
+            email: u.email!,
+            name: u.user_metadata?.full_name ?? u.email?.split('@')[0] ?? 'User',
+            role: (u.user_metadata?.role as any) || 'client',
+            details: 'Enterprise Partner'
+          });
+        }
         addToast('Authentication verified. Accessing console…', 'success');
         setIsOpen(false);
         navigate('/dashboard');
@@ -51,6 +61,7 @@ export const AuthModal: React.FC = () => {
       setIsSubmitting(false);
     }
   };
+
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
