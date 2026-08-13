@@ -7,6 +7,7 @@ import { ticketsApi } from '../../../api/tickets';
 import { meetingsApi } from '../../../api/meetings';
 import { chatApi } from '../../../api/chat';
 import { Badge, ProgressBar, TicketWorkspace } from '../../ui';
+import { analyzeProjectRequirement } from '../../../lib/aiRequirementEngine';
 import { 
   Send, 
   Folder, 
@@ -130,17 +131,52 @@ export const ClientDashboard: React.FC = () => {
     useAppStore.getState().setState({ chatMessages: [...currentMsgs, localMsg] });
 
     try {
-      const res = await chatApi.send({
+      await chatApi.send({
         sender: 'in',
         senderName: user.name,
         text: txt,
       });
-      if (!res.success) addToast(res.message || 'Failed to send message', 'error');
     } catch (err: any) {
-      addToast(err.message || 'Failed to send message', 'error');
+      console.warn('Backend chat send warning:', err);
     } finally {
       setIsSubmittingChat(false);
     }
+
+    // Trigger AI requirement analysis response
+    setTimeout(() => {
+      const aiResult = analyzeProjectRequirement(txt, user.name);
+      const replyTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const aiMsg = { sender: 'out' as const, senderName: 'RDK AI Assistant', text: aiResult.replyText, time: replyTime };
+
+      const updatedMsgs = useAppStore.getState().chatMessages ?? [];
+      useAppStore.getState().setState({ chatMessages: [...updatedMsgs, aiMsg] });
+
+      if (aiResult.projectCreated) {
+        const { id, name, budget, deadline } = aiResult.projectCreated;
+        const currentProjects = useAppStore.getState().projects ?? [];
+        if (!currentProjects.some((p) => p.name === name)) {
+          const newProj = {
+            id,
+            name,
+            client: user.email,
+            assignedTo: 'engineering@rdk.com',
+            status: 'Proposed' as const,
+            progress: 10,
+            desc: `Automated AI Requirement Intake for ${user.name}`,
+            milestones: [
+              { name: 'AI Scope Analysis & Intake', completed: true },
+              { name: 'Architecture Review & Budget Approval', completed: false },
+              { name: 'Sprint 1 Core Build', completed: false },
+            ],
+            tasks: [{ id: 1, title: 'Scope Verification with Engineering', status: 'To Do' as const }],
+            deliverables: [],
+            budget,
+            deadline,
+          };
+          useAppStore.getState().setState({ projects: [newProj, ...currentProjects] });
+        }
+      }
+    }, 600);
   };
 
   const handleUploadDeliverable = async (projectId: string) => {

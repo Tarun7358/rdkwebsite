@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { MessageSquare, Folder, Search, Send, Bot, CheckCircle2 } from 'lucide-react';
 import { chatApi } from '../../api/chat';
 import { useAppStore } from '../../store/appStore';
+import { analyzeProjectRequirement } from '../../lib/aiRequirementEngine';
 
 export const ChatPreview: React.FC = () => {
   const storeMessages = useAppStore((s) => s.chatMessages);
@@ -9,9 +10,9 @@ export const ChatPreview: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const defaultMessages = [
-    { sender: 'in', senderName: 'RDK Support', text: 'Hello! Welcome to RDK Tech. How can we assist with your software project today?', time: '10:30 AM' },
-    { sender: 'out', senderName: 'Client Partner', text: 'What stack do you use for enterprise mobile applications?', time: '10:31 AM' },
-    { sender: 'in', senderName: 'RDK Support', text: 'We specialize in React Native & Flutter with offline SQLite, real-time WebSockets, and Supabase / Node.js backends.', time: '10:32 AM' }
+    { sender: 'in' as const, senderName: 'RDK Support', text: 'Hello! Welcome to RDK Tech. How can we assist with your software project today?', time: '10:30 AM' },
+    { sender: 'out' as const, senderName: 'Client Partner', text: 'What stack do you use for enterprise mobile applications?', time: '10:31 AM' },
+    { sender: 'in' as const, senderName: 'RDK Support', text: 'We specialize in React Native & Flutter with offline SQLite, real-time WebSockets, and Supabase / Node.js backends.', time: '10:32 AM' }
   ];
 
   const messages = storeMessages && storeMessages.length > 0 ? storeMessages : defaultMessages;
@@ -20,19 +21,34 @@ export const ChatPreview: React.FC = () => {
     const text = textToSend || inputText;
     if (!text.trim()) return;
 
+    if (!textToSend) setInputText('');
     setIsSubmitting(true);
+
+    const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const localMsg = { sender: 'out' as const, senderName: 'Visitor Client', text, time: timeStr };
+    const currentMsgs = storeMessages && storeMessages.length > 0 ? storeMessages : defaultMessages;
+    useAppStore.getState().setState({ chatMessages: [...currentMsgs, localMsg] });
+
     try {
       await chatApi.send({
         sender: 'out',
         senderName: 'Visitor Client',
         text
       });
-      if (!textToSend) setInputText('');
     } catch (err) {
-      console.error('Failed to send chat message:', err);
-    } me: {
+      console.warn('Chat send warning:', err);
+    } finally {
       setIsSubmitting(false);
     }
+
+    // AI Requirement Engine Response
+    setTimeout(() => {
+      const aiResult = analyzeProjectRequirement(text, 'Visitor Client');
+      const replyTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const aiMsg = { sender: 'in' as const, senderName: 'RDK AI Assistant', text: aiResult.replyText, time: replyTime };
+      const latestMsgs = useAppStore.getState().chatMessages ?? [];
+      useAppStore.getState().setState({ chatMessages: [...latestMsgs, aiMsg] });
+    }, 500);
   };
 
   return (
