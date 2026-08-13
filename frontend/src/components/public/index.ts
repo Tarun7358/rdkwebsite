@@ -11,3 +11,4 @@ export * from './Testimonials';
 export * from './Pricing';
 export * from './Contact';
 export * from './Careers';
+export * from './VetriGasModal';

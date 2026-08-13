@@ -1,10 +1,20 @@
 import React, { useState } from 'react';
 import { useAppStore } from '../../store/appStore';
 import type { PortfolioItem } from '../../types';
+import { VetriGasModal } from './VetriGasModal';
 
 const defaultPortfolio: PortfolioItem[] = [
   {
     id: 1,
+    cat: 'mobile',
+    title: 'Vetri Gas (Vetri Indane Enterprise)',
+    desc: 'Flagship enterprise LPG distribution system featuring real-time GPS fleet tracking, ZKTeco biometric attendance, dashcam snapshots, and inventory control center.',
+    tags: ['React Native / PWA', 'TypeScript', 'Node.js', 'SQLite', 'IoT Telemetry'],
+    date: 'Active Project (2026)',
+    icon: '🔥'
+  },
+  {
+    id: 2,
     cat: 'web',
     title: 'Luxora Marketplace',
     desc: 'Multi-vendor e-commerce platform with real-time inventory, AI recommendations, and integrated payment processing.',
@@ -13,7 +23,7 @@ const defaultPortfolio: PortfolioItem[] = [
     icon: '🛒'
   },
   {
-    id: 2,
+    id: 3,
     cat: 'mobile',
     title: 'FitTrack Pro',
     desc: 'Cross-platform fitness tracking app with AI coaching, social features, and health device integrations.',
@@ -22,7 +32,7 @@ const defaultPortfolio: PortfolioItem[] = [
     icon: '📱'
   },
   {
-    id: 3,
+    id: 4,
     cat: 'discord',
     title: 'GuardianBot',
     desc: 'Enterprise-grade Discord moderation system managing 500K+ member server with AI content filtering.',
@@ -31,7 +41,7 @@ const defaultPortfolio: PortfolioItem[] = [
     icon: '🤖'
   },
   {
-    id: 4,
+    id: 5,
     cat: 'ai',
     title: 'LegalMind AI',
     desc: 'Document intelligence platform for a law firm — contract analysis, clause extraction, and risk scoring at scale.',
@@ -40,22 +50,13 @@ const defaultPortfolio: PortfolioItem[] = [
     icon: '🧠'
   },
   {
-    id: 5,
+    id: 6,
     cat: 'web',
     title: 'MediBook',
     desc: 'Healthcare appointment booking platform with telemedicine, EHR integration, and HIPAA-compliant architecture.',
     tags: ['NestJS', 'React', 'PostgreSQL'],
     date: 'Aug 2025',
     icon: '🏥'
-  },
-  {
-    id: 6,
-    cat: 'mobile',
-    title: 'RideSwift',
-    desc: 'Ride-hailing app with real-time GPS tracking, surge pricing, driver matching algorithm, and in-app payments.',
-    tags: ['React Native', 'Google Maps', 'Razorpay'],
-    date: 'Jul 2025',
-    icon: '🚗'
   }
 ];
 
@@ -63,6 +64,7 @@ export const Portfolio: React.FC = () => {
   const storePortfolio = useAppStore((s) => s.portfolio);
   const portfolio = storePortfolio && storePortfolio.length > 0 ? storePortfolio : defaultPortfolio;
   const [filter, setFilter] = useState<'all' | 'web' | 'mobile' | 'discord' | 'ai'>('all');
+  const [isVetriGasOpen, setIsVetriGasOpen] = useState(false);
 
   const filteredItems = portfolio.filter((item) => filter === 'all' || item.cat === filter);
 
@@ -94,39 +96,73 @@ export const Portfolio: React.FC = () => {
           ))}
         </div>
         <div className="portfolio-grid" id="portfolioGrid">
-          {filteredItems.map((item) => (
-            <div key={item.id} className="port-card visible" data-cat={item.cat}>
-              <div className="port-img" style={{ background: item.bg }}>{item.icon}</div>
-              <div className="port-body">
-                <div className="port-cat">
-                  {item.cat === 'web'
-                    ? 'E-commerce'
-                    : item.cat === 'mobile'
-                    ? 'Mobile app'
-                    : item.cat === 'discord'
-                    ? 'Discord bot'
-                    : 'AI solution'}
+          {filteredItems.map((item) => {
+            const isVetri = item.title.includes('Vetri Gas');
+            return (
+              <div
+                key={item.id}
+                className="port-card visible"
+                data-cat={item.cat}
+                style={isVetri ? { border: '2px solid #ea580c', cursor: 'pointer' } : {}}
+                onClick={isVetri ? () => setIsVetriGasOpen(true) : undefined}
+              >
+                <div className="port-img" style={{ background: isVetri ? 'linear-gradient(135deg, #b91c1c, #ea580c)' : item.bg }}>
+                  {item.icon}
                 </div>
-                <div className="port-title">{item.title}</div>
-                <div className="port-desc">{item.desc}</div>
-                <div className="port-stack">
-                  {item.tags.map((t, idx) => (
-                    <span key={idx} className="tag">
-                      {t}
+                <div className="port-body">
+                  <div className="port-cat" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span>
+                      {item.cat === 'web'
+                        ? 'E-commerce'
+                        : item.cat === 'mobile'
+                        ? 'Enterprise Fleet & IoT'
+                        : item.cat === 'discord'
+                        ? 'Discord bot'
+                        : 'AI solution'}
                     </span>
-                  ))}
-                </div>
-                <div className="port-footer">
-                  <span className="port-date">{item.date}</span>
-                  <a href="#contact" className="btn btn-outline">
-                    Case study
-                  </a>
+                    {isVetri && (
+                      <span style={{ background: '#ea580c', color: '#fff', fontSize: '0.65rem', padding: '0.15rem 0.5rem', borderRadius: '12px', fontWeight: 800 }}>
+                        LIVE INTERACTIVE DEMO
+                      </span>
+                    )}
+                  </div>
+                  <div className="port-title">{item.title}</div>
+                  <div className="port-desc">{item.desc}</div>
+                  <div className="port-stack">
+                    {item.tags.map((t, idx) => (
+                      <span key={idx} className="tag">
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                  <div className="port-footer">
+                    <span className="port-date">{item.date}</span>
+                    {isVetri ? (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setIsVetriGasOpen(true);
+                        }}
+                        className="btn btn-primary"
+                        style={{ background: '#ea580c', borderColor: '#ea580c' }}
+                      >
+                        ⚡ Open Live Demo
+                      </button>
+                    ) : (
+                      <a href="#contact" className="btn btn-outline">
+                        Case study
+                      </a>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
+
+      <VetriGasModal isOpen={isVetriGasOpen} onClose={() => setIsVetriGasOpen(false)} />
     </section>
   );
 };
+
