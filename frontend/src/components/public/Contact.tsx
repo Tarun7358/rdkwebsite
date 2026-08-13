@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { projectsApi } from '../../api/projects';
 import { useAppStore } from '../../store/appStore';
+import { Mail, Bot, MapPin, Clock, LifeBuoy, Send, ArrowRight } from 'lucide-react';
 
 export const Contact: React.FC = () => {
   const addToast = useAppStore((s) => s.addToast);
@@ -10,7 +11,7 @@ export const Contact: React.FC = () => {
     email: '',
     discord: '',
     projectType: 'Website development',
-    budgetRange: 'Under $1,000',
+    budgetRange: 'Standard Scope',
     deadline: '',
     description: '',
   });
@@ -32,14 +33,14 @@ export const Contact: React.FC = () => {
         desc: `Client Name: ${formData.name}\nDiscord: ${formData.discord}\n\nDescription:\n${formData.description}`,
       });
       if (res.success) {
-        addToast('Project request submitted successfully!', 'success');
+        addToast('Project inquiry submitted successfully!', 'success');
         setFormData({
           name: '',
           company: '',
           email: '',
           discord: '',
           projectType: 'Website development',
-          budgetRange: 'Under $1,000',
+          budgetRange: 'Standard Scope',
           deadline: '',
           description: '',
         });
@@ -56,54 +57,74 @@ export const Contact: React.FC = () => {
   return (
     <section id="contact">
       <div className="section-inner">
-        <div className="section-label">Get in touch</div>
-        <h2 className="section-title">Start your project</h2>
+        <div className="section-label" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
+          <Mail size={14} /> Direct Engagement
+        </div>
+        <h2 className="section-title">Initiate Your Software Project</h2>
         <div className="contact-grid">
           <div className="contact-info">
-            <h3>Let's build something great together</h3>
+            <h3>Architectural Discovery & Proposal</h3>
             <p>
-              Tell us about your project and the RDK team will get back to you with a detailed proposal within 24 hours. Free consultation included.
+              Provide your technical specifications and our engineering leads will deliver a formal scope document within 24 hours.
             </p>
-            <div className="contact-detail">
-              <div className="contact-icon">📧</div>
+            
+            <div className="contact-detail" style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '1.25rem' }}>
+              <div className="contact-icon" style={{ background: 'var(--surface, #1f2937)', border: '1px solid var(--border, #374151)', width: '40px', height: '40px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Mail size={18} color="#ea580c" />
+              </div>
               <div>
-                <div>Email</div>
-                <div style={{ color: 'var(--blue)', fontWeight: 600 }}>hello@rdkreations.io</div>
+                <div style={{ fontSize: '0.75rem', color: 'var(--text3, #9ca3af)', fontWeight: 700 }}>Direct Email</div>
+                <div style={{ color: '#ea580c', fontWeight: 700, fontSize: '0.9rem' }}>hello@rdkreations.io</div>
               </div>
             </div>
-            <div className="contact-detail">
-              <div className="contact-icon">🎮</div>
+
+            <div className="contact-detail" style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '1rem' }}>
+              <div className="contact-icon" style={{ background: 'var(--surface, #1f2937)', border: '1px solid var(--border, #374151)', width: '40px', height: '40px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Bot size={18} color="#ea580c" />
+              </div>
               <div>
-                <div>Discord</div>
-                <div style={{ color: 'var(--blue)', fontWeight: 600 }}>discord.gg/rdkreations</div>
+                <div style={{ fontSize: '0.75rem', color: 'var(--text3, #9ca3af)', fontWeight: 700 }}>Discord Community</div>
+                <div style={{ color: '#ea580c', fontWeight: 700, fontSize: '0.9rem' }}>discord.gg/rdkreations</div>
               </div>
             </div>
-            <div className="contact-detail">
-              <div className="contact-icon">📍</div>
+
+            <div className="contact-detail" style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '1rem' }}>
+              <div className="contact-icon" style={{ background: 'var(--surface, #1f2937)', border: '1px solid var(--border, #374151)', width: '40px', height: '40px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <MapPin size={18} color="#ea580c" />
+              </div>
               <div>
-                <div>Office</div>
-                <div>Remote-first · GMT+0 to GMT+5:30</div>
+                <div style={{ fontSize: '0.75rem', color: 'var(--text3, #9ca3af)', fontWeight: 700 }}>Global Operations</div>
+                <div style={{ fontSize: '0.85rem', color: 'var(--text, #ffffff)' }}>Remote-First · GMT+0 to GMT+5:30</div>
               </div>
             </div>
-            <div className="contact-detail">
-              <div className="contact-icon">🕐</div>
+
+            <div className="contact-detail" style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '1rem' }}>
+              <div className="contact-icon" style={{ background: 'var(--surface, #1f2937)', border: '1px solid var(--border, #374151)', width: '40px', height: '40px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Clock size={18} color="#ea580c" />
+              </div>
               <div>
-                <div>Business hours</div>
-                <div>Mon–Fri, 9am–7pm</div>
+                <div style={{ fontSize: '0.75rem', color: 'var(--text3, #9ca3af)', fontWeight: 700 }}>SLA Business Hours</div>
+                <div style={{ fontSize: '0.85rem', color: 'var(--text, #ffffff)' }}>Mon–Fri, 9:00 AM – 7:00 PM</div>
               </div>
             </div>
-            <div style={{ marginTop: '2rem', padding: '1.5rem', background: 'var(--bg2)', borderRadius: '12px', border: '1px solid var(--border)' }}>
-              <div style={{ fontWeight: 800, marginBottom: '0.5rem' }}>🎫 Or open a support ticket</div>
-              <div style={{ fontSize: '0.82rem', color: 'var(--text3)', marginBottom: '1rem', lineHeight: '1.4' }}>
-                Already an RDK client? Use our ticket system for project updates and support.
+
+            <div style={{ marginTop: '2rem', padding: '1.5rem', background: 'var(--surface, #1f2937)', borderRadius: '12px', border: '1px solid var(--border, #374151)' }}>
+              <div style={{ fontWeight: 800, marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#ea580c' }}>
+                <LifeBuoy size={18} /> Existing Client Support Portal
               </div>
-              <a href="#tickets" className="btn btn-ghost" style={{ display: 'inline-block' }}>Open ticket →</a>
+              <div style={{ fontSize: '0.82rem', color: 'var(--text2, #d1d5db)', marginBottom: '1rem', lineHeight: '1.4' }}>
+                Already an RDK partner? Submit active tickets for sprint updates and code revisions.
+              </div>
+              <a href="#tickets" className="btn btn-outline" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
+                Open Support Ticket <ArrowRight size={14} />
+              </a>
             </div>
           </div>
+
           <form className="contact-form" onSubmit={handleSubmit}>
             <div className="form-row">
               <div className="form-group">
-                <label>Full name *</label>
+                <label>Full Name *</label>
                 <input
                   type="text"
                   placeholder="Alex Johnson"
@@ -113,18 +134,19 @@ export const Contact: React.FC = () => {
                 />
               </div>
               <div className="form-group">
-                <label>Company</label>
+                <label>Company / Organization</label>
                 <input
                   type="text"
-                  placeholder="Acme Inc."
+                  placeholder="Acme Enterprise"
                   value={formData.company}
                   onChange={(e) => setFormData({ ...formData, company: e.target.value })}
                 />
               </div>
             </div>
+
             <div className="form-row">
               <div className="form-group">
-                <label>Email *</label>
+                <label>Work Email *</label>
                 <input
                   type="email"
                   placeholder="alex@company.com"
@@ -134,7 +156,7 @@ export const Contact: React.FC = () => {
                 />
               </div>
               <div className="form-group">
-                <label>Discord username</label>
+                <label>Discord Handle</label>
                 <input
                   type="text"
                   placeholder="alex#0001"
@@ -143,55 +165,58 @@ export const Contact: React.FC = () => {
                 />
               </div>
             </div>
+
             <div className="form-row">
               <div className="form-group">
-                <label>Project type</label>
+                <label>Target Service Architecture</label>
                 <select
                   value={formData.projectType}
                   onChange={(e) => setFormData({ ...formData, projectType: e.target.value })}
                 >
-                  <option>Website development</option>
-                  <option>Mobile app</option>
-                  <option>Discord bot</option>
-                  <option>AI solution</option>
-                  <option>Full-stack platform</option>
-                  <option>Cloud / DevOps</option>
-                  <option>Other</option>
+                  <option>Website & SaaS Engineering</option>
+                  <option>Mobile Application (PWA / Native)</option>
+                  <option>Discord Bot & Automation</option>
+                  <option>AI Intelligence & RAG System</option>
+                  <option>Full-Stack Enterprise Architecture</option>
+                  <option>Cloud Infrastructure & DevOps</option>
+                  <option>Custom Engineering</option>
                 </select>
               </div>
               <div className="form-group">
-                <label>Budget range</label>
+                <label>Target Scope Scale</label>
                 <select
                   value={formData.budgetRange}
                   onChange={(e) => setFormData({ ...formData, budgetRange: e.target.value })}
                 >
-                  <option>Under $1,000</option>
-                  <option>$1,000 – $5,000</option>
-                  <option>$5,000 – $15,000</option>
-                  <option>$15,000 – $50,000</option>
-                  <option>$50,000+</option>
+                  <option>MVP / Sprint Scope</option>
+                  <option>Core Product Architecture</option>
+                  <option>Enterprise Suite</option>
+                  <option>Custom Retainer</option>
                 </select>
               </div>
             </div>
+
             <div className="form-group">
-              <label>Deadline</label>
+              <label>Target Target Launch Date</label>
               <input
                 type="date"
                 value={formData.deadline}
                 onChange={(e) => setFormData({ ...formData, deadline: e.target.value })}
               />
             </div>
+
             <div className="form-group">
-              <label>Project description *</label>
+              <label>Technical Specifications & Requirements *</label>
               <textarea
-                placeholder="Tell the RDK team about your project — what you're building, who it's for, and any specific requirements or integrations..."
+                placeholder="Detail your target features, compliance requirements, third-party API integrations, and expected milestone timeline..."
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 required
               />
             </div>
-            <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
-              {isSubmitting ? 'Submitting...' : 'Send project request ↗'}
+
+            <button type="submit" className="btn btn-primary" disabled={isSubmitting} style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', background: '#ea580c', borderColor: '#ea580c' }}>
+              {isSubmitting ? 'Submitting Scope...' : 'Submit Technical Scope Proposal'} <Send size={16} />
             </button>
           </form>
         </div>

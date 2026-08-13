@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Sun, Moon } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
 import { useDashboardStore } from '../store/dashboardStore';
 import { useTheme } from '../hooks/useTheme';
@@ -59,9 +60,10 @@ export const Home: React.FC = () => {
             <a href="#contact">Contact</a>
           </div>
           <div className="nav-right">
-            <button id="themeToggle" className="btn btn-ghost" onClick={toggle}>
-              {theme === 'dark' ? '☀️' : '🌙'}
+            <button id="themeToggle" className="btn btn-ghost" onClick={toggle} style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', padding: '0.4rem' }}>
+              {theme === 'dark' ? <Sun size={18} color="#f59e0b" /> : <Moon size={18} color="#6366f1" />}
             </button>
+
             <button className="btn btn-ghost" onClick={handleAuthAction}>
               {user ? 'Console' : 'Log in'}
             </button>

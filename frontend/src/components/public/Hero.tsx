@@ -1,4 +1,5 @@
 import React from 'react';
+import { ShieldCheck, ArrowUpRight } from 'lucide-react';
 
 export const Hero: React.FC = () => {
   return (
@@ -12,7 +13,9 @@ export const Hero: React.FC = () => {
       </div>
       <div className="hero-inner">
         <div>
-          <div className="hero-badge">🚀 Trusted by 200+ businesses worldwide</div>
+          <div className="hero-badge" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
+            <ShieldCheck size={16} color="#4ade80" /> Enterprise-Grade Software & Engineering Partner
+          </div>
           <h1>
             Build software
             <br />
@@ -24,14 +27,15 @@ export const Hero: React.FC = () => {
             systems, and custom software.
           </p>
           <div className="hero-btns">
-            <a href="#contact" className="btn btn-primary btn-xl">
-              Start a project ↗
+            <a href="#contact" className="btn btn-primary btn-xl" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
+              Start a Project <ArrowUpRight size={20} />
             </a>
             <a href="#portfolio" className="btn btn-ghost btn-xl">
-              View portfolio
+              View Portfolio
             </a>
           </div>
         </div>
+
         <div className="hero-visual">
           <div>
             <div className="hero-card">
