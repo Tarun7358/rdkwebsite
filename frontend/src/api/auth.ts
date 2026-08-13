@@ -22,7 +22,7 @@ export const authApi = {
   signInWithGoogle: () =>
     supabase.auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo: window.location.origin + '/' },
+      options: { redirectTo: `${window.location.origin}/dashboard` },
     }),
 
   signInWithPassword: (email: string, password: string) =>
