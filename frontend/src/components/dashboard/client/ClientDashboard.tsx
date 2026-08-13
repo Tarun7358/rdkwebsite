@@ -503,7 +503,7 @@ export const ClientDashboard: React.FC = () => {
         </div>
 
         {/* Quick Requirement Scoping Prompts */}
-        <div style={{ padding: '0.6rem 1rem', borderTop: '1px solid var(--border)', background: 'var(--bg2)', display: 'flex', gap: '0.4rem', overflowX: 'auto' }}>
+        <div className="no-scrollbar" style={{ padding: '0.65rem 1rem', borderTop: '1px solid var(--border)', background: 'var(--bg2)', display: 'flex', gap: '0.5rem', overflowX: 'auto', msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
           {[
             '📋 Get Project Requirement Estimate',
             '🛒 Need E-Commerce Website with Auth & Payments',
@@ -521,12 +521,14 @@ export const ClientDashboard: React.FC = () => {
                 background: 'var(--card)',
                 border: '1px solid var(--border)',
                 color: 'var(--text)',
-                padding: '0.35rem 0.75rem',
+                padding: '0.4rem 0.85rem',
                 borderRadius: '16px',
-                fontSize: '0.75rem',
-                fontWeight: 600,
+                fontSize: '0.775rem',
+                fontWeight: 700,
                 cursor: 'pointer',
                 transition: 'all 0.2s',
+                boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+                flexShrink: 0
               }}
             >
               {prompt}

@@ -91,7 +91,7 @@ export const ChatPreview: React.FC = () => {
             </div>
 
             {/* Quick Prompts */}
-            <div style={{ padding: '0.6rem 0.85rem', borderTop: '1px solid var(--border, #e5e7eb)', background: 'var(--bg2, #f8f9fa)', display: 'flex', gap: '0.5rem', overflowX: 'auto' }}>
+            <div className="no-scrollbar" style={{ padding: '0.6rem 0.85rem', borderTop: '1px solid var(--border, #e5e7eb)', background: 'var(--bg2, #f8f9fa)', display: 'flex', gap: '0.5rem', overflowX: 'auto', msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
               {[
                 'What tech stack do you use?',
                 'How fast can you deliver?',
@@ -105,13 +105,14 @@ export const ChatPreview: React.FC = () => {
                     background: 'var(--card, #ffffff)',
                     border: '1px solid var(--border, #e5e7eb)',
                     color: 'var(--text, #111827)',
-                    padding: '0.3rem 0.75rem',
+                    padding: '0.35rem 0.8rem',
                     borderRadius: '14px',
                     fontSize: '0.75rem',
-                    fontWeight: 600,
+                    fontWeight: 700,
                     cursor: 'pointer',
                     transition: 'all 0.2s',
-                    boxShadow: '0 1px 2px rgba(0,0,0,0.04)'
+                    boxShadow: '0 1px 2px rgba(0,0,0,0.04)',
+                    flexShrink: 0
                   }}
                 >
                   {prompt}
