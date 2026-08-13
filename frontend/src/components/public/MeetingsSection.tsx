@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Video, MonitorPlay, Bot, PhoneCall, Calendar, Clock, CheckCircle2, ArrowRight } from 'lucide-react';
+import { meetingsApi } from '../../api/meetings';
+import { useAppStore } from '../../store/appStore';
 
 const meetingsData = [
   { icon: <Video size={24} color="#38bdf8" />, name: 'Google Meet Discovery', desc: '30 or 60 min video consultation & scope breakdown', type: 'Google Meet' },
@@ -9,13 +11,35 @@ const meetingsData = [
 ];
 
 export const MeetingsSection: React.FC = () => {
+  const addToast = useAppStore((s) => s.addToast);
   const [selectedMeeting, setSelectedMeeting] = useState<string | null>(null);
-  const [selectedDate, setSelectedDate] = useState('Tomorrow, 2:00 PM');
+  const [selectedDate, setSelectedDate] = useState('Tomorrow, 2:00 PM EST');
+  const [clientEmail, setClientEmail] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [booked, setBooked] = useState(false);
 
-  const handleBookMeeting = (e: React.FormEvent) => {
+  const handleBookMeeting = async (e: React.FormEvent) => {
     e.preventDefault();
-    setBooked(true);
+    if (!clientEmail) return;
+    setIsSubmitting(true);
+    try {
+      const res = await meetingsApi.schedule({
+        client: clientEmail,
+        type: selectedMeeting || 'Google Meet',
+        date: selectedDate.split(',')[0],
+        time: selectedDate.split(',')[1] || '2:00 PM'
+      });
+      if (res.success) {
+        setBooked(true);
+        addToast('Meeting persisted to real-time calendar!', 'success');
+      } else {
+        addToast(res.message || 'Failed to schedule meeting', 'error');
+      }
+    } catch (err: any) {
+      addToast(err.message || 'An error occurred', 'error');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -25,7 +49,7 @@ export const MeetingsSection: React.FC = () => {
           <Calendar size={14} /> Live Technical Consultations
         </div>
         <h2 className="section-title">Schedule an Engineering Session</h2>
-        <p className="section-sub">Select your preferred communication channel — instant calendar invitation sent upon submission.</p>
+        <p className="section-sub">Select your preferred communication channel — real-time booking synced to production database.</p>
         
         <div className="meeting-grid">
           {meetingsData.map((meet, idx) => (
@@ -59,7 +83,6 @@ export const MeetingsSection: React.FC = () => {
             {!booked ? (
               <form onSubmit={handleBookMeeting}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border, #374151)', paddingBottom: '0.75rem', marginBottom: '1rem' }}>
-
                   <div style={{ fontWeight: 700, fontSize: '1.1rem', color: '#ea580c', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                     <Clock size={18} /> Schedule {selectedMeeting} Session
                   </div>
@@ -86,6 +109,8 @@ export const MeetingsSection: React.FC = () => {
                     <input
                       type="email"
                       required
+                      value={clientEmail}
+                      onChange={(e) => setClientEmail(e.target.value)}
                       placeholder="alex@company.com"
                       style={{ width: '100%', padding: '0.6rem', background: 'var(--surface, #1f2937)', border: '1px solid var(--border, #374151)', color: '#ffffff', borderRadius: '8px' }}
                     />
@@ -93,17 +118,17 @@ export const MeetingsSection: React.FC = () => {
                 </div>
 
                 <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'flex-end' }}>
-                  <button type="submit" className="btn btn-primary" style={{ background: '#ea580c', borderColor: '#ea580c', display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
-                    Confirm & Send Calendar Invite <ArrowRight size={16} />
+                  <button type="submit" disabled={isSubmitting} className="btn btn-primary" style={{ background: '#ea580c', borderColor: '#ea580c', display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
+                    {isSubmitting ? 'Syncing with Supabase...' : 'Confirm & Save Meeting'} <ArrowRight size={16} />
                   </button>
                 </div>
               </form>
             ) : (
               <div style={{ textAlign: 'center', padding: '1rem' }}>
                 <CheckCircle2 size={40} color="#22c55e" style={{ margin: '0 auto 0.5rem auto' }} />
-                <h4 style={{ fontSize: '1.2rem', fontWeight: 800 }}>Meeting Confirmed!</h4>
+                <h4 style={{ fontSize: '1.2rem', fontWeight: 800 }}>Meeting Confirmed & Saved to Database!</h4>
                 <p style={{ fontSize: '0.85rem', color: 'var(--text2, #d1d5db)' }}>
-                  A {selectedMeeting} calendar invitation for <strong>{selectedDate}</strong> has been dispatched.
+                  A {selectedMeeting} calendar invitation for <strong>{selectedDate}</strong> has been dispatched for <strong>{clientEmail}</strong>.
                 </p>
                 <button onClick={() => setSelectedMeeting(null)} className="btn btn-outline" style={{ marginTop: '1rem' }}>Done</button>
               </div>

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDashboardStore } from '../../store/dashboardStore';
 import { useAppStore } from '../../store/appStore';
 import { authApi, setUserRole } from '../../api/auth';
+import { Lock, Mail, User, Building2, Briefcase, Rocket, Settings, ShieldCheck, CheckCircle2, Globe, Eye, EyeOff, X } from 'lucide-react';
 
 export const AuthModal: React.FC = () => {
   const navigate = useNavigate();
@@ -29,12 +30,12 @@ export const AuthModal: React.FC = () => {
       if (error) {
         addToast(error.message, 'error');
       } else {
-        addToast('Welcome back! Redirecting to your console…', 'success');
+        addToast('Authentication verified. Accessing console…', 'success');
         setIsOpen(false);
         navigate('/dashboard');
       }
     } catch (err: any) {
-      addToast(err.message || 'An error occurred', 'error');
+      addToast(err.message || 'An error occurred during authentication', 'error');
     } finally {
       setIsSubmitting(false);
     }
@@ -50,21 +51,21 @@ export const AuthModal: React.FC = () => {
         addToast(error.message, 'error');
       } else {
         if (role !== 'client') await setUserRole(email, role);
-        addToast('Account created! Check your email to verify, then sign in.', 'success');
+        addToast('Account created! Please check your email to confirm registration.', 'success');
         setTab('login');
       }
     } catch (err: any) {
-      addToast(err.message || 'An error occurred', 'error');
+      addToast(err.message || 'An error occurred during registration', 'error');
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const roleOptions = [
-    { value: 'client',     icon: '🏢', label: 'Client',      sub: 'Hire talent & manage projects' },
-    { value: 'employee',   icon: '💼', label: 'Employee',     sub: 'Work on client projects' },
-    { value: 'freelancer', icon: '🚀', label: 'Freelancer',   sub: 'Independent contractor' },
-    { value: 'admin',      icon: '⚙️', label: 'Admin',        sub: 'Platform management access' },
+    { value: 'client', icon: <Building2 size={18} color="#ea580c" />, label: 'Client', sub: 'Commission & oversee software builds' },
+    { value: 'employee', icon: <Briefcase size={18} color="#ea580c" />, label: 'Employee', sub: 'Execute production sprints' },
+    { value: 'freelancer', icon: <Rocket size={18} color="#ea580c" />, label: 'Contractor', sub: 'Specialized module engineering' },
+    { value: 'admin', icon: <Settings size={18} color="#ea580c" />, label: 'Administrator', sub: 'System oversight & governance' },
   ];
 
   return (
@@ -77,12 +78,12 @@ export const AuthModal: React.FC = () => {
       >
         {/* ── CARD ── */}
         <div style={{
-          background: 'linear-gradient(145deg, #0f1623 0%, #151d2e 100%)',
-          border: '1px solid rgba(99,102,241,0.25)',
+          background: 'var(--card, #111827)',
+          border: '1px solid var(--border, #374151)',
           borderRadius: '24px',
           width: '100%',
           maxWidth: '460px',
-          boxShadow: '0 0 0 1px rgba(255,255,255,0.04), 0 32px 80px rgba(0,0,0,0.7), 0 0 60px rgba(99,102,241,0.12)',
+          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.7)',
           overflow: 'hidden',
           position: 'relative',
           animation: 'authSlideUp 0.35s cubic-bezier(0.34,1.56,0.64,1)',
@@ -92,7 +93,7 @@ export const AuthModal: React.FC = () => {
           <div style={{
             position: 'absolute', top: '-80px', left: '50%', transform: 'translateX(-50%)',
             width: '300px', height: '200px',
-            background: 'radial-gradient(ellipse at center, rgba(99,102,241,0.3) 0%, transparent 70%)',
+            background: 'radial-gradient(ellipse at center, rgba(234, 88, 12, 0.2) 0%, transparent 70%)',
             pointerEvents: 'none',
           }} />
 
@@ -102,53 +103,53 @@ export const AuthModal: React.FC = () => {
               onClick={() => setIsOpen(false)}
               style={{
                 position: 'absolute', top: '1.25rem', right: '1.25rem',
-                background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)',
+                background: 'var(--surface, #1f2937)', border: '1px solid var(--border, #374151)',
                 color: '#9CA3AF', borderRadius: '8px', width: '32px', height: '32px',
                 cursor: 'pointer', fontSize: '1rem', display: 'flex', alignItems: 'center',
                 justifyContent: 'center', transition: 'all 0.2s',
               }}
-              onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.12)'; (e.currentTarget as HTMLButtonElement).style.color = '#fff'; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.06)'; (e.currentTarget as HTMLButtonElement).style.color = '#9CA3AF'; }}
-            >✕</button>
+            >
+              <X size={16} />
+            </button>
 
             {/* Logo mark */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '1.5rem' }}>
               <div style={{
                 width: '36px', height: '36px', borderRadius: '10px',
-                background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
+                background: '#ea580c',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 fontSize: '1rem', fontWeight: 900, color: '#fff', letterSpacing: '-1px',
-                boxShadow: '0 4px 16px rgba(99,102,241,0.4)',
+                boxShadow: '0 4px 16px rgba(234, 88, 12, 0.4)',
               }}>R</div>
               <span style={{ fontSize: '0.85rem', fontWeight: 700, color: '#fff', letterSpacing: '-0.3px' }}>
-                RDK <span style={{ color: '#6366f1' }}>Industries</span>
+                RDK <span style={{ color: '#ea580c' }}>Industries</span>
               </span>
             </div>
 
             {tab === 'login' ? (
               <>
                 <h2 style={{ fontSize: '1.7rem', fontWeight: 800, color: '#fff', margin: '0 0 0.4rem', letterSpacing: '-0.5px' }}>
-                  Welcome back
+                  Enterprise Console Access
                 </h2>
-                <p style={{ fontSize: '0.875rem', color: '#6B7280', margin: '0 0 1.75rem', lineHeight: 1.5 }}>
-                  Sign in to access your RDK console and manage your projects.
+                <p style={{ fontSize: '0.875rem', color: 'var(--text2, #9ca3af)', margin: '0 0 1.75rem', lineHeight: 1.5 }}>
+                  Sign in with your verified credentials to access project management.
                 </p>
               </>
             ) : (
               <>
                 <h2 style={{ fontSize: '1.7rem', fontWeight: 800, color: '#fff', margin: '0 0 0.4rem', letterSpacing: '-0.5px' }}>
-                  Create your account
+                  Register Client Portal
                 </h2>
-                <p style={{ fontSize: '0.875rem', color: '#6B7280', margin: '0 0 1.75rem', lineHeight: 1.5 }}>
-                  Join 200+ businesses scaling with RDK's enterprise platform.
+                <p style={{ fontSize: '0.875rem', color: 'var(--text2, #9ca3af)', margin: '0 0 1.75rem', lineHeight: 1.5 }}>
+                  Join partner organizations leveraging RDK's enterprise software suite.
                 </p>
               </>
             )}
 
             {/* ── TAB SWITCHER ── */}
             <div style={{
-              display: 'flex', background: 'rgba(255,255,255,0.04)',
-              border: '1px solid rgba(255,255,255,0.08)',
+              display: 'flex', background: 'var(--surface, #1f2937)',
+              border: '1px solid var(--border, #374151)',
               borderRadius: '12px', padding: '4px', gap: '4px', marginBottom: '1.75rem',
             }}>
               {(['login', 'register'] as const).map((t) => (
@@ -160,10 +161,10 @@ export const AuthModal: React.FC = () => {
                     fontSize: '0.875rem', fontWeight: 600, cursor: 'pointer',
                     transition: 'all 0.2s',
                     background: tab === t
-                      ? 'linear-gradient(135deg, #6366f1, #8b5cf6)'
+                      ? '#ea580c'
                       : 'transparent',
-                    color: tab === t ? '#fff' : '#6B7280',
-                    boxShadow: tab === t ? '0 2px 12px rgba(99,102,241,0.35)' : 'none',
+                    color: tab === t ? '#fff' : 'var(--text3, #9ca3af)',
+                    boxShadow: tab === t ? '0 2px 12px rgba(234, 88, 12, 0.35)' : 'none',
                   }}
                 >
                   {t === 'login' ? 'Sign In' : 'Create Account'}
@@ -179,103 +180,41 @@ export const AuthModal: React.FC = () => {
             {tab === 'login' && (
               <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
 
-                {/* ── DEMO QUICK-FILL ── */}
-                <div style={{
-                  background: 'rgba(99,102,241,0.07)',
-                  border: '1px solid rgba(99,102,241,0.2)',
-                  borderRadius: '12px',
-                  padding: '0.9rem',
-                }}>
-                  <div style={{ fontSize: '0.72rem', fontWeight: 700, color: '#818CF8', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.6rem' }}>
-                    ⚡ Demo accounts — click to fill
-                  </div>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.4rem' }}>
-                    {[
-                      { icon: '🏢', role: 'Client',     email: 'client@rdk.com',     pwd: 'rdk@demo2026' },
-                      { icon: '💼', role: 'Employee',   email: 'employee@rdk.com',   pwd: 'rdk@demo2026' },
-                      { icon: '🚀', role: 'Freelancer', email: 'freelancer@rdk.com', pwd: 'rdk@demo2026' },
-                      { icon: '⚙️', role: 'Admin',      email: 'admin@rdk.com',      pwd: 'rdk@demo2026' },
-                    ].map((d) => (
-                      <button
-                        key={d.role}
-                        type="button"
-                        onClick={() => { setEmail(d.email); setPassword(d.pwd); }}
-                        style={{
-                          background: 'rgba(255,255,255,0.04)',
-                          border: '1px solid rgba(255,255,255,0.08)',
-                          borderRadius: '8px',
-                          padding: '0.45rem 0.6rem',
-                          cursor: 'pointer',
-                          textAlign: 'left',
-                          transition: 'all 0.15s',
-                          color: '#D1D5DB',
-                          fontSize: '0.78rem',
-                          fontWeight: 600,
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '0.4rem',
-                        }}
-                        onMouseEnter={e => {
-                          (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(99,102,241,0.5)';
-                          (e.currentTarget as HTMLButtonElement).style.background = 'rgba(99,102,241,0.1)';
-                        }}
-                        onMouseLeave={e => {
-                          (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(255,255,255,0.08)';
-                          (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.04)';
-                        }}
-                      >
-                        <span>{d.icon}</span>
-                        <div>
-                          <div style={{ color: '#E5E7EB' }}>{d.role}</div>
-                          <div style={{ fontSize: '0.68rem', color: '#6B7280', fontWeight: 400 }}>{d.email}</div>
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-                  <div style={{ fontSize: '0.68rem', color: '#4B5563', marginTop: '0.5rem', textAlign: 'center' }}>
-                    Password for all demo accounts: <code style={{ color: '#818CF8', background: 'rgba(99,102,241,0.15)', padding: '0.1rem 0.35rem', borderRadius: '4px' }}>rdk@demo2026</code>
-                  </div>
-                </div>
-
-                <Field label="Email address" icon="✉️">
+                <Field label="Email Address" icon={<Mail size={16} color="#ea580c" />}>
                   <input
                     type="email"
-                    placeholder="you@company.com"
+                    placeholder="name@company.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
                     style={inputStyle}
-                    onFocus={e => Object.assign(e.currentTarget.style, inputFocusStyle)}
-                    onBlur={e => Object.assign(e.currentTarget.style, inputBlurStyle)}
                   />
                 </Field>
 
-                <Field label="Password" icon="🔒" right={
+                <Field label="Password" icon={<Lock size={16} color="#ea580c" />} right={
                   <button type="button" onClick={() => setShowPwd(!showPwd)} style={eyeBtn}>
-                    {showPwd ? '🙈' : '👁️'}
+                    {showPwd ? <EyeOff size={16} /> : <Eye size={16} />}
                   </button>
                 }>
                   <input
                     type={showPwd ? 'text' : 'password'}
-                    placeholder="Enter your password"
+                    placeholder="Enter your security password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
                     style={inputStyle}
-                    onFocus={e => Object.assign(e.currentTarget.style, inputFocusStyle)}
-                    onBlur={e => Object.assign(e.currentTarget.style, inputBlurStyle)}
                   />
                 </Field>
 
-                <SubmitButton loading={isSubmitting} label="Sign In →" loadingLabel="Signing in…" />
+                <SubmitButton loading={isSubmitting} label="Authenticate & Sign In" loadingLabel="Authenticating…" />
 
-                <div style={{ textAlign: 'center', fontSize: '0.8rem', color: '#4B5563', marginTop: '0.5rem' }}>
-                  Don't have an account?{' '}
+                <div style={{ textAlign: 'center', fontSize: '0.8rem', color: 'var(--text3, #9ca3af)', marginTop: '0.5rem' }}>
+                  Don't have a corporate account?{' '}
                   <span
                     onClick={() => setTab('register')}
-                    style={{ color: '#818CF8', fontWeight: 600, cursor: 'pointer' }}
+                    style={{ color: '#ea580c', fontWeight: 600, cursor: 'pointer' }}
                   >
-                    Create one free
+                    Register here
                   </span>
                 </div>
               </form>
@@ -284,7 +223,7 @@ export const AuthModal: React.FC = () => {
             {/* ─── REGISTER FORM ─── */}
             {tab === 'register' && (
               <form onSubmit={handleRegister} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                <Field label="Full name" icon="👤">
+                <Field label="Full Name" icon={<User size={16} color="#ea580c" />}>
                   <input
                     type="text"
                     placeholder="Alex Johnson"
@@ -292,12 +231,10 @@ export const AuthModal: React.FC = () => {
                     onChange={(e) => setName(e.target.value)}
                     required
                     style={inputStyle}
-                    onFocus={e => Object.assign(e.currentTarget.style, inputFocusStyle)}
-                    onBlur={e => Object.assign(e.currentTarget.style, inputBlurStyle)}
                   />
                 </Field>
 
-                <Field label="Work email" icon="✉️">
+                <Field label="Work Email" icon={<Mail size={16} color="#ea580c" />}>
                   <input
                     type="email"
                     placeholder="alex@company.com"
@@ -305,14 +242,12 @@ export const AuthModal: React.FC = () => {
                     onChange={(e) => setEmail(e.target.value)}
                     required
                     style={inputStyle}
-                    onFocus={e => Object.assign(e.currentTarget.style, inputFocusStyle)}
-                    onBlur={e => Object.assign(e.currentTarget.style, inputBlurStyle)}
                   />
                 </Field>
 
-                <Field label="Password" icon="🔒" right={
+                <Field label="Password" icon={<Lock size={16} color="#ea580c" />} right={
                   <button type="button" onClick={() => setShowPwd(!showPwd)} style={eyeBtn}>
-                    {showPwd ? '🙈' : '👁️'}
+                    {showPwd ? <EyeOff size={16} /> : <Eye size={16} />}
                   </button>
                 }>
                   <input
@@ -322,15 +257,13 @@ export const AuthModal: React.FC = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     required
                     style={inputStyle}
-                    onFocus={e => Object.assign(e.currentTarget.style, inputFocusStyle)}
-                    onBlur={e => Object.assign(e.currentTarget.style, inputBlurStyle)}
                   />
                 </Field>
 
                 {/* Role selector */}
                 <div>
-                  <label style={{ fontSize: '0.78rem', fontWeight: 600, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.06em', display: 'block', marginBottom: '0.6rem' }}>
-                    I am joining as…
+                  <label style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--text3, #9ca3af)', textTransform: 'uppercase', letterSpacing: '0.06em', display: 'block', marginBottom: '0.6rem' }}>
+                    Select Access Role
                   </label>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
                     {roleOptions.map((r) => (
@@ -340,11 +273,11 @@ export const AuthModal: React.FC = () => {
                         onClick={() => setRole(r.value as any)}
                         style={{
                           background: role === r.value
-                            ? 'linear-gradient(135deg, rgba(99,102,241,0.2), rgba(139,92,246,0.15))'
-                            : 'rgba(255,255,255,0.03)',
+                            ? 'rgba(234, 88, 12, 0.15)'
+                            : 'var(--surface, #1f2937)',
                           border: role === r.value
-                            ? '1px solid rgba(99,102,241,0.6)'
-                            : '1px solid rgba(255,255,255,0.07)',
+                            ? '1px solid #ea580c'
+                            : '1px solid var(--border, #374151)',
                           borderRadius: '10px',
                           padding: '0.65rem 0.75rem',
                           cursor: 'pointer',
@@ -353,27 +286,20 @@ export const AuthModal: React.FC = () => {
                         }}
                       >
                         <div style={{ fontSize: '1rem', marginBottom: '0.2rem' }}>{r.icon}</div>
-                        <div style={{ fontSize: '0.8rem', fontWeight: 700, color: role === r.value ? '#a5b4fc' : '#D1D5DB' }}>{r.label}</div>
-                        <div style={{ fontSize: '0.7rem', color: '#6B7280', lineHeight: 1.3 }}>{r.sub}</div>
+                        <div style={{ fontSize: '0.8rem', fontWeight: 700, color: role === r.value ? '#ea580c' : '#D1D5DB' }}>{r.label}</div>
+                        <div style={{ fontSize: '0.7rem', color: 'var(--text3, #9ca3af)', lineHeight: 1.3 }}>{r.sub}</div>
                       </button>
                     ))}
                   </div>
                 </div>
 
-                <SubmitButton loading={isSubmitting} label="Create Account →" loadingLabel="Creating account…" />
+                <SubmitButton loading={isSubmitting} label="Create Enterprise Account" loadingLabel="Creating account…" />
 
-                <p style={{ textAlign: 'center', fontSize: '0.75rem', color: '#374151', margin: '0.25rem 0 0', lineHeight: 1.5 }}>
-                  By creating an account you agree to our{' '}
-                  <span style={{ color: '#6366f1', cursor: 'pointer' }}>Terms of Service</span>
-                  {' '}and{' '}
-                  <span style={{ color: '#6366f1', cursor: 'pointer' }}>Privacy Policy</span>.
-                </p>
-
-                <div style={{ textAlign: 'center', fontSize: '0.8rem', color: '#4B5563' }}>
+                <div style={{ textAlign: 'center', fontSize: '0.8rem', color: 'var(--text3, #9ca3af)' }}>
                   Already have an account?{' '}
                   <span
                     onClick={() => setTab('login')}
-                    style={{ color: '#818CF8', fontWeight: 600, cursor: 'pointer' }}
+                    style={{ color: '#ea580c', fontWeight: 600, cursor: 'pointer' }}
                   >
                     Sign in
                   </span>
@@ -386,29 +312,21 @@ export const AuthModal: React.FC = () => {
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               gap: '1.25rem', marginTop: '1.5rem',
               paddingTop: '1.25rem',
-              borderTop: '1px solid rgba(255,255,255,0.06)',
+              borderTop: '1px solid var(--border, #374151)',
             }}>
               {[
-                { icon: '🔐', text: 'End-to-end encrypted' },
-                { icon: '✅', text: 'SOC 2 compliant' },
-                { icon: '🌍', text: '99.9% uptime SLA' },
-              ].map((b) => (
-                <div key={b.text} style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.7rem', color: '#4B5563' }}>
-                  <span>{b.icon}</span><span>{b.text}</span>
+                { icon: <ShieldCheck size={14} color="#ea580c" />, text: 'End-to-End Encryption' },
+                { icon: <CheckCircle2 size={14} color="#4ade80" />, text: 'SOC 2 Ready' },
+                { icon: <Globe size={14} color="#38bdf8" />, text: '99.9% Uptime SLA' },
+              ].map((b, idx) => (
+                <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.7rem', color: 'var(--text3, #9ca3af)' }}>
+                  {b.icon}<span>{b.text}</span>
                 </div>
               ))}
             </div>
           </div>
         </div>
       </div>
-
-      {/* Keyframe injection */}
-      <style>{`
-        @keyframes authSlideUp {
-          from { opacity: 0; transform: translateY(32px) scale(0.97); }
-          to   { opacity: 1; transform: translateY(0) scale(1); }
-        }
-      `}</style>
     </>
   );
 };
@@ -417,13 +335,14 @@ export const AuthModal: React.FC = () => {
 
 const Field: React.FC<{
   label: string;
-  icon: string;
+  icon: React.ReactNode;
   right?: React.ReactNode;
   children: React.ReactNode;
-}> = ({ label, icon: _icon, right, children }) => (
+}> = ({ label, icon, right, children }) => (
   <div>
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
-      <label style={{ fontSize: '0.78rem', fontWeight: 600, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+      <label style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--text3, #9ca3af)', textTransform: 'uppercase', letterSpacing: '0.06em', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+        {icon}
         {label}
       </label>
       {right}
@@ -440,8 +359,8 @@ const SubmitButton: React.FC<{ loading: boolean; label: string; loadingLabel: st
       width: '100%',
       padding: '0.85rem',
       background: loading
-        ? 'rgba(99,102,241,0.4)'
-        : 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+        ? 'rgba(234, 88, 12, 0.5)'
+        : '#ea580c',
       border: 'none',
       borderRadius: '12px',
       color: '#fff',
@@ -450,30 +369,11 @@ const SubmitButton: React.FC<{ loading: boolean; label: string; loadingLabel: st
       cursor: loading ? 'not-allowed' : 'pointer',
       letterSpacing: '-0.2px',
       transition: 'all 0.2s',
-      boxShadow: loading ? 'none' : '0 4px 24px rgba(99,102,241,0.45)',
+      boxShadow: loading ? 'none' : '0 4px 24px rgba(234, 88, 12, 0.45)',
       marginTop: '0.25rem',
     }}
-    onMouseEnter={e => {
-      if (!loading) {
-        (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(-1px)';
-        (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 8px 32px rgba(99,102,241,0.55)';
-      }
-    }}
-    onMouseLeave={e => {
-      (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(0)';
-      (e.currentTarget as HTMLButtonElement).style.boxShadow = loading ? 'none' : '0 4px 24px rgba(99,102,241,0.45)';
-    }}
   >
-    {loading ? (
-      <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
-        <span style={{
-          width: '14px', height: '14px', border: '2px solid rgba(255,255,255,0.3)',
-          borderTop: '2px solid #fff', borderRadius: '50%',
-          animation: 'spin 0.7s linear infinite', display: 'inline-block',
-        }} />
-        {loadingLabel}
-      </span>
-    ) : label}
+    {loading ? loadingLabel : label}
   </button>
 );
 
@@ -481,31 +381,18 @@ const SubmitButton: React.FC<{ loading: boolean; label: string; loadingLabel: st
 const inputStyle: React.CSSProperties = {
   width: '100%',
   padding: '0.75rem 1rem',
-  background: 'rgba(255,255,255,0.05)',
-  border: '1px solid rgba(255,255,255,0.1)',
+  background: 'var(--surface, #1f2937)',
+  border: '1px solid var(--border, #374151)',
   borderRadius: '10px',
   color: '#F9FAFB',
   fontSize: '0.9rem',
   outline: 'none',
-  transition: 'border-color 0.2s, box-shadow 0.2s',
   boxSizing: 'border-box',
-};
-
-const inputFocusStyle: React.CSSProperties = {
-  borderColor: 'rgba(99,102,241,0.8)',
-  boxShadow: '0 0 0 3px rgba(99,102,241,0.15)',
-  background: 'rgba(99,102,241,0.06)',
-};
-
-const inputBlurStyle: React.CSSProperties = {
-  borderColor: 'rgba(255,255,255,0.1)',
-  boxShadow: 'none',
-  background: 'rgba(255,255,255,0.05)',
 };
 
 const eyeBtn: React.CSSProperties = {
   background: 'none', border: 'none', cursor: 'pointer',
-  fontSize: '0.85rem', color: '#6B7280', padding: '0',
+  fontSize: '0.85rem', color: '#9CA3AF', padding: '0',
 };
 
 export default AuthModal;

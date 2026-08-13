@@ -1,33 +1,61 @@
 import React, { useState } from 'react';
 import { Ticket, Bell, Paperclip, Users, LifeBuoy, Send, CheckCircle2 } from 'lucide-react';
+import { ticketsApi } from '../../api/tickets';
+import { useAppStore } from '../../store/appStore';
 
 export const TicketSection: React.FC = () => {
-  const [interactiveTickets, setInteractiveTickets] = useState([
-    { id: 'WEB-2026-0041', title: 'E-commerce Checkout Timeout', cat: 'Web Engineering', priority: 'High', status: 'Active', assigned: 'Sarah K.' },
-    { id: 'APP-2026-0112', title: 'Biometrics Sync Latency Audit', cat: 'Mobile & IoT', priority: 'Medium', status: 'In Review', assigned: 'RDK Core Team' },
-  ]);
+  const addToast = useAppStore((s) => s.addToast);
+  const storeTickets = useAppStore((s) => s.tickets);
 
   const [ticketTitle, setTicketTitle] = useState('');
+  const [clientEmail, setClientEmail] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
+  const defaultTickets = [
+    { id: 'WEB-2026-0041', title: 'E-commerce Checkout Timeout', cat: 'Web Engineering', priority: 'High', status: 'Active', assigned: 'Sarah K.' },
+    { id: 'APP-2026-0112', title: 'Biometrics Sync Latency Audit', cat: 'Mobile & IoT', priority: 'Medium', status: 'In Review', assigned: 'RDK Core Team' },
+  ];
 
-  const handleSubmitTicket = (e: React.FormEvent) => {
+  const displayedTickets = storeTickets && storeTickets.length > 0
+    ? storeTickets.map(t => ({
+        id: t.id,
+        title: t.title,
+        cat: t.category,
+        priority: t.priority,
+        status: t.status,
+        assigned: t.assignedTo || 'Unassigned'
+      }))
+    : defaultTickets;
+
+  const handleSubmitTicket = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!ticketTitle) return;
-    const newId = `TICK-2026-${Math.floor(1000 + Math.random() * 9000)}`;
-    const newTicket = {
-      id: newId,
-      title: ticketTitle,
-      cat: 'Web Engineering',
-      priority: 'High',
-      status: 'Active',
-      assigned: 'Auto-Assigned'
-    };
+    if (!ticketTitle || !clientEmail) return;
+    setIsSubmitting(true);
 
-    setInteractiveTickets([newTicket, ...interactiveTickets]);
-    setTicketTitle('');
-    setSubmitted(true);
-    setTimeout(() => setSubmitted(false), 3000);
+    try {
+      const res = await ticketsApi.create({
+        client: clientEmail,
+        clientName: clientEmail.split('@')[0],
+        title: ticketTitle,
+        priority: 'High',
+        category: 'Web Engineering',
+        description: ticketTitle
+      });
+
+      if (res.success) {
+        setTicketTitle('');
+        setSubmitted(true);
+        addToast('Ticket created & synchronized in real-time!', 'success');
+        setTimeout(() => setSubmitted(false), 4000);
+      } else {
+        addToast(res.message || 'Failed to submit ticket', 'error');
+      }
+    } catch (err: any) {
+      addToast(err.message || 'An error occurred submitting ticket', 'error');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -61,23 +89,34 @@ export const TicketSection: React.FC = () => {
           {/* Interactive Ticket Form */}
           <div style={{ marginTop: '2rem', background: 'var(--card, #111827)', border: '1px solid var(--border, #374151)', borderRadius: '12px', padding: '1.25rem' }}>
             <div style={{ fontSize: '0.85rem', fontWeight: 800, color: '#ea580c', marginBottom: '0.5rem', textTransform: 'uppercase' }}>
-              Test Ticket Simulator
+              Create Real-Time Support Ticket
             </div>
-            <form onSubmit={handleSubmitTicket} style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+            <form onSubmit={handleSubmitTicket} style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
               <input
-                type="text"
-                value={ticketTitle}
-                onChange={(e) => setTicketTitle(e.target.value)}
-                placeholder="Enter issue description (e.g. API webhook latency)..."
-                style={{ flex: 1, minWidth: '200px', padding: '0.5rem 0.75rem', background: 'var(--surface, #1f2937)', border: '1px solid var(--border, #374151)', color: '#ffffff', borderRadius: '6px', fontSize: '0.85rem' }}
+                type="email"
+                required
+                value={clientEmail}
+                onChange={(e) => setClientEmail(e.target.value)}
+                placeholder="Your email address (e.g. client@company.com)..."
+                style={{ padding: '0.55rem 0.75rem', background: 'var(--surface, #1f2937)', border: '1px solid var(--border, #374151)', color: '#ffffff', borderRadius: '6px', fontSize: '0.85rem' }}
               />
-              <button type="submit" className="btn btn-primary" style={{ background: '#ea580c', borderColor: '#ea580c', display: 'inline-flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.85rem' }}>
-                Submit Ticket <Send size={14} />
-              </button>
+              <div style={{ display: 'flex', gap: '0.5rem' }}>
+                <input
+                  type="text"
+                  required
+                  value={ticketTitle}
+                  onChange={(e) => setTicketTitle(e.target.value)}
+                  placeholder="Ticket title / issue description..."
+                  style={{ flex: 1, padding: '0.55rem 0.75rem', background: 'var(--surface, #1f2937)', border: '1px solid var(--border, #374151)', color: '#ffffff', borderRadius: '6px', fontSize: '0.85rem' }}
+                />
+                <button type="submit" disabled={isSubmitting} className="btn btn-primary" style={{ background: '#ea580c', borderColor: '#ea580c', display: 'inline-flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.85rem' }}>
+                  {isSubmitting ? 'Submitting...' : 'Submit Ticket'} <Send size={14} />
+                </button>
+              </div>
             </form>
             {submitted && (
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#4ade80', fontSize: '0.8rem', marginTop: '0.5rem', fontWeight: 600 }}>
-                <CheckCircle2 size={14} /> Ticket registered and dispatched to developer queue!
+                <CheckCircle2 size={14} /> Ticket registered and persisted to real-time database!
               </div>
             )}
           </div>
@@ -87,11 +126,11 @@ export const TicketSection: React.FC = () => {
         <div>
           <div className="ticket-demo" style={{ background: 'var(--card, #111827)', border: '1px solid var(--border, #374151)', borderRadius: '16px', padding: '1.5rem', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1)' }}>
             <div style={{ fontSize: '0.75rem', color: 'var(--text3, #9ca3af)', fontWeight: 700, textTransform: 'uppercase', marginBottom: '1rem' }}>
-              Active Client Support Feed
+              Real-Time Database Ticket Feed
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              {interactiveTickets.map((t) => (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', maxHeight: '350px', overflowY: 'auto' }}>
+              {displayedTickets.map((t) => (
                 <div key={t.id} style={{ background: 'var(--surface, #1f2937)', border: '1px solid var(--border, #374151)', borderRadius: '10px', padding: '1rem' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <div style={{ fontWeight: 700, fontSize: '0.9rem', color: 'var(--text, #ffffff)' }}>{t.title}</div>
