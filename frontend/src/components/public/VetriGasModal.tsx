@@ -11,16 +11,17 @@ export const VetriGasModal: React.FC<VetriGasModalProps> = ({ isOpen, onClose })
 
   // GPS State
   const [selectedVehicle, setSelectedVehicle] = useState('TN-38-AX-9941 (Truck #1)');
-  const [vehicleStatus, setVehicleStatus] = useState({ speed: 42, fuel: 88, lat: 11.0168, lng: 76.9558, location: 'Avinashi Road, Coimbatore', driver: 'Ramesh K. (ID: DRV-882)' });
+  const [vehicleStatus, setVehicleStatus] = useState({ speed: 50, fuel: 87, lat: 11.0131, lng: 76.9511, location: 'Avinashi Road, Coimbatore', driver: 'Ramesh K. (ID: DRV-882)' });
   const [pinging, setPinging] = useState(false);
 
   // Biometric State
   const [scanning, setScanning] = useState(false);
   const [scanResult, setScanResult] = useState<{ name: string; role: string; time: string } | null>(null);
   const [logs, setLogs] = useState([
-    { id: 1, name: 'Ramesh Kumar', role: 'Fleet Driver', time: '08:30 AM', verified: true },
-    { id: 2, name: 'Senthil Nathan', role: 'Loadman Supervisor', time: '08:45 AM', verified: true },
-    { id: 3, name: 'Mani Kandan', role: 'Storeroom Manager', time: '09:00 AM', verified: true },
+    { id: 1, name: 'Velu Swamy', role: 'Loadman', time: '02:43:43 PM', verified: true },
+    { id: 2, name: 'Ramesh Kumar', role: 'Fleet Driver', time: '08:30 AM', verified: true },
+    { id: 3, name: 'Senthil Nathan', role: 'Loadman Supervisor', time: '08:45 AM', verified: true },
+    { id: 4, name: 'Mani Kandan', role: 'Storeroom Manager', time: '09:00 AM', verified: true },
   ]);
 
   // Inventory State
@@ -51,8 +52,8 @@ export const VetriGasModal: React.FC<VetriGasModalProps> = ({ isOpen, onClose })
         ...prev,
         speed: Math.floor(35 + Math.random() * 25),
         fuel: Math.max(10, prev.fuel - 1),
-        lat: Number((11.0168 + (Math.random() - 0.5) * 0.01).toFixed(4)),
-        lng: Number((76.9558 + (Math.random() - 0.5) * 0.01).toFixed(4)),
+        lat: Number((11.0131 + (Math.random() - 0.5) * 0.01).toFixed(4)),
+        lng: Number((76.9511 + (Math.random() - 0.5) * 0.01).toFixed(4)),
       }));
       setPinging(false);
     }, 600);
@@ -121,17 +122,17 @@ export const VetriGasModal: React.FC<VetriGasModalProps> = ({ isOpen, onClose })
   };
 
   return (
-    <div style={{ position: 'fixed', inset: 0, zIndex: 9999, background: 'rgba(0, 0, 0, 0.75)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1.5rem' }}>
-      <div style={{ background: 'var(--card, #111827)', color: 'var(--text, #f9fafb)', border: '1px solid var(--border, #374151)', borderRadius: '16px', width: '100%', maxWidth: '950px', maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ position: 'fixed', inset: 0, zIndex: 9999, background: 'rgba(0, 0, 0, 0.8)', backdropFilter: 'blur(10px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
+      <div style={{ background: '#0f172a', color: '#f8fafc', border: '1px solid #334155', borderRadius: '16px', width: '100%', maxWidth: '960px', maxHeight: '92vh', overflowY: 'auto', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.7)', display: 'flex', flexDirection: 'column' }}>
         
         {/* Header */}
-        <div style={{ padding: '1.25rem 1.5rem', borderBottom: '1px solid var(--border, #374151)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'linear-gradient(90deg, #b91c1c 0%, #c2410c 100%)', color: '#ffffff' }}>
+        <div style={{ padding: '1.25rem 1.5rem', borderBottom: '1px solid #334155', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'linear-gradient(90deg, #b91c1c 0%, #c2410c 100%)', color: '#ffffff' }}>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
-              <span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', background: '#4ade80', animation: 'pulse 1.5s infinite' }}></span>
-              Vetri Gas Live Enterprise Suite
+              <span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', background: '#4ade80' }}></span>
+              VETRI GAS LIVE ENTERPRISE SUITE
             </div>
-            <h2 style={{ fontSize: '1.5rem', fontWeight: 800, margin: '0.2rem 0 0 0' }}>Vetri Indane LPG Fleet & Biometrics</h2>
+            <h2 style={{ fontSize: '1.5rem', fontWeight: 800, margin: '0.2rem 0 0 0', color: '#ffffff' }}>Vetri Indane LPG Fleet & Biometrics</h2>
           </div>
           <button onClick={onClose} style={{ background: 'rgba(255,255,255,0.2)', border: 'none', color: '#ffffff', width: '36px', height: '36px', borderRadius: '50%', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem', transition: 'all 0.2s' }}>
             <X size={20} />
@@ -139,7 +140,7 @@ export const VetriGasModal: React.FC<VetriGasModalProps> = ({ isOpen, onClose })
         </div>
 
         {/* Navigation Tabs */}
-        <div style={{ display: 'flex', gap: '0.5rem', padding: '0.75rem 1.5rem', borderBottom: '1px solid var(--border, #374151)', background: 'var(--surface, #1f2937)', overflowX: 'auto' }}>
+        <div style={{ display: 'flex', gap: '0.5rem', padding: '0.75rem 1.25rem', borderBottom: '1px solid #334155', background: '#1e293b', overflowX: 'auto' }}>
           {[
             { id: 'gps', label: 'Fleet GPS', icon: <Truck size={16} /> },
             { id: 'biometric', label: 'Biometrics Sync', icon: <Fingerprint size={16} /> },
@@ -151,39 +152,41 @@ export const VetriGasModal: React.FC<VetriGasModalProps> = ({ isOpen, onClose })
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
               style={{
-                display: 'flex',
+                display: 'inline-flex',
                 alignItems: 'center',
                 gap: '0.5rem',
-                padding: '0.5rem 1rem',
+                padding: '0.55rem 1.1rem',
                 borderRadius: '8px',
                 border: 'none',
-                fontWeight: 600,
+                fontWeight: 700,
                 fontSize: '0.85rem',
+                whiteSpace: 'nowrap',
+                flexShrink: 0,
                 cursor: 'pointer',
                 background: activeTab === tab.id ? '#ea580c' : 'transparent',
-                color: activeTab === tab.id ? '#ffffff' : 'var(--text3, #9ca3af)',
+                color: activeTab === tab.id ? '#ffffff' : '#94a3b8',
                 transition: 'all 0.2s'
               }}
             >
               {tab.icon}
-              {tab.label}
+              <span>{tab.label}</span>
             </button>
           ))}
         </div>
 
         {/* Modal Content */}
-        <div style={{ padding: '1.5rem', flex: 1 }}>
+        <div style={{ padding: '1.5rem', flex: 1, background: '#0f172a' }}>
 
           {/* TAB 1: FLEET GPS TRACKING */}
           {activeTab === 'gps' && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
                 <div>
-                  <label style={{ fontSize: '0.8rem', color: 'var(--text3, #9ca3af)', fontWeight: 600 }}>Select Active Delivery Vehicle:</label>
+                  <label style={{ fontSize: '0.825rem', color: '#cbd5e1', fontWeight: 700 }}>Select Active Delivery Vehicle:</label>
                   <select
                     value={selectedVehicle}
                     onChange={(e) => setSelectedVehicle(e.target.value)}
-                    style={{ display: 'block', marginTop: '0.25rem', padding: '0.5rem 1rem', borderRadius: '8px', border: '1px solid var(--border, #374151)', background: 'var(--card, #111827)', color: 'var(--text, #ffffff)', fontWeight: 600 }}
+                    style={{ display: 'block', marginTop: '0.35rem', padding: '0.55rem 1rem', borderRadius: '8px', border: '1px solid #334155', background: '#1e293b', color: '#f8fafc', fontWeight: 700, outline: 'none' }}
                   >
                     <option>TN-38-AX-9941 (Truck #1)</option>
                     <option>TN-38-BZ-4012 (Truck #2)</option>
@@ -193,7 +196,7 @@ export const VetriGasModal: React.FC<VetriGasModalProps> = ({ isOpen, onClose })
                 <button
                   onClick={handlePingGps}
                   disabled={pinging}
-                  style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.6rem 1.25rem', background: '#ea580c', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: 700, cursor: 'pointer', opacity: pinging ? 0.7 : 1 }}
+                  style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.65rem 1.25rem', background: '#ea580c', color: '#ffffff', border: 'none', borderRadius: '8px', fontWeight: 700, cursor: 'pointer', opacity: pinging ? 0.7 : 1 }}
                 >
                   <RefreshCw size={16} className={pinging ? 'spin' : ''} />
                   {pinging ? 'Pinging Telemetry...' : 'Ping Live Vehicle GPS'}
@@ -201,39 +204,39 @@ export const VetriGasModal: React.FC<VetriGasModalProps> = ({ isOpen, onClose })
               </div>
 
               {/* Vehicle Stats Grid */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
-                <div style={{ background: 'var(--surface, #1f2937)', padding: '1rem', borderRadius: '12px', border: '1px solid var(--border, #374151)' }}>
-                  <span style={{ fontSize: '0.75rem', color: 'var(--text3, #9ca3af)' }}>Current Speed</span>
-                  <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#38bdf8', marginTop: '0.2rem' }}>{vehicleStatus.speed} km/h</div>
-                  <span style={{ fontSize: '0.7rem', color: '#4ade80' }}>● GPS Speed Lock Active</span>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem' }}>
+                <div style={{ background: '#1e293b', padding: '1.15rem', borderRadius: '12px', border: '1px solid #334155' }}>
+                  <span style={{ fontSize: '0.775rem', color: '#cbd5e1', fontWeight: 600 }}>Current Speed</span>
+                  <div style={{ fontSize: '1.65rem', fontWeight: 900, color: '#38bdf8', marginTop: '0.2rem' }}>{vehicleStatus.speed} km/h</div>
+                  <span style={{ fontSize: '0.725rem', color: '#4ade80', fontWeight: 600 }}>● GPS Speed Lock Active</span>
                 </div>
-                <div style={{ background: 'var(--surface, #1f2937)', padding: '1rem', borderRadius: '12px', border: '1px solid var(--border, #374151)' }}>
-                  <span style={{ fontSize: '0.75rem', color: 'var(--text3, #9ca3af)' }}>Fuel Tank Telemetry</span>
-                  <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#f59e0b', marginTop: '0.2rem' }}>{vehicleStatus.fuel}%</div>
-                  <span style={{ fontSize: '0.7rem', color: 'var(--text3, #9ca3af)' }}>Est. Range: 340 km</span>
+                <div style={{ background: '#1e293b', padding: '1.15rem', borderRadius: '12px', border: '1px solid #334155' }}>
+                  <span style={{ fontSize: '0.775rem', color: '#cbd5e1', fontWeight: 600 }}>Fuel Tank Telemetry</span>
+                  <div style={{ fontSize: '1.65rem', fontWeight: 900, color: '#f59e0b', marginTop: '0.2rem' }}>{vehicleStatus.fuel}%</div>
+                  <span style={{ fontSize: '0.725rem', color: '#94a3b8', fontWeight: 600 }}>Est. Range: 340 km</span>
                 </div>
-                <div style={{ background: 'var(--surface, #1f2937)', padding: '1rem', borderRadius: '12px', border: '1px solid var(--border, #374151)' }}>
-                  <span style={{ fontSize: '0.75rem', color: 'var(--text3, #9ca3af)' }}>Assigned Driver</span>
-                  <div style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text, #ffffff)', marginTop: '0.2rem' }}>{vehicleStatus.driver}</div>
-                  <span style={{ fontSize: '0.7rem', color: '#4ade80' }}>Verified Biometric Duty</span>
+                <div style={{ background: '#1e293b', padding: '1.15rem', borderRadius: '12px', border: '1px solid #334155' }}>
+                  <span style={{ fontSize: '0.775rem', color: '#cbd5e1', fontWeight: 600 }}>Assigned Driver</span>
+                  <div style={{ fontSize: '1.1rem', fontWeight: 800, color: '#ffffff', marginTop: '0.2rem' }}>{vehicleStatus.driver}</div>
+                  <span style={{ fontSize: '0.725rem', color: '#4ade80', fontWeight: 600 }}>Verified Biometric Duty</span>
                 </div>
               </div>
 
               {/* Simulated GPS Map Container */}
-              <div style={{ background: '#0f172a', borderRadius: '12px', border: '1px solid #1e293b', padding: '1.5rem', position: 'relative', overflow: 'hidden', minHeight: '200px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', color: '#94a3b8', fontSize: '0.8rem' }}>
-                  <span style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', color: '#38bdf8', fontWeight: 700 }}>
+              <div style={{ background: '#020617', borderRadius: '12px', border: '1px solid #1e293b', padding: '1.5rem', position: 'relative', overflow: 'hidden', minHeight: '200px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', color: '#94a3b8', fontSize: '0.825rem' }}>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#38bdf8', fontWeight: 700 }}>
                     <MapPin size={16} /> Live GPS Coordinate Stream
                   </span>
-                  <span>{vehicleStatus.lat}° N, {vehicleStatus.lng}° E</span>
+                  <span style={{ fontWeight: 700, color: '#e2e8f0' }}>{vehicleStatus.lat}° N, {vehicleStatus.lng}° E</span>
                 </div>
                 <div style={{ margin: '1.5rem 0', textAlign: 'center' }}>
                   <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.75rem', background: 'rgba(234, 88, 12, 0.2)', border: '1px solid #ea580c', padding: '0.75rem 1.5rem', borderRadius: '30px', color: '#fdba74', fontWeight: 700 }}>
-                    <Truck size={22} style={{ animation: 'bounce 1s infinite' }} />
+                    <Truck size={22} />
                     Vehicle in transit on {vehicleStatus.location}
                   </div>
                 </div>
-                <div style={{ fontSize: '0.75rem', color: '#64748b', textAlign: 'center' }}>
+                <div style={{ fontSize: '0.75rem', color: '#64748b', textAlign: 'center', fontWeight: 600 }}>
                   📡 Connected to IoT Gateway · Coimbatore Central Fleet Station
                 </div>
               </div>
@@ -245,9 +248,9 @@ export const VetriGasModal: React.FC<VetriGasModalProps> = ({ isOpen, onClose })
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.25rem' }}>
                 {/* Fingerprint Scanner Demo */}
-                <div style={{ background: 'var(--surface, #1f2937)', padding: '1.5rem', borderRadius: '12px', border: '1px solid var(--border, #374151)', textAlign: 'center' }}>
-                  <h3 style={{ fontSize: '1.1rem', fontWeight: 700, margin: '0 0 0.5rem 0' }}>ZKTeco Biometric Scanner</h3>
-                  <p style={{ fontSize: '0.8rem', color: 'var(--text3, #9ca3af)', marginBottom: '1.5rem' }}>
+                <div style={{ background: '#1e293b', padding: '1.5rem', borderRadius: '12px', border: '1px solid #334155', textAlign: 'center' }}>
+                  <h3 style={{ fontSize: '1.15rem', fontWeight: 800, margin: '0 0 0.5rem 0', color: '#ffffff' }}>ZKTeco Biometric Scanner</h3>
+                  <p style={{ fontSize: '0.825rem', color: '#cbd5e1', marginBottom: '1.5rem', lineHeight: 1.5 }}>
                     Tap to trigger live hardware fingerprint verification for staff attendance.
                   </p>
                   
@@ -258,8 +261,8 @@ export const VetriGasModal: React.FC<VetriGasModalProps> = ({ isOpen, onClose })
                       height: '100px',
                       borderRadius: '50%',
                       margin: '0 auto 1.5rem',
-                      background: scanning ? 'rgba(234, 88, 12, 0.2)' : scanResult ? 'rgba(34, 197, 94, 0.2)' : 'var(--card, #111827)',
-                      border: `3px solid ${scanning ? '#ea580c' : scanResult ? '#22c55e' : 'var(--border, #374151)'}`,
+                      background: scanning ? 'rgba(234, 88, 12, 0.2)' : scanResult ? 'rgba(34, 197, 94, 0.2)' : '#0f172a',
+                      border: `3px solid ${scanning ? '#ea580c' : scanResult ? '#22c55e' : '#334155'}`,
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -267,13 +270,13 @@ export const VetriGasModal: React.FC<VetriGasModalProps> = ({ isOpen, onClose })
                       transition: 'all 0.3s'
                     }}
                   >
-                    <Fingerprint size={48} color={scanning ? '#ea580c' : scanResult ? '#22c55e' : '#9ca3af'} />
+                    <Fingerprint size={48} color={scanning ? '#ea580c' : scanResult ? '#22c55e' : '#94a3b8'} />
                   </div>
 
                   <button
                     onClick={handleScanBiometric}
                     disabled={scanning}
-                    style={{ width: '100%', padding: '0.75rem', background: '#ea580c', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: 700, cursor: 'pointer' }}
+                    style={{ width: '100%', padding: '0.75rem', background: '#ea580c', color: '#ffffff', border: 'none', borderRadius: '8px', fontWeight: 700, cursor: 'pointer' }}
                   >
                     {scanning ? 'Reading Fingerprint Sensor...' : 'Scan Staff Fingerprint'}
                   </button>
@@ -287,17 +290,17 @@ export const VetriGasModal: React.FC<VetriGasModalProps> = ({ isOpen, onClose })
                 </div>
 
                 {/* Duty Attendance Log */}
-                <div style={{ background: 'var(--surface, #1f2937)', padding: '1.5rem', borderRadius: '12px', border: '1px solid var(--border, #374151)' }}>
-                  <h3 style={{ fontSize: '1.1rem', fontWeight: 700, margin: '0 0 1rem 0' }}>Real-time Duty Check-in Logs</h3>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', maxHeight: '250px', overflowY: 'auto' }}>
+                <div style={{ background: '#1e293b', padding: '1.5rem', borderRadius: '12px', border: '1px solid #334155' }}>
+                  <h3 style={{ fontSize: '1.15rem', fontWeight: 800, margin: '0 0 1rem 0', color: '#ffffff' }}>Real-time Duty Check-in Logs</h3>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', maxHeight: '260px', overflowY: 'auto' }}>
                     {logs.map((log) => (
-                      <div key={log.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.6rem 0.8rem', background: 'var(--card, #111827)', borderRadius: '8px', border: '1px solid var(--border, #374151)', fontSize: '0.85rem' }}>
+                      <div key={log.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.7rem 0.9rem', background: '#0f172a', borderRadius: '8px', border: '1px solid #334155', fontSize: '0.85rem' }}>
                         <div>
-                          <div style={{ fontWeight: 700 }}>{log.name}</div>
-                          <div style={{ fontSize: '0.75rem', color: 'var(--text3, #9ca3af)' }}>{log.role}</div>
+                          <div style={{ fontWeight: 800, color: '#f8fafc' }}>{log.name}</div>
+                          <div style={{ fontSize: '0.75rem', color: '#cbd5e1', marginTop: '0.1rem' }}>{log.role}</div>
                         </div>
                         <div style={{ textAlign: 'right' }}>
-                          <span style={{ fontSize: '0.75rem', color: '#22c55e', background: 'rgba(34, 197, 94, 0.1)', padding: '0.2rem 0.5rem', borderRadius: '4px', fontWeight: 600 }}>{log.time}</span>
+                          <span style={{ fontSize: '0.75rem', color: '#22c55e', background: 'rgba(34, 197, 94, 0.15)', border: '1px solid rgba(34, 197, 94, 0.3)', padding: '0.2rem 0.6rem', borderRadius: '4px', fontWeight: 700 }}>{log.time}</span>
                         </div>
                       </div>
                     ))}
@@ -311,27 +314,27 @@ export const VetriGasModal: React.FC<VetriGasModalProps> = ({ isOpen, onClose })
           {activeTab === 'inventory' && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem' }}>
-                <div style={{ background: 'var(--surface, #1f2937)', padding: '1.25rem', borderRadius: '12px', border: '1px solid var(--border, #374151)' }}>
-                  <span style={{ fontSize: '0.8rem', color: 'var(--text3, #9ca3af)', fontWeight: 600 }}>14.2 kg Domestic Stock</span>
-                  <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#38bdf8', marginTop: '0.2rem' }}>{domesticCylinders} Cylinders</div>
-                  <span style={{ fontSize: '0.75rem', color: '#4ade80' }}>Ready for delivery</span>
+                <div style={{ background: '#1e293b', padding: '1.25rem', borderRadius: '12px', border: '1px solid #334155' }}>
+                  <span style={{ fontSize: '0.8rem', color: '#cbd5e1', fontWeight: 700 }}>14.2 kg Domestic Stock</span>
+                  <div style={{ fontSize: '1.85rem', fontWeight: 900, color: '#38bdf8', marginTop: '0.2rem' }}>{domesticCylinders} Cylinders</div>
+                  <span style={{ fontSize: '0.75rem', color: '#4ade80', fontWeight: 600 }}>Ready for delivery</span>
                 </div>
-                <div style={{ background: 'var(--surface, #1f2937)', padding: '1.25rem', borderRadius: '12px', border: '1px solid var(--border, #374151)' }}>
-                  <span style={{ fontSize: '0.8rem', color: 'var(--text3, #9ca3af)', fontWeight: 600 }}>19 kg Commercial Stock</span>
-                  <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#f59e0b', marginTop: '0.2rem' }}>{commercialCylinders} Cylinders</div>
-                  <span style={{ fontSize: '0.75rem', color: '#4ade80' }}>Hotel & Business Grade</span>
+                <div style={{ background: '#1e293b', padding: '1.25rem', borderRadius: '12px', border: '1px solid #334155' }}>
+                  <span style={{ fontSize: '0.8rem', color: '#cbd5e1', fontWeight: 700 }}>19 kg Commercial Stock</span>
+                  <div style={{ fontSize: '1.85rem', fontWeight: 900, color: '#f59e0b', marginTop: '0.2rem' }}>{commercialCylinders} Cylinders</div>
+                  <span style={{ fontSize: '0.75rem', color: '#4ade80', fontWeight: 600 }}>Hotel & Business Grade</span>
                 </div>
-                <div style={{ background: 'var(--surface, #1f2937)', padding: '1.25rem', borderRadius: '12px', border: '1px solid var(--border, #374151)' }}>
-                  <span style={{ fontSize: '0.8rem', color: 'var(--text3, #9ca3af)', fontWeight: 600 }}>Empty Returns Received</span>
-                  <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#a855f7', marginTop: '0.2rem' }}>{emptyReturns} Units</div>
-                  <span style={{ fontSize: '0.75rem', color: 'var(--text3, #9ca3af)' }}>Pending plant refill</span>
+                <div style={{ background: '#1e293b', padding: '1.25rem', borderRadius: '12px', border: '1px solid #334155' }}>
+                  <span style={{ fontSize: '0.8rem', color: '#cbd5e1', fontWeight: 700 }}>Empty Returns Received</span>
+                  <div style={{ fontSize: '1.85rem', fontWeight: 900, color: '#c084fc', marginTop: '0.2rem' }}>{emptyReturns} Units</div>
+                  <span style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: 600 }}>Pending plant refill</span>
                 </div>
               </div>
 
-              <div style={{ background: 'var(--surface, #1f2937)', padding: '1.5rem', borderRadius: '12px', border: '1px solid var(--border, #374151)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
+              <div style={{ background: '#1e293b', padding: '1.5rem', borderRadius: '12px', border: '1px solid #334155', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
                 <div>
-                  <h4 style={{ margin: 0, fontWeight: 700, fontSize: '1rem' }}>Simulate Dispatch Loading Batch</h4>
-                  <p style={{ margin: '0.2rem 0 0 0', fontSize: '0.8rem', color: 'var(--text3, #9ca3af)' }}>Transfer cylinders from Storeroom to Loadman truck batch.</p>
+                  <h4 style={{ margin: 0, fontWeight: 800, fontSize: '1.05rem', color: '#ffffff' }}>Simulate Dispatch Loading Batch</h4>
+                  <p style={{ margin: '0.2rem 0 0 0', fontSize: '0.825rem', color: '#cbd5e1' }}>Transfer cylinders from Storeroom to Loadman truck batch.</p>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                   <input
@@ -340,11 +343,11 @@ export const VetriGasModal: React.FC<VetriGasModalProps> = ({ isOpen, onClose })
                     max="20"
                     value={dispatchCount}
                     onChange={(e) => setDispatchCount(Number(e.target.value))}
-                    style={{ width: '70px', padding: '0.5rem', borderRadius: '8px', border: '1px solid var(--border, #374151)', background: 'var(--card, #111827)', color: 'var(--text, #ffffff)', fontWeight: 700, textAlign: 'center' }}
+                    style={{ width: '70px', padding: '0.55rem', borderRadius: '8px', border: '1px solid #334155', background: '#0f172a', color: '#ffffff', fontWeight: 800, textAlign: 'center', outline: 'none' }}
                   />
                   <button
                     onClick={handleDispatchBatch}
-                    style={{ padding: '0.6rem 1.25rem', background: '#ea580c', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: 700, cursor: 'pointer' }}
+                    style={{ padding: '0.65rem 1.25rem', background: '#ea580c', color: '#ffffff', border: 'none', borderRadius: '8px', fontWeight: 700, cursor: 'pointer' }}
                   >
                     Dispatch Batch
                   </button>
@@ -358,13 +361,13 @@ export const VetriGasModal: React.FC<VetriGasModalProps> = ({ isOpen, onClose })
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
                 <div>
-                  <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 700 }}>Fleet Cabin & Road Dashcam System</h3>
-                  <p style={{ margin: '0.2rem 0 0 0', fontSize: '0.8rem', color: 'var(--text3, #9ca3af)' }}>Capture instant video frame snapshots from active delivery trucks.</p>
+                  <h3 style={{ margin: 0, fontSize: '1.15rem', fontWeight: 800, color: '#ffffff' }}>Fleet Cabin & Road Dashcam System</h3>
+                  <p style={{ margin: '0.2rem 0 0 0', fontSize: '0.825rem', color: '#cbd5e1' }}>Capture instant video frame snapshots from active delivery trucks.</p>
                 </div>
                 <button
                   onClick={handleCaptureDashcam}
                   disabled={capturing}
-                  style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.6rem 1.25rem', background: '#ea580c', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: 700, cursor: 'pointer' }}
+                  style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.65rem 1.25rem', background: '#ea580c', color: '#ffffff', border: 'none', borderRadius: '8px', fontWeight: 700, cursor: 'pointer' }}
                 >
                   <Camera size={16} />
                   {capturing ? 'Capturing Frame...' : 'Capture Instant Snapshot'}
@@ -373,12 +376,12 @@ export const VetriGasModal: React.FC<VetriGasModalProps> = ({ isOpen, onClose })
 
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1rem' }}>
                 {snapshots.map((snap) => (
-                  <div key={snap.id} style={{ background: 'var(--surface, #1f2937)', borderRadius: '12px', overflow: 'hidden', border: '1px solid var(--border, #374151)' }}>
+                  <div key={snap.id} style={{ background: '#1e293b', borderRadius: '12px', overflow: 'hidden', border: '1px solid #334155' }}>
                     <img src={snap.img} alt={snap.id} style={{ width: '100%', height: '160px', objectFit: 'cover' }} />
-                    <div style={{ padding: '0.8rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.8rem' }}>
+                    <div style={{ padding: '0.85rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.8rem' }}>
                       <div>
-                        <div style={{ fontWeight: 700, color: 'var(--text, #ffffff)' }}>{snap.id} · {snap.vehicle}</div>
-                        <div style={{ color: 'var(--text3, #9ca3af)', fontSize: '0.75rem' }}>Captured: {snap.time}</div>
+                        <div style={{ fontWeight: 800, color: '#ffffff' }}>{snap.id} · {snap.vehicle}</div>
+                        <div style={{ color: '#cbd5e1', fontSize: '0.75rem', marginTop: '0.1rem' }}>Captured: {snap.time}</div>
                       </div>
                       <span style={{ color: '#38bdf8', fontWeight: 700 }}>HD Frame</span>
                     </div>
@@ -391,26 +394,26 @@ export const VetriGasModal: React.FC<VetriGasModalProps> = ({ isOpen, onClose })
           {/* TAB 5: ORDER BOOKING & RECEIPT */}
           {activeTab === 'orders' && (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>
-              <form onSubmit={handleBookOrder} style={{ background: 'var(--surface, #1f2937)', padding: '1.25rem', borderRadius: '12px', border: '1px solid var(--border, #374151)', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 700 }}>Book LPG Delivery Order</h3>
+              <form onSubmit={handleBookOrder} style={{ background: '#1e293b', padding: '1.35rem', borderRadius: '12px', border: '1px solid #334155', display: 'flex', flexDirection: 'column', gap: '1.1rem' }}>
+                <h3 style={{ margin: 0, fontSize: '1.15rem', fontWeight: 800, color: '#ffffff' }}>Book LPG Delivery Order</h3>
                 
                 <div>
-                  <label style={{ fontSize: '0.8rem', color: 'var(--text3, #9ca3af)' }}>Customer / Commercial Enterprise Name:</label>
+                  <label style={{ fontSize: '0.825rem', color: '#cbd5e1', fontWeight: 700 }}>Customer / Commercial Enterprise Name:</label>
                   <input
                     type="text"
                     value={custName}
                     onChange={(e) => setCustName(e.target.value)}
                     required
-                    style={{ width: '100%', marginTop: '0.2rem', padding: '0.5rem', borderRadius: '8px', border: '1px solid var(--border, #374151)', background: 'var(--card, #111827)', color: 'var(--text, #ffffff)' }}
+                    style={{ width: '100%', marginTop: '0.3rem', padding: '0.6rem 0.8rem', borderRadius: '8px', border: '1px solid #334155', background: '#0f172a', color: '#ffffff', outline: 'none', fontWeight: 600 }}
                   />
                 </div>
 
                 <div>
-                  <label style={{ fontSize: '0.8rem', color: 'var(--text3, #9ca3af)' }}>Cylinder Type:</label>
+                  <label style={{ fontSize: '0.825rem', color: '#cbd5e1', fontWeight: 700 }}>Cylinder Type:</label>
                   <select
                     value={cylType}
                     onChange={(e) => setCylType(e.target.value)}
-                    style={{ width: '100%', marginTop: '0.2rem', padding: '0.5rem', borderRadius: '8px', border: '1px solid var(--border, #374151)', background: 'var(--card, #111827)', color: 'var(--text, #ffffff)' }}
+                    style={{ width: '100%', marginTop: '0.3rem', padding: '0.6rem 0.8rem', borderRadius: '8px', border: '1px solid #334155', background: '#0f172a', color: '#ffffff', outline: 'none', fontWeight: 600 }}
                   >
                     <option>19kg Commercial</option>
                     <option>14.2kg Domestic</option>
@@ -418,7 +421,7 @@ export const VetriGasModal: React.FC<VetriGasModalProps> = ({ isOpen, onClose })
                 </div>
 
                 <div>
-                  <label style={{ fontSize: '0.8rem', color: 'var(--text3, #9ca3af)' }}>Quantity:</label>
+                  <label style={{ fontSize: '0.825rem', color: '#cbd5e1', fontWeight: 700 }}>Quantity:</label>
                   <input
                     type="number"
                     min="1"
@@ -426,11 +429,11 @@ export const VetriGasModal: React.FC<VetriGasModalProps> = ({ isOpen, onClose })
                     value={cylQty}
                     onChange={(e) => setCylQty(Number(e.target.value))}
                     required
-                    style={{ width: '100%', marginTop: '0.2rem', padding: '0.5rem', borderRadius: '8px', border: '1px solid var(--border, #374151)', background: 'var(--card, #111827)', color: 'var(--text, #ffffff)' }}
+                    style={{ width: '100%', marginTop: '0.3rem', padding: '0.6rem 0.8rem', borderRadius: '8px', border: '1px solid #334155', background: '#0f172a', color: '#ffffff', outline: 'none', fontWeight: 600 }}
                   />
                 </div>
 
-                <button type="submit" style={{ padding: '0.75rem', background: '#ea580c', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: 700, cursor: 'pointer', marginTop: '0.5rem' }}>
+                <button type="submit" style={{ padding: '0.75rem', background: '#ea580c', color: '#ffffff', border: 'none', borderRadius: '8px', fontWeight: 800, cursor: 'pointer', marginTop: '0.5rem' }}>
                   Generate Receipt & Book Order
                 </button>
               </form>
@@ -486,9 +489,9 @@ export const VetriGasModal: React.FC<VetriGasModalProps> = ({ isOpen, onClose })
         </div>
 
         {/* Footer */}
-        <div style={{ padding: '1rem 1.5rem', borderTop: '1px solid var(--border, #374151)', background: 'var(--surface, #1f2937)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.8rem', color: 'var(--text3, #9ca3af)' }}>
-          <span>Enterprise Platform built by RDK Industries</span>
-          <button onClick={onClose} style={{ padding: '0.4rem 1rem', background: 'var(--card, #111827)', border: '1px solid var(--border, #374151)', color: 'var(--text, #ffffff)', borderRadius: '6px', cursor: 'pointer', fontWeight: 600 }}>
+        <div style={{ padding: '1rem 1.5rem', borderTop: '1px solid #334155', background: '#1e293b', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.8rem', color: '#cbd5e1' }}>
+          <span style={{ fontWeight: 600 }}>Enterprise Platform built by RDK Industries</span>
+          <button onClick={onClose} style={{ padding: '0.45rem 1.15rem', background: '#0f172a', border: '1px solid #334155', color: '#ffffff', borderRadius: '6px', cursor: 'pointer', fontWeight: 700 }}>
             Close Showcase
           </button>
         </div>
@@ -497,3 +500,5 @@ export const VetriGasModal: React.FC<VetriGasModalProps> = ({ isOpen, onClose })
     </div>
   );
 };
+
+export default VetriGasModal;
