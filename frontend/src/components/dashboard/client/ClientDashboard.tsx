@@ -272,9 +272,9 @@ export const ClientDashboard: React.FC = () => {
   // Projects Tab
   if (activeTab === 'projects') {
     return (
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '2rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem', width: '100%' }}>
         <div>
-          <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '1rem', color: 'var(--text)' }}>Projects Workspace</h3>
+          <h3 style={{ fontSize: '1.1rem', fontWeight: 800, marginBottom: '1rem', color: 'var(--text)' }}>Active Scope & Proposals</h3>
           {myProjects.length === 0 ? (
             <div style={{ padding: '2.5rem', background: 'var(--bg2)', borderRadius: '16px', textAlign: 'center', border: '1px solid var(--border)', color: 'var(--text2)' }}>
               No projects registered for this account. Request a new scope on the right.
