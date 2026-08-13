@@ -8,48 +8,42 @@ const defaultCareers: CareerItem[] = [
     title: 'Senior Frontend Developer',
     type: 'Full-time',
     dept: 'Engineering · Remote',
-    tags: ['React', 'Next.js', 'TypeScript', '3+ years'],
-    salary: '$60k – $90k/yr'
+    tags: ['React', 'Next.js', 'TypeScript', '3+ years']
   },
   {
     id: 2,
     title: 'Backend Developer (NestJS)',
     type: 'Full-time',
     dept: 'Engineering · Remote',
-    tags: ['NestJS', 'PostgreSQL', 'Node.js', '2+ years'],
-    salary: '$55k – $85k/yr'
+    tags: ['NestJS', 'PostgreSQL', 'Node.js', '2+ years']
   },
   {
     id: 3,
     title: 'Flutter Developer',
     type: 'Full-time',
     dept: 'Mobile · Remote',
-    tags: ['Flutter', 'Dart', 'Firebase', '2+ years'],
-    salary: '$50k – $80k/yr'
+    tags: ['Flutter', 'Dart', 'Firebase', '2+ years']
   },
   {
     id: 4,
     title: 'AI/ML Engineer',
     type: 'Full-time',
     dept: 'AI · Remote',
-    tags: ['Python', 'LangChain', 'OpenAI', '3+ years'],
-    salary: '$70k – $110k/yr'
+    tags: ['Python', 'LangChain', 'OpenAI', '3+ years']
   },
   {
     id: 5,
     title: 'Discord Bot Developer',
     type: 'Freelance',
     dept: 'Bots · Remote',
-    tags: ['Discord.js', 'Python', '1+ years'],
-    salary: '$25 – $50/hr'
+    tags: ['Discord.js', 'Python', '1+ years']
   },
   {
     id: 6,
     title: 'UI/UX Designer',
     type: 'Full-time',
     dept: 'Design · Remote',
-    tags: ['Figma', 'Framer', 'Design systems', '3+ years'],
-    salary: '$55k – $80k/yr'
+    tags: ['Figma', 'Framer', 'Design systems', '3+ years']
   }
 ];
 
@@ -78,8 +72,7 @@ export const Careers: React.FC = () => {
                   </span>
                 ))}
               </div>
-              <div className="job-footer">
-                <span className="salary">{job.salary}</span>
+              <div className="job-footer" style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem' }}>
                 <a href="#contact" className={`btn ${job.type === 'Freelance' ? 'btn-outline' : 'btn-primary'}`}>
                   {job.type === 'Freelance' ? 'Apply' : 'Apply now'}
                 </a>
@@ -91,3 +84,4 @@ export const Careers: React.FC = () => {
     </section>
   );
 };
+

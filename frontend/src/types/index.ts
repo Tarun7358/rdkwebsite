@@ -158,8 +158,9 @@ export interface CareerItem {
   type: string;
   dept: string;
   tags: string[];
-  salary: string;
+  salary?: string;
 }
+
 
 // ─────────────────────────────────────────────
 // FREELANCER
