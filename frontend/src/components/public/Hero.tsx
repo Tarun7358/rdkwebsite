@@ -26,8 +26,8 @@ export const Hero: React.FC = () => {
             <a href="#contact" className="btn btn-primary btn-xl" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
               Start a Project <ArrowUpRight size={20} />
             </a>
-            <a href="#services" className="btn btn-ghost btn-xl">
-              Explore Services
+            <a href="#pricing" className="btn btn-ghost btn-xl">
+              View Pricing
             </a>
           </div>
         </div>

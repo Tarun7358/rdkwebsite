@@ -8,7 +8,6 @@ import { useAppStore } from '../store/appStore';
 import {
   Hero,
   Stats,
-  Services,
   Workflow,
   DashboardPreview,
   TicketSection,
@@ -50,7 +49,7 @@ export const Home: React.FC = () => {
             </div>
           </a>
           <div className="nav-links">
-            <a href="#services">Services</a>
+            <a href="#workflow">Workflow</a>
             <a href="#pricing">Pricing</a>
             <a href="#about">About</a>
             <a href="#careers">Careers</a>
@@ -79,7 +78,7 @@ export const Home: React.FC = () => {
       {/* Mobile Menu */}
       {mobileMenuOpen && (
         <div className="mobile-menu open" id="mobileMenu" style={{ display: 'flex', flexDirection: 'column' }}>
-          <a href="#services" onClick={() => setMobileMenuOpen(false)}>Services</a>
+          <a href="#workflow" onClick={() => setMobileMenuOpen(false)}>Workflow</a>
           <a href="#pricing" onClick={() => setMobileMenuOpen(false)}>Pricing</a>
           <a href="#about" onClick={() => setMobileMenuOpen(false)}>About</a>
           <a href="#careers" onClick={() => setMobileMenuOpen(false)}>Careers</a>
@@ -102,7 +101,6 @@ export const Home: React.FC = () => {
       {/* Sections */}
       <Hero />
       <Stats />
-      <Services />
       <Workflow />
       <DashboardPreview />
       <TicketSection />
@@ -127,7 +125,7 @@ export const Home: React.FC = () => {
           <div style={{ display: 'flex', gap: '4rem' }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.85rem' }}>
               <span style={{ fontWeight: 700, color: 'var(--text)' }}>Platform</span>
-              <a href="#services" style={{ color: 'var(--text3)' }}>Services</a>
+              <a href="#workflow" style={{ color: 'var(--text3)' }}>Workflow</a>
               <a href="#pricing" style={{ color: 'var(--text3)' }}>Pricing</a>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.85rem' }}>
