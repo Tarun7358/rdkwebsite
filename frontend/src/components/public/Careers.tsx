@@ -90,22 +90,10 @@ export const Careers: React.FC = () => {
               }}
             >
               <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '1rem', marginBottom: '0.5rem' }}>
+                <div style={{ marginBottom: '0.5rem' }}>
                   <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '1.1rem', color: 'var(--text)', lineHeight: 1.3 }}>
                     {job.title}
                   </div>
-                  <span style={{
-                    fontSize: '0.725rem',
-                    fontWeight: 800,
-                    padding: '0.25rem 0.65rem',
-                    borderRadius: '20px',
-                    whiteSpace: 'nowrap',
-                    background: job.type === 'Full-time' ? 'rgba(124, 58, 237, 0.12)' : 'rgba(16, 185, 129, 0.12)',
-                    color: job.type === 'Full-time' ? 'var(--primary)' : '#10b981',
-                    border: `1px solid ${job.type === 'Full-time' ? 'rgba(124, 58, 237, 0.25)' : 'rgba(16, 185, 129, 0.25)'}`
-                  }}>
-                    {job.type}
-                  </span>
                 </div>
 
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.825rem', color: 'var(--text2)', marginBottom: '1.25rem' }}>
