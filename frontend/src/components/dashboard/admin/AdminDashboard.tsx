@@ -6,7 +6,23 @@ import { ticketsApi } from '../../../api/tickets';
 import { invoicesApi } from '../../../api/invoices';
 import { cmsApi } from '../../../api/cms';
 import { applicationsApi } from '../../../api/applications';
-import { Badge } from '../../ui';
+import { Badge, TicketWorkspace } from '../../ui';
+import { 
+  Ticket, 
+  Mail, 
+  Search, 
+  Filter, 
+  Download, 
+  CheckCircle2, 
+  Clock, 
+  ShieldAlert, 
+  User, 
+  AlertCircle,
+  FolderKanban,
+  Receipt,
+  Users,
+  Briefcase
+} from 'lucide-react';
 
 export const AdminDashboard: React.FC = () => {
   const activeTab = useDashboardStore((s) => s.activeTab);
@@ -25,6 +41,11 @@ export const AdminDashboard: React.FC = () => {
   const [devAssignment, setDevAssignment] = useState<Record<string, string>>({});
   const [projectStatus, setProjectStatus] = useState<Record<string, string>>({});
   const [projectProgress, setProjectProgress] = useState<Record<string, number>>({});
+
+  // Ticket console states
+  const [selectedTicketId, setSelectedTicketId] = useState<string>(tickets[0]?.id || '');
+  const [ticketFilter, setTicketFilter] = useState<'all' | 'active' | 'resolved'>('all');
+  const [ticketSearch, setTicketSearch] = useState('');
 
   const handleUpdateProject = async (projectId: string) => {
     const assignedTo = devAssignment[projectId];
@@ -148,7 +169,7 @@ export const AdminDashboard: React.FC = () => {
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <span>SSE Sync Engine</span>
-                <span style={{ color: 'var(--blue)' }}>Polling</span>
+                <span style={{ color: 'var(--primary)' }}>Real-Time Active</span>
               </div>
             </div>
           </div>
@@ -232,46 +253,195 @@ export const AdminDashboard: React.FC = () => {
     );
   }
 
-  // Tickets Tab
+  // Tickets Tab - Full Support & Communication Console
   if (activeTab === 'tickets') {
+    const activeTicketsCount = tickets.filter((t) => t.status === 'Active').length;
+    const resolvedTicketsCount = tickets.filter((t) => t.status === 'Resolved').length;
+
+    // Filtered list
+    const filteredTickets = tickets.filter((t) => {
+      const matchFilter =
+        ticketFilter === 'all' ||
+        (ticketFilter === 'active' && t.status === 'Active') ||
+        (ticketFilter === 'resolved' && t.status === 'Resolved');
+
+      const searchLower = ticketSearch.toLowerCase();
+      const matchSearch =
+        !ticketSearch ||
+        t.id.toLowerCase().includes(searchLower) ||
+        t.title.toLowerCase().includes(searchLower) ||
+        t.client.toLowerCase().includes(searchLower) ||
+        (t.category && t.category.toLowerCase().includes(searchLower));
+
+      return matchFilter && matchSearch;
+    });
+
+    const currentTicket = tickets.find((t) => t.id === selectedTicketId) || filteredTickets[0] || tickets[0];
+
     return (
-      <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '12px', padding: '1.5rem' }}>
-        <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '1rem' }}>Support ticket routing</h3>
-        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem', textAlign: 'left' }}>
-          <thead>
-            <tr style={{ borderBottom: '1px solid var(--border)', color: 'var(--text3)' }}>
-              <th style={{ padding: '0.75rem 0.5rem' }}>Ticket ID</th>
-              <th style={{ padding: '0.75rem 0.5rem' }}>Subject</th>
-              <th style={{ padding: '0.75rem 0.5rem' }}>Client</th>
-              <th style={{ padding: '0.75rem 0.5rem' }}>Delegated Engineer</th>
-              <th style={{ padding: '0.75rem 0.5rem' }}>Status</th>
-              <th style={{ padding: '0.75rem 0.5rem', textAlign: 'right' }}>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {tickets.map((t) => (
-              <tr key={t.id} style={{ borderBottom: '1px solid var(--border)' }}>
-                <td style={{ padding: '1rem 0.5rem', fontWeight: 600 }}>{t.id}</td>
-                <td style={{ padding: '1rem 0.5rem', fontWeight: 700 }}>{t.title}</td>
-                <td style={{ padding: '1rem 0.5rem' }}>{t.client}</td>
-                <td style={{ padding: '1rem 0.5rem' }}>
-                  <input
-                    type="text"
-                    value={t.assignedTo}
-                    onChange={(e) => handleAssignTicket(t.id, e.target.value)}
-                    style={{ padding: '0.25rem 0.5rem', background: 'var(--bg2)', color: 'var(--text)', border: '1px solid var(--border)', borderRadius: '4px', fontSize: '0.8rem', width: '150px' }}
-                  />
-                </td>
-                <td style={{ padding: '1rem 0.5rem' }}>
-                  <Badge status={t.status} />
-                </td>
-                <td style={{ padding: '1rem 0.5rem', textAlign: 'right', color: 'var(--text3)' }}>
-                  Auto-routing active
-                </td>
-              </tr>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+        {/* Metric Cards */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
+          <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '14px', padding: '1.25rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span style={{ fontSize: '0.8rem', color: 'var(--text2)', fontWeight: 600 }}>Total All Tickets</span>
+              <Ticket size={20} color="var(--primary)" />
+            </div>
+            <div style={{ fontSize: '1.75rem', fontWeight: 800, marginTop: '0.35rem', color: 'var(--text)' }}>
+              {tickets.length}
+            </div>
+          </div>
+
+          <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '14px', padding: '1.25rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span style={{ fontSize: '0.8rem', color: 'var(--text2)', fontWeight: 600 }}>Active / Open Queue</span>
+              <Clock size={20} color="#f59e0b" />
+            </div>
+            <div style={{ fontSize: '1.75rem', fontWeight: 800, marginTop: '0.35rem', color: '#f59e0b' }}>
+              {activeTicketsCount}
+            </div>
+          </div>
+
+          <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '14px', padding: '1.25rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span style={{ fontSize: '0.8rem', color: 'var(--text2)', fontWeight: 600 }}>Past / Resolved Archive</span>
+              <CheckCircle2 size={20} color="#10b981" />
+            </div>
+            <div style={{ fontSize: '1.75rem', fontWeight: 800, marginTop: '0.35rem', color: '#10b981' }}>
+              {resolvedTicketsCount}
+            </div>
+          </div>
+
+          <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '14px', padding: '1.25rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span style={{ fontSize: '0.8rem', color: 'var(--text2)', fontWeight: 600 }}>Notification Channel</span>
+              <Mail size={20} color="var(--primary)" />
+            </div>
+            <div style={{ fontSize: '0.85rem', fontWeight: 700, marginTop: '0.5rem', color: 'var(--text)' }}>
+              admin@rdktech.com
+            </div>
+            <span style={{ fontSize: '0.725rem', color: '#10b981' }}>● Dispatches Active</span>
+          </div>
+        </div>
+
+        {/* Email Notification & Dispatch Banner */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(124, 58, 237, 0.08)', border: '1px solid rgba(124, 58, 237, 0.25)', borderRadius: '12px', padding: '0.85rem 1.25rem', flexWrap: 'wrap', gap: '0.75rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+            <Mail size={18} color="var(--primary)" />
+            <span style={{ fontSize: '0.85rem', color: 'var(--text)' }}>
+              <strong>Configured Email Alerts:</strong> Inbound client tickets and responses are synced and mirrored to <code style={{ color: 'var(--primary)', fontWeight: 700 }}>admin@rdktech.com</code>.
+            </span>
+          </div>
+          <span style={{ fontSize: '0.775rem', color: 'var(--text3)', fontWeight: 600 }}>
+            Transcripts available for all past & current tickets
+          </span>
+        </div>
+
+        {/* Search & Filter Bar */}
+        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '10px', padding: '0.4rem 0.8rem', flex: '1', maxWidth: '380px' }}>
+            <Search size={16} color="var(--text3)" />
+            <input
+              type="text"
+              placeholder="Search by ID, client email, or title..."
+              value={ticketSearch}
+              onChange={(e) => setTicketSearch(e.target.value)}
+              style={{ background: 'transparent', border: 'none', color: 'var(--text)', outline: 'none', fontSize: '0.85rem', width: '100%' }}
+            />
+          </div>
+
+          <div style={{ display: 'flex', gap: '0.5rem' }}>
+            {(['all', 'active', 'resolved'] as const).map((filterKey) => (
+              <button
+                key={filterKey}
+                onClick={() => setTicketFilter(filterKey)}
+                className={`btn ${ticketFilter === filterKey ? 'btn-primary' : 'btn-outline'}`}
+                style={{
+                  fontSize: '0.8rem',
+                  padding: '0.45rem 0.95rem',
+                  borderRadius: '8px',
+                  textTransform: 'capitalize',
+                  fontWeight: 600,
+                }}
+              >
+                {filterKey === 'all' ? `All (${tickets.length})` : filterKey === 'active' ? `Active (${activeTicketsCount})` : `Past / Resolved (${resolvedTicketsCount})`}
+              </button>
             ))}
-          </tbody>
-        </table>
+          </div>
+        </div>
+
+        {/* Master-Detail Split Workspace */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(320px, 1fr) minmax(420px, 1.7fr)', gap: '1.5rem', minHeight: '560px' }}>
+          {/* Left Column: Ticket List Queue */}
+          <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '16px', padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.75rem', maxHeight: '680px', overflowY: 'auto' }}>
+            <div style={{ fontSize: '0.85rem', fontWeight: 800, color: 'var(--text)', marginBottom: '0.25rem', display: 'flex', justifyContent: 'space-between' }}>
+              <span>Ticket Queue ({filteredTickets.length})</span>
+              <span style={{ fontSize: '0.75rem', color: 'var(--text3)' }}>Click to open communication thread</span>
+            </div>
+
+            {filteredTickets.length === 0 ? (
+              <div style={{ padding: '3rem 1rem', textAlign: 'center', color: 'var(--text3)', background: 'var(--bg2)', borderRadius: '12px' }}>
+                <Ticket size={28} style={{ opacity: 0.4, margin: '0 auto 0.5rem' }} />
+                <div>No tickets match current search/filter.</div>
+              </div>
+            ) : (
+              filteredTickets.map((t) => {
+                const isSelected = (currentTicket?.id === t.id);
+                return (
+                  <div
+                    key={t.id}
+                    onClick={() => setSelectedTicketId(t.id)}
+                    style={{
+                      background: isSelected ? 'var(--bg2)' : 'transparent',
+                      border: `1px solid ${isSelected ? 'var(--primary)' : 'var(--border)'}`,
+                      boxShadow: isSelected ? '0 0 14px rgba(124, 58, 237, 0.18)' : 'none',
+                      borderRadius: '12px',
+                      padding: '1rem',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease',
+                      position: 'relative',
+                    }}
+                  >
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
+                      <span style={{ fontWeight: 800, color: 'var(--primary)', fontFamily: 'var(--font-mono)', fontSize: '0.78rem' }}>
+                        {t.id}
+                      </span>
+                      <Badge status={t.status} />
+                    </div>
+
+                    <div style={{ fontWeight: 700, fontSize: '0.9rem', color: 'var(--text)', marginBottom: '0.35rem' }}>
+                      {t.title}
+                    </div>
+
+                    <div style={{ fontSize: '0.78rem', color: 'var(--text2)', display: 'flex', flexDirection: 'column', gap: '0.2rem' }}>
+                      <span>Client: <strong style={{ color: 'var(--text)' }}>{t.client}</strong></span>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.725rem', color: 'var(--text3)', marginTop: '0.2rem' }}>
+                        <span>Priority: <strong>{t.priority}</strong></span>
+                        <span>Assignee: <strong>{t.assignedTo || 'Unassigned'}</strong></span>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })
+            )}
+          </div>
+
+          {/* Right Column: Ticket Workspace & Communication Console */}
+          <div>
+            {currentTicket ? (
+              <TicketWorkspace
+                ticket={currentTicket}
+                onStatusChange={() => {
+                  // State auto updates via SSE and AppStore
+                }}
+              />
+            ) : (
+              <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '16px', padding: '4rem 2rem', textAlign: 'center', color: 'var(--text3)' }}>
+                Select a ticket from the queue to view messages and download transcripts.
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     );
   }
@@ -357,7 +527,7 @@ export const AdminDashboard: React.FC = () => {
                   <td style={{ padding: '1rem 0.5rem', fontWeight: 700 }}>{app.name}</td>
                   <td style={{ padding: '1rem 0.5rem' }}>{app.email}</td>
                   <td style={{ padding: '1rem 0.5rem' }}>{app.position}</td>
-                  <td style={{ padding: '1rem 0.5rem', color: 'var(--blue)' }}>📄 {app.resume}</td>
+                  <td style={{ padding: '1rem 0.5rem', color: 'var(--primary)' }}>📄 {app.resume}</td>
                   <td style={{ padding: '1rem 0.5rem' }}>
                     <Badge status={app.status} />
                   </td>
