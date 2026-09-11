@@ -1,21 +1,54 @@
-import { apiAction } from './client';
 import { supabase } from '../lib/supabase';
 import type { ApiResponse, UserProfile } from '../types';
 
 export async function getOrCreateProfile(
   userId: string,
   email: string,
-  name: string
+  name: string,
 ): Promise<ApiResponse<UserProfile>> {
-  return apiAction<UserProfile>('get_or_create_profile', { userId, email, name });
+  try {
+    // Try to fetch existing profile
+    let { data: profile } = await supabase
+      .from('profiles').select('*').eq('id', userId).maybeSingle();
+
+    if (!profile) {
+      // Create new profile
+      const { data: created, error } = await supabase
+        .from('profiles')
+        .insert({ id: userId, email, name, role: 'client', details: 'Client Partner' })
+        .select()
+        .single();
+      if (error) return { success: false, message: error.message };
+      profile = created;
+    }
+
+    return {
+      success: true,
+      message: 'Profile ready',
+      data: {
+        email: profile.email,
+        name: profile.name,
+        role: profile.role,
+        details: profile.details,
+      },
+    };
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : 'Unknown error';
+    return { success: false, message: msg };
+  }
 }
 
 export async function setUserRole(
   email: string,
   role: string,
-  details?: string
+  details?: string,
 ): Promise<ApiResponse> {
-  return apiAction('set_user_role', { email, role, details: details ?? '' });
+  const { error } = await supabase
+    .from('profiles')
+    .update({ role, details: details ?? '' })
+    .eq('email', email);
+  if (error) return { success: false, message: error.message };
+  return { success: true, message: 'Role updated' };
 }
 
 export const authApi = {
@@ -40,6 +73,6 @@ export const authApi = {
   getSession: () => supabase.auth.getSession(),
 
   onAuthStateChange: (
-    callback: Parameters<typeof supabase.auth.onAuthStateChange>[0]
+    callback: Parameters<typeof supabase.auth.onAuthStateChange>[0],
   ) => supabase.auth.onAuthStateChange(callback),
 };

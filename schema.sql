@@ -159,3 +159,69 @@ insert into app_config (key, value) values ('theme', 'light') on conflict (key) 
 insert into applications (name, email, position, status, resume) values
 ('Marcus Miller', 'marcus.miller@gmail.com', 'Senior Frontend Developer', 'Interviewing', 'marcus_resume.pdf')
 on conflict do nothing;
+
+-- ================================================
+-- ROW LEVEL SECURITY (RLS)
+-- Enables safe direct access from the frontend anon key
+-- ================================================
+
+-- Enable RLS on all tables
+alter table profiles enable row level security;
+alter table projects enable row level security;
+alter table tickets enable row level security;
+alter table invoices enable row level security;
+alter table meetings enable row level security;
+alter table chat_messages enable row level security;
+alter table applications enable row level security;
+alter table freelancer_profiles enable row level security;
+alter table cms_config enable row level security;
+alter table app_config enable row level security;
+
+-- ── profiles ──
+create policy "Public read profiles" on profiles for select using (true);
+create policy "Users insert own profile" on profiles for insert with check (auth.uid() = id);
+create policy "Users update own profile" on profiles for update using (auth.uid() = id);
+
+-- ── projects ── (all authenticated users can read; anyone can insert/update for demo)
+create policy "Public read projects" on projects for select using (true);
+create policy "Anyone insert project" on projects for insert with check (true);
+create policy "Anyone update project" on projects for update using (true);
+
+-- ── tickets ──
+create policy "Public read tickets" on tickets for select using (true);
+create policy "Anyone insert ticket" on tickets for insert with check (true);
+create policy "Anyone update ticket" on tickets for update using (true);
+
+-- ── invoices ──
+create policy "Public read invoices" on invoices for select using (true);
+create policy "Anyone insert invoice" on invoices for insert with check (true);
+create policy "Anyone update invoice" on invoices for update using (true);
+
+-- ── meetings ──
+create policy "Public read meetings" on meetings for select using (true);
+create policy "Anyone insert meeting" on meetings for insert with check (true);
+
+-- ── chat_messages ──
+create policy "Public read chat" on chat_messages for select using (true);
+create policy "Anyone insert chat" on chat_messages for insert with check (true);
+
+-- ── applications ──
+create policy "Public read applications" on applications for select using (true);
+create policy "Anyone insert application" on applications for insert with check (true);
+create policy "Anyone update application" on applications for update using (true);
+
+-- ── freelancer_profiles ──
+create policy "Public read freelancers" on freelancer_profiles for select using (true);
+create policy "Anyone upsert freelancer" on freelancer_profiles for insert with check (true);
+create policy "Anyone update freelancer" on freelancer_profiles for update using (true);
+
+-- ── cms_config ──
+create policy "Public read cms" on cms_config for select using (true);
+create policy "Anyone upsert cms" on cms_config for insert with check (true);
+create policy "Anyone update cms" on cms_config for update using (true);
+
+-- ── app_config ──
+create policy "Public read app_config" on app_config for select using (true);
+create policy "Anyone upsert app_config" on app_config for insert with check (true);
+create policy "Anyone update app_config" on app_config for update using (true);
+
