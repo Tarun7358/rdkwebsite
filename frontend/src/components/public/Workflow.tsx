@@ -1,5 +1,5 @@
 import React from 'react';
-import { MessageSquare, ClipboardList, Palette, Cpu, TestTube, Rocket, ShieldCheck, GitCommit } from 'lucide-react';
+import { MessageSquare, ClipboardList, Palette, Cpu, TestTube, Rocket, ShieldCheck } from 'lucide-react';
 
 const workflowSteps = [
   { num: '01', icon: <MessageSquare size={20} color="#a855f7" />, name: 'Technical Discovery', desc: 'Requirements analysis & scope definition' },
@@ -16,9 +16,6 @@ export const Workflow: React.FC = () => {
     <section className="workflow-section" id="about" style={{ background: 'var(--bg2)', padding: '5rem 0', position: 'relative' }}>
       <div className="section-inner">
         <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-          <div className="section-label" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', margin: '0 auto 0.75rem' }}>
-            <GitCommit size={14} /> Software Lifecycle Methodology
-          </div>
           <h2 className="section-title">Structured Engineering Workflow</h2>
           <p className="section-sub" style={{ margin: '0 auto' }}>
             A transparent, sprint-based process designed to deliver enterprise software on schedule with zero guesswork.
