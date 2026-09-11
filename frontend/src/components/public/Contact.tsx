@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
-import { Mail, Bot, MapPin, Clock, Send, ArrowRight, LifeBuoy, CheckCircle2 } from 'lucide-react';
+import { 
+  Mail, Bot, MapPin, Clock, Send, ArrowRight, LifeBuoy, CheckCircle2,
+  User, Building2, MessageSquare, Layers, Cpu, Calendar, FileText,
+  ShieldCheck, ChevronDown, Lock, Zap
+} from 'lucide-react';
 import { projectsApi } from '../../api/projects';
 import { useAppStore } from '../../store/appStore';
 
@@ -128,115 +132,225 @@ export const Contact: React.FC = () => {
           </div>
 
           {/* Form */}
-          <form className="contact-form" onSubmit={handleSubmit} style={{ background: 'var(--card-glass)', border: '1px solid var(--border)', borderRadius: '20px', padding: '2.25rem', backdropFilter: 'blur(12px)', boxShadow: 'var(--card-shadow)' }}>
-            <div className="form-row">
-              <div className="form-group">
-                <label style={{ fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text)', marginBottom: '0.4rem', display: 'block' }}>Full Name *</label>
-                <input
-                  type="text"
-                  placeholder="Alex Johnson"
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  required
-                  style={{ background: 'var(--bg2)', border: '1px solid var(--border)', color: 'var(--text)', padding: '0.75rem 1rem', borderRadius: '10px' }}
-                />
+          <form className="contact-form" onSubmit={handleSubmit}>
+            {/* Form Header Badge */}
+            <div className="proposal-card-header">
+              <div className="proposal-status-badge">
+                <span className="proposal-status-dot" />
+                <span>Direct Engineering Pipeline Active</span>
               </div>
-              <div className="form-group">
-                <label style={{ fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text)', marginBottom: '0.4rem', display: 'block' }}>Company / Organization</label>
-                <input
-                  type="text"
-                  placeholder="Acme Enterprise"
-                  value={formData.company}
-                  onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                  style={{ background: 'var(--bg2)', border: '1px solid var(--border)', color: 'var(--text)', padding: '0.75rem 1rem', borderRadius: '10px' }}
-                />
+              <div className="proposal-sla-badge">
+                <Zap size={13} style={{ color: 'var(--primary)' }} />
+                <span>Response SLA &lt; 2 Hours</span>
               </div>
             </div>
 
             <div className="form-row">
               <div className="form-group">
-                <label style={{ fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text)', marginBottom: '0.4rem', display: 'block' }}>Work Email *</label>
-                <input
-                  type="email"
-                  placeholder="alex@company.com"
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  required
-                  style={{ background: 'var(--bg2)', border: '1px solid var(--border)', color: 'var(--text)', padding: '0.75rem 1rem', borderRadius: '10px' }}
-                />
+                <label className="field-label">
+                  <span>Full Name <span className="req">*</span></span>
+                </label>
+                <div className="input-field-group">
+                  <div className="input-icon-left">
+                    <User size={16} />
+                  </div>
+                  <input
+                    type="text"
+                    placeholder="Alex Johnson"
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    required
+                  />
+                </div>
               </div>
+
               <div className="form-group">
-                <label style={{ fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text)', marginBottom: '0.4rem', display: 'block' }}>Discord Handle</label>
-                <input
-                  type="text"
-                  placeholder="alex#0001"
-                  value={formData.discord}
-                  onChange={(e) => setFormData({ ...formData, discord: e.target.value })}
-                  style={{ background: 'var(--bg2)', border: '1px solid var(--border)', color: 'var(--text)', padding: '0.75rem 1rem', borderRadius: '10px' }}
-                />
+                <label className="field-label">
+                  <span>Company / Organization</span>
+                  <span className="field-label-hint">Optional</span>
+                </label>
+                <div className="input-field-group">
+                  <div className="input-icon-left">
+                    <Building2 size={16} />
+                  </div>
+                  <input
+                    type="text"
+                    placeholder="Acme Enterprise"
+                    value={formData.company}
+                    onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+                  />
+                </div>
               </div>
             </div>
 
             <div className="form-row">
               <div className="form-group">
-                <label style={{ fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text)', marginBottom: '0.4rem', display: 'block' }}>Target Service Architecture</label>
-                <select
-                  value={formData.projectType}
-                  onChange={(e) => setFormData({ ...formData, projectType: e.target.value })}
-                  style={{ background: 'var(--bg2)', border: '1px solid var(--border)', color: 'var(--text)', padding: '0.75rem 1rem', borderRadius: '10px' }}
-                >
-                  <option>Website & SaaS Engineering</option>
-                  <option>Mobile Application (PWA / Native)</option>
-                  <option>Discord Bot & Automation</option>
-                  <option>AI Intelligence & RAG System</option>
-                  <option>Full-Stack Enterprise Architecture</option>
-                  <option>Cloud Infrastructure & DevOps</option>
-                  <option>Custom Engineering</option>
-                </select>
+                <label className="field-label">
+                  <span>Work Email <span className="req">*</span></span>
+                </label>
+                <div className="input-field-group">
+                  <div className="input-icon-left">
+                    <Mail size={16} />
+                  </div>
+                  <input
+                    type="email"
+                    placeholder="alex@company.com"
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    required
+                  />
+                </div>
               </div>
+
               <div className="form-group">
-                <label style={{ fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text)', marginBottom: '0.4rem', display: 'block' }}>Target Scope Scale</label>
-                <select
-                  value={formData.budgetRange}
-                  onChange={(e) => setFormData({ ...formData, budgetRange: e.target.value })}
-                  style={{ background: 'var(--bg2)', border: '1px solid var(--border)', color: 'var(--text)', padding: '0.75rem 1rem', borderRadius: '10px' }}
-                >
-                  <option>MVP / Sprint Scope</option>
-                  <option>Core Product Architecture</option>
-                  <option>Enterprise Suite</option>
-                  <option>Custom Retainer</option>
-                </select>
+                <label className="field-label">
+                  <span>Discord Handle</span>
+                  <span className="field-label-hint">Live dev chat</span>
+                </label>
+                <div className="input-field-group">
+                  <div className="input-icon-left">
+                    <MessageSquare size={16} />
+                  </div>
+                  <input
+                    type="text"
+                    placeholder="alex#0001"
+                    value={formData.discord}
+                    onChange={(e) => setFormData({ ...formData, discord: e.target.value })}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="form-row">
+              <div className="form-group">
+                <label className="field-label">
+                  <span>Target Service Architecture</span>
+                </label>
+                <div className="input-field-group">
+                  <div className="input-icon-left">
+                    <Layers size={16} />
+                  </div>
+                  <select
+                    value={formData.projectType}
+                    onChange={(e) => setFormData({ ...formData, projectType: e.target.value })}
+                  >
+                    <option>Website & SaaS Engineering</option>
+                    <option>Mobile Application (PWA / Native)</option>
+                    <option>Discord Bot & Automation</option>
+                    <option>AI Intelligence & RAG System</option>
+                    <option>Full-Stack Enterprise Architecture</option>
+                    <option>Cloud Infrastructure & DevOps</option>
+                    <option>Custom Engineering</option>
+                  </select>
+                  <ChevronDown size={15} className="select-chevron" />
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label className="field-label">
+                  <span>Target Scope Scale</span>
+                </label>
+                <div className="input-field-group">
+                  <div className="input-icon-left">
+                    <Cpu size={16} />
+                  </div>
+                  <select
+                    value={formData.budgetRange}
+                    onChange={(e) => setFormData({ ...formData, budgetRange: e.target.value })}
+                  >
+                    <option>MVP / Sprint Scope</option>
+                    <option>Core Product Architecture</option>
+                    <option>Enterprise Suite</option>
+                    <option>Custom Retainer</option>
+                  </select>
+                  <ChevronDown size={15} className="select-chevron" />
+                </div>
               </div>
             </div>
 
             <div className="form-group">
-              <label style={{ fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text)', marginBottom: '0.4rem', display: 'block' }}>Target Launch Date</label>
-              <input
-                type="date"
-                value={formData.deadline}
-                onChange={(e) => setFormData({ ...formData, deadline: e.target.value })}
-                style={{ background: 'var(--bg2)', border: '1px solid var(--border)', color: 'var(--text)', padding: '0.75rem 1rem', borderRadius: '10px' }}
-              />
+              <label className="field-label">
+                <span>Target Launch Date</span>
+                <span className="field-label-hint">Estimated Milestone</span>
+              </label>
+              <div className="input-field-group">
+                <div className="input-icon-left">
+                  <Calendar size={16} />
+                </div>
+                <input
+                  type="date"
+                  value={formData.deadline}
+                  onChange={(e) => setFormData({ ...formData, deadline: e.target.value })}
+                />
+              </div>
             </div>
 
             <div className="form-group">
-              <label style={{ fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text)', marginBottom: '0.4rem', display: 'block' }}>Technical Specifications & Requirements *</label>
-              <textarea
-                placeholder="Detail your target features, compliance requirements, third-party API integrations, and expected milestone timeline..."
-                value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                required
-                style={{ background: 'var(--bg2)', border: '1px solid var(--border)', color: 'var(--text)', padding: '0.75rem 1rem', borderRadius: '10px', minHeight: '120px' }}
-              />
+              <label className="field-label">
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
+                  <FileText size={14} style={{ color: 'var(--primary)' }} />
+                  Technical Specifications & Requirements <span className="req">*</span>
+                </span>
+                <span className="field-label-hint">Markdown supported</span>
+              </label>
+              <div className="textarea-field-group">
+                <textarea
+                  placeholder="Detail your target features, compliance requirements, third-party API integrations, and expected milestone timeline..."
+                  value={formData.description}
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  required
+                />
+              </div>
             </div>
 
-            <button type="submit" className="btn btn-primary" disabled={isSubmitting} style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.85rem 2rem', borderRadius: '12px', fontWeight: 700, fontSize: '0.95rem' }}>
-              {isSubmitting ? 'Submitting Scope...' : 'Submit Technical Scope Proposal'} <Send size={16} />
+            <button type="submit" className="submit-btn-hero" disabled={isSubmitting}>
+              {isSubmitting ? (
+                <span>Submitting Scope Proposal...</span>
+              ) : (
+                <>
+                  <span>Submit Technical Scope Proposal</span>
+                  <Send size={16} className="send-icon" />
+                </>
+              )}
             </button>
 
+            {/* Trust & Security Badges */}
+            <div className="form-trust-footer">
+              <span className="trust-item">
+                <Lock size={13} style={{ color: 'var(--primary)' }} />
+                <span>256-Bit SSL Encrypted</span>
+              </span>
+              <span className="trust-item">
+                <ShieldCheck size={13} style={{ color: '#10b981' }} />
+                <span>Strict NDA Protected</span>
+              </span>
+              <span className="trust-item">
+                <Zap size={13} style={{ color: '#f59e0b' }} />
+                <span>Lead Architect Review</span>
+              </span>
+            </div>
+
             {submitted && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#10b981', marginTop: '1rem', fontWeight: 700, fontSize: '0.9rem' }}>
-                <CheckCircle2 size={18} /> Scope proposal registered and queued for technical review!
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.75rem',
+                color: '#10b981',
+                marginTop: '1.25rem',
+                padding: '1rem 1.25rem',
+                background: 'rgba(16, 185, 129, 0.1)',
+                border: '1px solid rgba(16, 185, 129, 0.3)',
+                borderRadius: '12px',
+                fontWeight: 600,
+                fontSize: '0.9rem'
+              }}>
+                <CheckCircle2 size={20} style={{ flexShrink: 0 }} />
+                <div>
+                  <div style={{ fontWeight: 800 }}>Scope proposal registered successfully!</div>
+                  <div style={{ fontSize: '0.8rem', opacity: 0.9, marginTop: '2px' }}>
+                    Queued for technical review. Our engineering leads will reach out within the SLA window.
+                  </div>
+                </div>
               </div>
             )}
           </form>
