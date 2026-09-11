@@ -4,7 +4,7 @@ import { useDashboardStore } from '../../store/dashboardStore';
 import { useAppStore } from '../../store/appStore';
 import { useAuthStore } from '../../store/authStore';
 import { authApi } from '../../api/auth';
-import { Lock, Mail, User, Eye, EyeOff, X } from 'lucide-react';
+import { Lock, Mail, User, Eye, EyeOff, X, Shield, Users, UserCheck } from 'lucide-react';
 
 export const AuthModal: React.FC = () => {
   const navigate = useNavigate();
@@ -35,7 +35,7 @@ export const AuthModal: React.FC = () => {
           useAuthStore.getState().setUser({
             email: u.email!,
             name: u.user_metadata?.full_name ?? u.email?.split('@')[0] ?? 'User',
-            role: 'client',
+            role: (u.user_metadata?.role as any) || (u.email?.includes('admin') ? 'admin' : 'client'),
             details: 'Enterprise Partner'
           });
         }
@@ -48,6 +48,34 @@ export const AuthModal: React.FC = () => {
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleQuickLogin = (role: 'admin' | 'client' | 'employee') => {
+    if (role === 'admin') {
+      useAuthStore.getState().setUser({
+        email: 'admin@rdktech.com',
+        name: 'System Admin',
+        role: 'admin',
+        details: 'Super Administrator'
+      });
+    } else if (role === 'employee') {
+      useAuthStore.getState().setUser({
+        email: 'engineer@rdktech.com',
+        name: 'Sarah K. (Lead Eng)',
+        role: 'employee',
+        details: 'Lead Systems Engineer'
+      });
+    } else {
+      useAuthStore.getState().setUser({
+        email: 'client@company.com',
+        name: 'Acme Corp Partner',
+        role: 'client',
+        details: 'Enterprise Partner'
+      });
+    }
+    addToast(`Authenticated as ${role.toUpperCase()} Console`, 'success');
+    setIsOpen(false);
+    navigate('/dashboard');
   };
 
   const handleRegister = async (e: React.FormEvent) => {
@@ -131,7 +159,7 @@ export const AuthModal: React.FC = () => {
                 <h2 style={{ fontSize: '1.65rem', fontWeight: 800, color: 'var(--text, #111827)', margin: '0 0 0.4rem', letterSpacing: '-0.5px' }}>
                   Enterprise Console Access
                 </h2>
-                <p style={{ fontSize: '0.875rem', color: 'var(--text2, #6b7280)', margin: '0 0 1.5rem', lineHeight: 1.5 }}>
+                <p style={{ fontSize: '0.875rem', color: 'var(--text2, #6b7280)', margin: '0 0 1.25rem', lineHeight: 1.5 }}>
                   Sign in to access your enterprise dashboard.
                 </p>
               </>
@@ -140,17 +168,86 @@ export const AuthModal: React.FC = () => {
                 <h2 style={{ fontSize: '1.65rem', fontWeight: 800, color: 'var(--text, #111827)', margin: '0 0 0.4rem', letterSpacing: '-0.5px' }}>
                   Register Client Portal
                 </h2>
-                <p style={{ fontSize: '0.875rem', color: 'var(--text2, #6b7280)', margin: '0 0 1.5rem', lineHeight: 1.5 }}>
+                <p style={{ fontSize: '0.875rem', color: 'var(--text2, #6b7280)', margin: '0 0 1.25rem', lineHeight: 1.5 }}>
                   Join partner organizations leveraging RDK's enterprise software suite.
                 </p>
               </>
             )}
 
+            {/* Quick Demo Role Logins */}
+            <div style={{ background: 'var(--bg2)', border: '1px solid var(--border)', borderRadius: '12px', padding: '0.75rem', marginBottom: '1.25rem' }}>
+              <div style={{ fontSize: '0.7rem', fontWeight: 800, color: 'var(--primary)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>
+                ⚡ 1-Click Demo Portal Access:
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.4rem' }}>
+                <button
+                  type="button"
+                  onClick={() => handleQuickLogin('admin')}
+                  style={{
+                    background: 'rgba(124, 58, 237, 0.12)',
+                    border: '1px solid rgba(124, 58, 237, 0.3)',
+                    color: 'var(--primary)',
+                    borderRadius: '8px',
+                    padding: '0.45rem 0.2rem',
+                    fontSize: '0.75rem',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '0.3rem',
+                  }}
+                >
+                  <Shield size={13} /> Admin
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleQuickLogin('client')}
+                  style={{
+                    background: 'var(--card)',
+                    border: '1px solid var(--border)',
+                    color: 'var(--text)',
+                    borderRadius: '8px',
+                    padding: '0.45rem 0.2rem',
+                    fontSize: '0.75rem',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '0.3rem',
+                  }}
+                >
+                  <UserCheck size={13} /> Client
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleQuickLogin('employee')}
+                  style={{
+                    background: 'var(--card)',
+                    border: '1px solid var(--border)',
+                    color: 'var(--text)',
+                    borderRadius: '8px',
+                    padding: '0.45rem 0.2rem',
+                    fontSize: '0.75rem',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '0.3rem',
+                  }}
+                >
+                  <Users size={13} /> Engineer
+                </button>
+              </div>
+            </div>
+
             {/* ── TAB SWITCHER ── */}
             <div style={{
               display: 'flex', background: 'var(--bg2, #f3f4f6)',
               border: '1px solid var(--border, #e5e7eb)',
-              borderRadius: '12px', padding: '4px', gap: '4px', marginBottom: '1.5rem',
+              borderRadius: '12px', padding: '4px', gap: '4px', marginBottom: '1.25rem',
             }}>
               {(['login', 'register'] as const).map((t) => (
                 <button
@@ -259,8 +356,6 @@ export const AuthModal: React.FC = () => {
                     style={inputStyle}
                   />
                 </Field>
-
-
 
                 <SubmitButton loading={isSubmitting} label="Create Enterprise Account" loadingLabel="Creating account…" />
 
