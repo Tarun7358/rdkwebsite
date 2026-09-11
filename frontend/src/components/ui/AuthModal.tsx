@@ -125,17 +125,16 @@ export const AuthModal: React.FC = () => {
             </button>
 
             {/* Logo mark */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '1.5rem' }}>
-              <div style={{
-                width: '36px', height: '36px', borderRadius: '10px',
-                background: '#ea580c',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: '1rem', fontWeight: 900, color: '#fff', letterSpacing: '-1px',
-                boxShadow: '0 4px 16px rgba(234, 88, 12, 0.4)',
-              }}>R</div>
-              <span style={{ fontSize: '0.85rem', fontWeight: 700, color: '#fff', letterSpacing: '-0.3px' }}>
-                RDK <span style={{ color: '#ea580c' }}>Industries</span>
-              </span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.5rem' }}>
+              <img src="/logo-icon.png" alt="RDK Tech" style={{ width: '40px', height: '40px', objectFit: 'contain', filter: 'drop-shadow(0 2px 10px rgba(124, 58, 237, 0.45))' }} />
+              <div>
+                <div style={{ fontSize: '1.05rem', fontWeight: 900, color: '#fff', letterSpacing: '-0.3px', lineHeight: 1.1 }}>
+                  RDK <span style={{ background: 'linear-gradient(135deg, #818cf8 0%, #c084fc 100%)', WebkitBackgroundClip: 'text', backgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>TECH</span>
+                </div>
+                <div style={{ fontSize: '0.65rem', color: 'rgba(255, 255, 255, 0.6)', letterSpacing: '0.06em', textTransform: 'uppercase', fontWeight: 600 }}>
+                  Reliable Digital Kreations
+                </div>
+              </div>
             </div>
 
             {tab === 'login' ? (

@@ -46,8 +46,9 @@ export const Home: React.FC = () => {
       <nav id="navbar">
         <div className="nav-inner">
           <a href="#home" className="logo">
+            <img src="/logo-icon.png" alt="RDK Tech" className="logo-img" />
             <div>
-              <span className="abbr">RDK</span>
+              <span className="abbr">RDK <span className="logo-tech">TECH</span></span>
               <span className="full">Reliable Digital Kreations</span>
             </div>
           </a>
@@ -122,8 +123,14 @@ export const Home: React.FC = () => {
       <footer style={{ background: 'var(--card)', borderTop: '1px solid var(--border)', padding: '3rem 2rem', marginTop: '4rem' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '2rem' }}>
           <div>
-            <div style={{ fontWeight: 900, fontSize: '1.2rem', marginBottom: '0.5rem' }}>RDK Industries</div>
-            <div style={{ fontSize: '0.85rem', color: 'var(--text3)' }}>Reliable Digital Kreations · Professional Software Development</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.6rem' }}>
+              <img src="/logo-icon.png" alt="RDK Tech" style={{ width: '36px', height: '36px', objectFit: 'contain', filter: 'drop-shadow(0 2px 8px rgba(124, 58, 237, 0.35))' }} />
+              <div>
+                <div style={{ fontWeight: 900, fontSize: '1.2rem', lineHeight: 1.1 }}>RDK <span style={{ background: 'linear-gradient(135deg, #6366f1 0%, #a855f7 100%)', WebkitBackgroundClip: 'text', backgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>TECH</span></div>
+                <div style={{ fontSize: '0.68rem', color: 'var(--text3)', letterSpacing: '0.08em', textTransform: 'uppercase', fontWeight: 600 }}>Reliable Digital Kreations</div>
+              </div>
+            </div>
+            <div style={{ fontSize: '0.85rem', color: 'var(--text3)' }}>Professional Software Development & Digital Engineering</div>
           </div>
           <div style={{ display: 'flex', gap: '4rem' }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.85rem' }}>
@@ -141,7 +148,7 @@ export const Home: React.FC = () => {
           </div>
         </div>
         <div style={{ maxWidth: '1200px', margin: '2rem auto 0', paddingTop: '1.5rem', borderTop: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text3)' }}>
-          <span>&copy; {new Date().getFullYear()} RDK Industries. All rights reserved.</span>
+          <span>&copy; {new Date().getFullYear()} RDK Tech — Reliable Digital Kreations. All rights reserved.</span>
           <span>Built for scale.</span>
         </div>
       </footer>

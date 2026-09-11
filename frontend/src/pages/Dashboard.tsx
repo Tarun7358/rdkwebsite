@@ -135,11 +135,19 @@ export const Dashboard: React.FC = () => {
     <div id="dashboardView" style={{ display: 'flex', height: '100vh', background: 'var(--bg)', color: 'var(--text)' }}>
       {/* Sidebar */}
       <div className="dash-sidebar" style={{ display: 'flex', flexDirection: 'column', width: '260px', background: 'var(--card)', borderRight: '1px solid var(--border)' }}>
-        <div style={{ padding: '1.5rem', borderBottom: '1px solid var(--border)' }}>
-          <div style={{ fontSize: '1.4rem', fontWeight: 900, letterSpacing: '-0.5px', color: 'var(--text)', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-            <span style={{ color: '#ea580c' }}>RDK</span> Console
-          </div>
-          <div id="userRoleBadge" className="status-badge" style={{ marginTop: '0.5rem', display: 'inline-block', fontSize: '0.7rem', textTransform: 'capitalize', background: 'rgba(234, 88, 12, 0.12)', color: '#ea580c', fontWeight: 700, padding: '0.2rem 0.6rem', borderRadius: '6px' }}>
+        <div style={{ padding: '1.25rem 1.5rem', borderBottom: '1px solid var(--border)' }}>
+          <a href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <img src="/logo-icon.png" alt="RDK Tech" style={{ width: '36px', height: '36px', objectFit: 'contain', filter: 'drop-shadow(0 2px 8px rgba(124, 58, 237, 0.35))' }} />
+            <div>
+              <div style={{ fontSize: '1.2rem', fontWeight: 900, letterSpacing: '-0.5px', color: 'var(--text)', lineHeight: 1.1 }}>
+                RDK <span style={{ background: 'linear-gradient(135deg, #6366f1 0%, #a855f7 100%)', WebkitBackgroundClip: 'text', backgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Console</span>
+              </div>
+              <div style={{ fontSize: '0.65rem', color: 'var(--text3)', letterSpacing: '0.05em', textTransform: 'uppercase', fontWeight: 600 }}>
+                Enterprise Portal
+              </div>
+            </div>
+          </a>
+          <div id="userRoleBadge" className="status-badge" style={{ marginTop: '0.6rem', display: 'inline-block', fontSize: '0.7rem', textTransform: 'capitalize', background: 'rgba(124, 58, 237, 0.12)', color: '#8b5cf6', fontWeight: 700, padding: '0.2rem 0.6rem', borderRadius: '6px' }}>
             {user.role} Dashboard
           </div>
         </div>

@@ -68,23 +68,51 @@
       text-decoration: none;
       display: flex;
       align-items: center;
-      gap: .5rem;
+      gap: .75rem;
       white-space: nowrap;
-      line-height: 1.2
+      line-height: 1.2;
+      transition: transform 0.2s ease;
+    }
+
+    .logo:hover {
+      transform: translateY(-1px);
+    }
+
+    .logo-img {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+      flex-shrink: 0;
+      filter: drop-shadow(0 2px 8px rgba(124, 58, 237, 0.35));
+      transition: transform 0.25s ease, filter 0.25s ease;
+    }
+
+    .logo:hover .logo-img {
+      transform: scale(1.05);
+      filter: drop-shadow(0 4px 14px rgba(124, 58, 237, 0.5));
     }
 
     .logo .abbr {
-      color: var(--blue);
-      font-size: 1.3rem;
-      font-weight: 800
+      color: var(--text);
+      font-size: 1.25rem;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+    }
+
+    .logo .abbr .logo-tech {
+      background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
     .logo .full {
-      font-size: .7rem;
-      font-weight: 500;
-      color: var(--text2);
+      font-size: .68rem;
+      font-weight: 600;
+      color: var(--text3);
       display: block;
-      letter-spacing: .02em
+      letter-spacing: .08em;
+      text-transform: uppercase;
     }
 
     .nav-links {
