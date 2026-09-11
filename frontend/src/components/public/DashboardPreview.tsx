@@ -1,5 +1,5 @@
 import React from 'react';
-import { LayoutDashboard, Folder, Ticket, MessageSquare, CreditCard, Bell, User, CheckCircle2 } from 'lucide-react';
+import { LayoutDashboard, Folder, Ticket, MessageSquare, CreditCard } from 'lucide-react';
 
 export const DashboardPreview: React.FC = () => {
   return (
@@ -39,33 +39,25 @@ export const DashboardPreview: React.FC = () => {
                 rdk-console://client.rdkreations.io
               </span>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.75rem', color: '#10b981', fontWeight: 700 }}>
-              <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#10b981' }}></span>
-              Live Sync Active
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+              <span style={{ fontSize: '0.725rem', color: 'var(--text3)', fontWeight: 600 }}>Production Cluster EU-West</span>
+              <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#10b981', boxShadow: '0 0 8px #10b981' }}></div>
             </div>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '240px 1fr', minHeight: '440px' }}>
+          {/* Inner Dashboard Simulation */}
+          <div style={{ display: 'grid', gridTemplateColumns: '220px 1fr', minHeight: '440px' }}>
             {/* Sidebar Preview */}
-            <div style={{
-              background: 'var(--bg2)',
-              borderRight: '1px solid var(--border)',
-              padding: '1.5rem 1rem',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '0.35rem'
-            }}>
-              <div style={{ fontSize: '0.7rem', fontWeight: 800, color: 'var(--text3)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '0.75rem', paddingLeft: '0.5rem' }}>
-                WORKSPACE
+            <div style={{ background: 'var(--bg2)', borderRight: '1px solid var(--border)', padding: '1.25rem' }}>
+              <div style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--text3)', fontWeight: 800, marginBottom: '1rem' }}>
+                Client Console
               </div>
               {[
                 { icon: <LayoutDashboard size={16} />, label: 'Overview', active: true },
-                { icon: <Folder size={16} />, label: 'Projects & Sprints', active: false },
-                { icon: <Ticket size={16} />, label: 'Support Tickets', active: false, badge: '2' },
-                { icon: <MessageSquare size={16} />, label: 'Lead Engineer Chat', active: false },
-                { icon: <CreditCard size={16} />, label: 'Billing & Invoices', active: false },
-                { icon: <Bell size={16} />, label: 'System Logs', active: false },
-                { icon: <User size={16} />, label: 'Account Profile', active: false },
+                { icon: <Folder size={16} />, label: 'Active Projects', badge: '3' },
+                { icon: <Ticket size={16} />, label: 'Tickets & SLA', badge: '2' },
+                { icon: <MessageSquare size={16} />, label: 'Live Dev Chat' },
+                { icon: <CreditCard size={16} />, label: 'Invoices & Escrow' },
               ].map((item, idx) => (
                 <div
                   key={idx}
@@ -73,16 +65,16 @@ export const DashboardPreview: React.FC = () => {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    padding: '0.65rem 0.85rem',
-                    borderRadius: '10px',
-                    fontSize: '0.85rem',
-                    fontWeight: item.active ? 700 : 500,
-                    background: item.active ? 'rgba(124, 58, 237, 0.14)' : 'transparent',
+                    padding: '0.6rem 0.75rem',
+                    borderRadius: '8px',
+                    marginBottom: '0.25rem',
+                    background: item.active ? 'rgba(124, 58, 237, 0.12)' : 'transparent',
                     color: item.active ? 'var(--primary)' : 'var(--text2)',
-                    border: item.active ? '1px solid rgba(124, 58, 237, 0.25)' : '1px solid transparent',
+                    fontWeight: item.active ? 700 : 500,
+                    fontSize: '0.825rem'
                   }}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
                     {item.icon}
                     <span>{item.label}</span>
                   </div>
@@ -97,7 +89,7 @@ export const DashboardPreview: React.FC = () => {
 
             {/* Main Area Preview */}
             <div style={{ padding: '1.75rem', background: 'var(--card)' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+              <div style={{ marginBottom: '1.5rem' }}>
                 <div>
                   <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.25rem', fontWeight: 800, color: 'var(--text)', margin: 0 }}>
                     Enterprise Client Portal
@@ -106,9 +98,6 @@ export const DashboardPreview: React.FC = () => {
                     Sprint Cycle 04 · SLA 99.98% Uptime
                   </div>
                 </div>
-                <span style={{ fontSize: '0.75rem', padding: '0.3rem 0.75rem', borderRadius: '20px', background: 'rgba(16, 185, 129, 0.12)', color: '#10b981', border: '1px solid rgba(16, 185, 129, 0.25)', fontWeight: 700 }}>
-                  Active Retainer
-                </span>
               </div>
 
               {/* Stats Chips */}
@@ -155,10 +144,7 @@ export const DashboardPreview: React.FC = () => {
                       <div style={{ width: `${p.pct}%`, height: '100%', background: 'var(--primary-gradient)', borderRadius: '10px' }}></div>
                     </div>
 
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', marginTop: '0.5rem', color: 'var(--text3)' }}>
-                      <span style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', color: '#10b981', fontWeight: 600 }}>
-                        <CheckCircle2 size={13} /> Automated CI/CD Passing
-                      </span>
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', fontSize: '0.75rem', marginTop: '0.5rem', color: 'var(--text3)' }}>
                       <span style={{ fontFamily: 'var(--font-mono, monospace)', fontWeight: 700, color: 'var(--text)' }}>
                         {p.pct}% Complete
                       </span>
