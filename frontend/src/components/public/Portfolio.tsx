@@ -98,9 +98,6 @@ export const Portfolio: React.FC = () => {
   return (
     <section id="portfolio">
       <div className="section-inner">
-        <div className="section-label" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
-          <Layers size={14} /> Proven Track Record
-        </div>
         <h2 className="section-title">Featured Enterprise Engineering Case Studies</h2>
         <p className="section-sub">
           A selection of production-grade client implementations — click any card to inspect interactive system architecture & case studies.
