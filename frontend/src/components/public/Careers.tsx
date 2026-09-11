@@ -47,34 +47,102 @@ const defaultCareers: CareerItem[] = [
   }
 ];
 
+import { Briefcase, Globe, ArrowRight } from 'lucide-react';
+
 export const Careers: React.FC = () => {
   const storeCareers = useAppStore((s) => s.careers);
   const careers = storeCareers && storeCareers.length > 0 ? storeCareers : defaultCareers;
 
   return (
-    <section id="careers">
+    <section id="careers" style={{ padding: '5rem 0', background: 'var(--bg2)' }}>
       <div className="section-inner">
-        <div className="section-label">Join the team</div>
-        <h2 className="section-title">Open positions at RDK</h2>
-        <p className="section-sub">We're always looking for talented people. All RDK roles are remote-first.</p>
-        <div className="careers-grid">
+        <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+          <div className="section-label" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', margin: '0 auto 0.75rem' }}>
+            <Briefcase size={14} /> Join The Core Engineering Team
+          </div>
+          <h2 className="section-title">Open Positions at RDK</h2>
+          <p className="section-sub" style={{ margin: '0 auto' }}>
+            We're building mission-critical systems and looking for world-class builders. All roles are 100% remote.
+          </p>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem' }}>
           {careers.map((job) => (
-            <div key={job.id} className="job-card visible">
-              <div className="job-top">
-                <div className="job-title">{job.title}</div>
-                <span className="job-type">{job.type}</span>
-              </div>
-              <div className="job-dept">{job.dept}</div>
-              <div className="job-tags">
-                {job.tags.map((t, idx) => (
-                  <span key={idx} className="tag">
-                    {t}
+            <div
+              key={job.id}
+              className="glass-card"
+              style={{
+                background: 'var(--card-glass)',
+                border: '1px solid var(--border)',
+                borderRadius: '18px',
+                padding: '1.75rem',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                backdropFilter: 'blur(12px)',
+                boxShadow: 'var(--card-shadow)',
+                transition: 'all 0.25s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-4px)';
+                e.currentTarget.style.borderColor = 'rgba(124, 58, 237, 0.4)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.borderColor = 'var(--border)';
+              }}
+            >
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '1rem', marginBottom: '0.5rem' }}>
+                  <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '1.1rem', color: 'var(--text)', lineHeight: 1.3 }}>
+                    {job.title}
+                  </div>
+                  <span style={{
+                    fontSize: '0.725rem',
+                    fontWeight: 800,
+                    padding: '0.25rem 0.65rem',
+                    borderRadius: '20px',
+                    whiteSpace: 'nowrap',
+                    background: job.type === 'Full-time' ? 'rgba(124, 58, 237, 0.12)' : 'rgba(16, 185, 129, 0.12)',
+                    color: job.type === 'Full-time' ? 'var(--primary)' : '#10b981',
+                    border: `1px solid ${job.type === 'Full-time' ? 'rgba(124, 58, 237, 0.25)' : 'rgba(16, 185, 129, 0.25)'}`
+                  }}>
+                    {job.type}
                   </span>
-                ))}
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.825rem', color: 'var(--text2)', marginBottom: '1.25rem' }}>
+                  <Globe size={14} color="var(--primary)" /> {job.dept}
+                </div>
+
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.45rem', marginBottom: '1.5rem' }}>
+                  {job.tags.map((t, idx) => (
+                    <span
+                      key={idx}
+                      style={{
+                        fontSize: '0.75rem',
+                        fontWeight: 600,
+                        padding: '0.25rem 0.65rem',
+                        borderRadius: '6px',
+                        background: 'var(--bg)',
+                        color: 'var(--text2)',
+                        border: '1px solid var(--border)',
+                        fontFamily: 'var(--font-mono, monospace)'
+                      }}
+                    >
+                      {t}
+                    </span>
+                  ))}
+                </div>
               </div>
-              <div className="job-footer" style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem' }}>
-                <a href="#contact" className={`btn ${job.type === 'Freelance' ? 'btn-outline' : 'btn-primary'}`}>
-                  {job.type === 'Freelance' ? 'Apply' : 'Apply now'}
+
+              <div style={{ display: 'flex', justifyContent: 'flex-end', borderTop: '1px solid var(--border)', paddingTop: '1rem' }}>
+                <a
+                  href="#contact"
+                  className={`btn ${job.type === 'Freelance' ? 'btn-outline' : 'btn-primary'}`}
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.85rem', padding: '0.55rem 1.25rem' }}
+                >
+                  {job.type === 'Freelance' ? 'Apply for Contract' : 'Apply for Role'} <ArrowRight size={14} />
                 </a>
               </div>
             </div>

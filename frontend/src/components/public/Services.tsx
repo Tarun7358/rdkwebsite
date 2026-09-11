@@ -125,11 +125,11 @@ export const Services: React.FC = () => {
         </div>
 
         {/* Interactive Scope & Timeline Estimator */}
-        <div style={{ marginTop: '4rem', background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '16px', padding: '2rem', boxShadow: 'var(--shadow-lg)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#ea580c', fontWeight: 700, fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+        <div style={{ marginTop: '4rem', background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '20px', padding: '2.25rem', boxShadow: 'var(--shadow-lg)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--primary)', fontWeight: 700, fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.06em', fontFamily: 'var(--font-display)' }}>
             <Calculator size={18} /> Interactive Scope & Delivery Estimator
           </div>
-          <h3 style={{ fontSize: '1.4rem', fontWeight: 800, margin: '0.3rem 0 1rem 0', color: 'var(--text)' }}>Calculate Your Custom Project Timeline</h3>
+          <h3 style={{ fontSize: '1.5rem', fontWeight: 800, margin: '0.4rem 0 1rem 0', color: 'var(--text)', fontFamily: 'var(--font-display)' }}>Calculate Your Custom Project Timeline</h3>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem', marginTop: '1.5rem' }}>
             
@@ -151,9 +151,9 @@ export const Services: React.FC = () => {
                     style={{
                       padding: '0.65rem 0.75rem',
                       borderRadius: '8px',
-                      border: `1px solid ${platformType === item.id ? '#ea580c' : 'var(--border)'}`,
-                      background: platformType === item.id ? 'rgba(234, 88, 12, 0.15)' : 'var(--bg2)',
-                      color: platformType === item.id ? '#ea580c' : 'var(--text)',
+                      border: `1px solid ${platformType === item.id ? 'var(--primary)' : 'var(--border)'}`,
+                      background: platformType === item.id ? 'rgba(124, 58, 237, 0.12)' : 'var(--bg2)',
+                      color: platformType === item.id ? 'var(--primary)' : 'var(--text)',
                       fontSize: '0.8rem',
                       fontWeight: 700,
                       cursor: 'pointer',
@@ -190,16 +190,16 @@ export const Services: React.FC = () => {
                       gap: '0.4rem',
                       padding: '0.55rem 0.65rem',
                       borderRadius: '8px',
-                      border: `1px solid ${selectedFeatures.includes(feat.id) ? '#16a34a' : 'var(--border)'}`,
-                      background: selectedFeatures.includes(feat.id) ? 'rgba(22, 163, 74, 0.12)' : 'var(--bg2)',
-                      color: selectedFeatures.includes(feat.id) ? '#16a34a' : 'var(--text)',
+                      border: `1px solid ${selectedFeatures.includes(feat.id) ? '#10b981' : 'var(--border)'}`,
+                      background: selectedFeatures.includes(feat.id) ? 'rgba(16, 185, 129, 0.12)' : 'var(--bg2)',
+                      color: selectedFeatures.includes(feat.id) ? '#10b981' : 'var(--text)',
                       fontSize: '0.75rem',
                       fontWeight: 700,
                       cursor: 'pointer',
                       transition: 'all 0.2s'
                     }}
                   >
-                    <CheckCircle2 size={14} color={selectedFeatures.includes(feat.id) ? '#16a34a' : 'var(--text2)'} />
+                    <CheckCircle2 size={14} color={selectedFeatures.includes(feat.id) ? '#10b981' : 'var(--text2)'} />
                     {feat.label}
                   </button>
                 ))}
@@ -207,7 +207,7 @@ export const Services: React.FC = () => {
             </div>
 
             {/* Step 3: Estimated Calculation Box */}
-            <div style={{ background: 'var(--bg2)', padding: '1.25rem', borderRadius: '12px', border: '1px solid var(--border)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+            <div style={{ background: 'var(--bg2)', padding: '1.25rem', borderRadius: '14px', border: '1px solid var(--border)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
               <div>
                 <span style={{ fontSize: '0.75rem', color: 'var(--text2)', fontWeight: 700, textTransform: 'uppercase' }}>
                   Delivery Pace:
@@ -219,9 +219,9 @@ export const Services: React.FC = () => {
                       flex: 1,
                       padding: '0.4rem',
                       borderRadius: '6px',
-                      border: `1px solid ${timelineSpeed === 'standard' ? '#ea580c' : 'var(--border)'}`,
-                      background: timelineSpeed === 'standard' ? 'rgba(234, 88, 12, 0.2)' : 'var(--card)',
-                      color: timelineSpeed === 'standard' ? '#ea580c' : 'var(--text)',
+                      border: `1px solid ${timelineSpeed === 'standard' ? 'var(--primary)' : 'var(--border)'}`,
+                      background: timelineSpeed === 'standard' ? 'rgba(124, 58, 237, 0.15)' : 'var(--card)',
+                      color: timelineSpeed === 'standard' ? 'var(--primary)' : 'var(--text)',
                       fontSize: '0.75rem',
                       fontWeight: 700,
                       cursor: 'pointer'
@@ -235,9 +235,9 @@ export const Services: React.FC = () => {
                       flex: 1,
                       padding: '0.4rem',
                       borderRadius: '6px',
-                      border: `1px solid ${timelineSpeed === 'express' ? '#ea580c' : 'var(--border)'}`,
-                      background: timelineSpeed === 'express' ? 'rgba(234, 88, 12, 0.2)' : 'var(--card)',
-                      color: timelineSpeed === 'express' ? '#ea580c' : 'var(--text)',
+                      border: `1px solid ${timelineSpeed === 'express' ? 'var(--primary)' : 'var(--border)'}`,
+                      background: timelineSpeed === 'express' ? 'rgba(124, 58, 237, 0.15)' : 'var(--card)',
+                      color: timelineSpeed === 'express' ? 'var(--primary)' : 'var(--text)',
                       fontSize: '0.75rem',
                       fontWeight: 700,
                       cursor: 'pointer'
@@ -250,20 +250,19 @@ export const Services: React.FC = () => {
                 <span style={{ fontSize: '0.75rem', color: 'var(--text2)', fontWeight: 700, textTransform: 'uppercase' }}>
                   Estimated Delivery Timeline
                 </span>
-                <div style={{ fontSize: '1.8rem', fontWeight: 900, color: '#ea580c', marginTop: '0.2rem' }}>
+                <div style={{ fontSize: '1.8rem', fontWeight: 900, color: 'var(--primary)', marginTop: '0.2rem', fontFamily: 'var(--font-mono)' }}>
                   {getEstimatedDuration()}
                 </div>
-                <div style={{ fontSize: '0.75rem', color: '#16a34a', marginTop: '0.2rem', fontWeight: 600 }}>
+                <div style={{ fontSize: '0.75rem', color: '#10b981', marginTop: '0.2rem', fontWeight: 600 }}>
                   ✔ Milestone Delivery Schedule Included
                 </div>
               </div>
-
 
               <div style={{ marginTop: '1rem' }}>
                 <a
                   href="#contact"
                   className="btn btn-primary"
-                  style={{ width: '100%', textAlign: 'center', background: '#ea580c', borderColor: '#ea580c', fontWeight: 700, display: 'block' }}
+                  style={{ width: '100%', textAlign: 'center', fontWeight: 700, display: 'block' }}
                 >
                   Request Detailed Proposal
                 </a>

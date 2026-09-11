@@ -78,115 +78,115 @@ export const Contact: React.FC = () => {
             </p>
             
             <div className="contact-detail" style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '1.25rem' }}>
-              <div className="contact-icon" style={{ background: 'var(--bg2, #f8f9fa)', border: '1px solid var(--border, #e5e7eb)', width: '42px', height: '42px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Mail size={18} color="#ea580c" />
+              <div className="contact-icon" style={{ background: 'rgba(124, 58, 237, 0.1)', border: '1px solid rgba(124, 58, 237, 0.2)', width: '42px', height: '42px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Mail size={18} color="var(--primary)" />
               </div>
               <div>
-                <div style={{ fontSize: '0.75rem', color: 'var(--text2, #6b7280)', fontWeight: 700, textTransform: 'uppercase' }}>Direct Email</div>
-                <div style={{ color: '#ea580c', fontWeight: 700, fontSize: '0.925rem' }}>hello@rdkreations.io</div>
+                <div style={{ fontSize: '0.75rem', color: 'var(--text2)', fontWeight: 700, textTransform: 'uppercase' }}>Direct Email</div>
+                <div style={{ color: 'var(--primary)', fontWeight: 700, fontSize: '0.925rem' }}>hello@rdkreations.io</div>
               </div>
             </div>
 
             <div className="contact-detail" style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '1rem' }}>
-              <div className="contact-icon" style={{ background: 'var(--bg2, #f8f9fa)', border: '1px solid var(--border, #e5e7eb)', width: '42px', height: '42px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Bot size={18} color="#ea580c" />
+              <div className="contact-icon" style={{ background: 'rgba(124, 58, 237, 0.1)', border: '1px solid rgba(124, 58, 237, 0.2)', width: '42px', height: '42px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Bot size={18} color="var(--primary)" />
               </div>
               <div>
-                <div style={{ fontSize: '0.75rem', color: 'var(--text2, #6b7280)', fontWeight: 700, textTransform: 'uppercase' }}>Discord Community</div>
-                <div style={{ color: '#ea580c', fontWeight: 700, fontSize: '0.925rem' }}>discord.gg/rdkreations</div>
+                <div style={{ fontSize: '0.75rem', color: 'var(--text2)', fontWeight: 700, textTransform: 'uppercase' }}>Discord Community</div>
+                <div style={{ color: 'var(--primary)', fontWeight: 700, fontSize: '0.925rem' }}>discord.gg/rdkreations</div>
               </div>
             </div>
 
             <div className="contact-detail" style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '1rem' }}>
-              <div className="contact-icon" style={{ background: 'var(--bg2, #f8f9fa)', border: '1px solid var(--border, #e5e7eb)', width: '42px', height: '42px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <MapPin size={18} color="#ea580c" />
+              <div className="contact-icon" style={{ background: 'rgba(124, 58, 237, 0.1)', border: '1px solid rgba(124, 58, 237, 0.2)', width: '42px', height: '42px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <MapPin size={18} color="var(--primary)" />
               </div>
               <div>
-                <div style={{ fontSize: '0.75rem', color: 'var(--text2, #6b7280)', fontWeight: 700, textTransform: 'uppercase' }}>Global Operations</div>
-                <div style={{ fontSize: '0.875rem', color: 'var(--text, #111827)', fontWeight: 600 }}>Remote-First · GMT+0 to GMT+5:30</div>
+                <div style={{ fontSize: '0.75rem', color: 'var(--text2)', fontWeight: 700, textTransform: 'uppercase' }}>Global Operations</div>
+                <div style={{ fontSize: '0.875rem', color: 'var(--text)', fontWeight: 600 }}>Remote-First · GMT+0 to GMT+5:30</div>
               </div>
             </div>
 
             <div className="contact-detail" style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '1rem' }}>
-              <div className="contact-icon" style={{ background: 'var(--bg2, #f8f9fa)', border: '1px solid var(--border, #e5e7eb)', width: '42px', height: '42px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Clock size={18} color="#ea580c" />
+              <div className="contact-icon" style={{ background: 'rgba(124, 58, 237, 0.1)', border: '1px solid rgba(124, 58, 237, 0.2)', width: '42px', height: '42px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Clock size={18} color="var(--primary)" />
               </div>
               <div>
-                <div style={{ fontSize: '0.75rem', color: 'var(--text2, #6b7280)', fontWeight: 700, textTransform: 'uppercase' }}>SLA Response Time</div>
-                <div style={{ fontSize: '0.875rem', color: 'var(--text, #111827)', fontWeight: 600 }}>Within 2 Hours (Business Days)</div>
+                <div style={{ fontSize: '0.75rem', color: 'var(--text2)', fontWeight: 700, textTransform: 'uppercase' }}>SLA Response Time</div>
+                <div style={{ fontSize: '0.875rem', color: 'var(--text)', fontWeight: 600 }}>Within 2 Hours (Business Days)</div>
               </div>
             </div>
 
-            <div style={{ marginTop: '2rem', padding: '1.5rem', background: 'var(--bg2, #f8f9fa)', borderRadius: '16px', border: '1px solid var(--border, #e5e7eb)' }}>
-              <div style={{ fontWeight: 800, marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#ea580c', fontSize: '0.95rem' }}>
+            <div style={{ marginTop: '2rem', padding: '1.5rem', background: 'var(--card-glass)', borderRadius: '16px', border: '1px solid var(--border)', backdropFilter: 'blur(12px)' }}>
+              <div style={{ fontWeight: 800, marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--primary)', fontSize: '0.95rem' }}>
                 <LifeBuoy size={18} /> Existing Client Support Portal
               </div>
-              <div style={{ fontSize: '0.85rem', color: 'var(--text2, #6b7280)', marginBottom: '1rem', lineHeight: '1.5' }}>
+              <div style={{ fontSize: '0.85rem', color: 'var(--text2)', marginBottom: '1rem', lineHeight: '1.5' }}>
                 Already an RDK partner? Submit active tickets for sprint updates, SLA tracking, and code revisions.
               </div>
-              <a href="#tickets" className="btn btn-outline" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: '#ea580c', borderColor: '#ea580c', fontSize: '0.85rem' }}>
+              <a href="#tickets" className="btn btn-outline" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: 'var(--primary)', borderColor: 'var(--primary)', fontSize: '0.85rem' }}>
                 Open Support Ticket <ArrowRight size={14} />
               </a>
             </div>
           </div>
 
           {/* Form */}
-          <form className="contact-form" onSubmit={handleSubmit} style={{ background: 'var(--card, #ffffff)', border: '1px solid var(--border, #e5e7eb)', borderRadius: '16px', padding: '2rem', boxShadow: 'var(--shadow-lg)' }}>
+          <form className="contact-form" onSubmit={handleSubmit} style={{ background: 'var(--card-glass)', border: '1px solid var(--border)', borderRadius: '20px', padding: '2.25rem', backdropFilter: 'blur(12px)', boxShadow: 'var(--card-shadow)' }}>
             <div className="form-row">
               <div className="form-group">
-                <label style={{ fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text, #111827)', marginBottom: '0.4rem', display: 'block' }}>Full Name *</label>
+                <label style={{ fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text)', marginBottom: '0.4rem', display: 'block' }}>Full Name *</label>
                 <input
                   type="text"
                   placeholder="Alex Johnson"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   required
-                  style={{ background: 'var(--bg2, #f8f9fa)', border: '1px solid var(--border, #e5e7eb)', color: 'var(--text, #111827)', padding: '0.7rem 1rem', borderRadius: '10px' }}
+                  style={{ background: 'var(--bg2)', border: '1px solid var(--border)', color: 'var(--text)', padding: '0.75rem 1rem', borderRadius: '10px' }}
                 />
               </div>
               <div className="form-group">
-                <label style={{ fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text, #111827)', marginBottom: '0.4rem', display: 'block' }}>Company / Organization</label>
+                <label style={{ fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text)', marginBottom: '0.4rem', display: 'block' }}>Company / Organization</label>
                 <input
                   type="text"
                   placeholder="Acme Enterprise"
                   value={formData.company}
                   onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                  style={{ background: 'var(--bg2, #f8f9fa)', border: '1px solid var(--border, #e5e7eb)', color: 'var(--text, #111827)', padding: '0.7rem 1rem', borderRadius: '10px' }}
+                  style={{ background: 'var(--bg2)', border: '1px solid var(--border)', color: 'var(--text)', padding: '0.75rem 1rem', borderRadius: '10px' }}
                 />
               </div>
             </div>
 
             <div className="form-row">
               <div className="form-group">
-                <label style={{ fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text, #111827)', marginBottom: '0.4rem', display: 'block' }}>Work Email *</label>
+                <label style={{ fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text)', marginBottom: '0.4rem', display: 'block' }}>Work Email *</label>
                 <input
                   type="email"
                   placeholder="alex@company.com"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   required
-                  style={{ background: 'var(--bg2, #f8f9fa)', border: '1px solid var(--border, #e5e7eb)', color: 'var(--text, #111827)', padding: '0.7rem 1rem', borderRadius: '10px' }}
+                  style={{ background: 'var(--bg2)', border: '1px solid var(--border)', color: 'var(--text)', padding: '0.75rem 1rem', borderRadius: '10px' }}
                 />
               </div>
               <div className="form-group">
-                <label style={{ fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text, #111827)', marginBottom: '0.4rem', display: 'block' }}>Discord Handle</label>
+                <label style={{ fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text)', marginBottom: '0.4rem', display: 'block' }}>Discord Handle</label>
                 <input
                   type="text"
                   placeholder="alex#0001"
                   value={formData.discord}
                   onChange={(e) => setFormData({ ...formData, discord: e.target.value })}
-                  style={{ background: 'var(--bg2, #f8f9fa)', border: '1px solid var(--border, #e5e7eb)', color: 'var(--text, #111827)', padding: '0.7rem 1rem', borderRadius: '10px' }}
+                  style={{ background: 'var(--bg2)', border: '1px solid var(--border)', color: 'var(--text)', padding: '0.75rem 1rem', borderRadius: '10px' }}
                 />
               </div>
             </div>
 
             <div className="form-row">
               <div className="form-group">
-                <label style={{ fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text, #111827)', marginBottom: '0.4rem', display: 'block' }}>Target Service Architecture</label>
+                <label style={{ fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text)', marginBottom: '0.4rem', display: 'block' }}>Target Service Architecture</label>
                 <select
                   value={formData.projectType}
                   onChange={(e) => setFormData({ ...formData, projectType: e.target.value })}
-                  style={{ background: 'var(--bg2, #f8f9fa)', border: '1px solid var(--border, #e5e7eb)', color: 'var(--text, #111827)', padding: '0.7rem 1rem', borderRadius: '10px' }}
+                  style={{ background: 'var(--bg2)', border: '1px solid var(--border)', color: 'var(--text)', padding: '0.75rem 1rem', borderRadius: '10px' }}
                 >
                   <option>Website & SaaS Engineering</option>
                   <option>Mobile Application (PWA / Native)</option>
@@ -198,11 +198,11 @@ export const Contact: React.FC = () => {
                 </select>
               </div>
               <div className="form-group">
-                <label style={{ fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text, #111827)', marginBottom: '0.4rem', display: 'block' }}>Target Scope Scale</label>
+                <label style={{ fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text)', marginBottom: '0.4rem', display: 'block' }}>Target Scope Scale</label>
                 <select
                   value={formData.budgetRange}
                   onChange={(e) => setFormData({ ...formData, budgetRange: e.target.value })}
-                  style={{ background: 'var(--bg2, #f8f9fa)', border: '1px solid var(--border, #e5e7eb)', color: 'var(--text, #111827)', padding: '0.7rem 1rem', borderRadius: '10px' }}
+                  style={{ background: 'var(--bg2)', border: '1px solid var(--border)', color: 'var(--text)', padding: '0.75rem 1rem', borderRadius: '10px' }}
                 >
                   <option>MVP / Sprint Scope</option>
                   <option>Core Product Architecture</option>
@@ -213,32 +213,32 @@ export const Contact: React.FC = () => {
             </div>
 
             <div className="form-group">
-              <label style={{ fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text, #111827)', marginBottom: '0.4rem', display: 'block' }}>Target Launch Date</label>
+              <label style={{ fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text)', marginBottom: '0.4rem', display: 'block' }}>Target Launch Date</label>
               <input
                 type="date"
                 value={formData.deadline}
                 onChange={(e) => setFormData({ ...formData, deadline: e.target.value })}
-                style={{ background: 'var(--bg2, #f8f9fa)', border: '1px solid var(--border, #e5e7eb)', color: 'var(--text, #111827)', padding: '0.7rem 1rem', borderRadius: '10px' }}
+                style={{ background: 'var(--bg2)', border: '1px solid var(--border)', color: 'var(--text)', padding: '0.75rem 1rem', borderRadius: '10px' }}
               />
             </div>
 
             <div className="form-group">
-              <label style={{ fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text, #111827)', marginBottom: '0.4rem', display: 'block' }}>Technical Specifications & Requirements *</label>
+              <label style={{ fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text)', marginBottom: '0.4rem', display: 'block' }}>Technical Specifications & Requirements *</label>
               <textarea
                 placeholder="Detail your target features, compliance requirements, third-party API integrations, and expected milestone timeline..."
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 required
-                style={{ background: 'var(--bg2, #f8f9fa)', border: '1px solid var(--border, #e5e7eb)', color: 'var(--text, #111827)', padding: '0.7rem 1rem', borderRadius: '10px', minHeight: '120px' }}
+                style={{ background: 'var(--bg2)', border: '1px solid var(--border)', color: 'var(--text)', padding: '0.75rem 1rem', borderRadius: '10px', minHeight: '120px' }}
               />
             </div>
 
-            <button type="submit" className="btn btn-primary" disabled={isSubmitting} style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', background: '#ea580c', borderColor: '#ea580c', padding: '0.8rem 1.75rem', borderRadius: '12px', fontWeight: 700 }}>
+            <button type="submit" className="btn btn-primary" disabled={isSubmitting} style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.85rem 2rem', borderRadius: '12px', fontWeight: 700, fontSize: '0.95rem' }}>
               {isSubmitting ? 'Submitting Scope...' : 'Submit Technical Scope Proposal'} <Send size={16} />
             </button>
 
             {submitted && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#16a34a', marginTop: '1rem', fontWeight: 700, fontSize: '0.9rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#10b981', marginTop: '1rem', fontWeight: 700, fontSize: '0.9rem' }}>
                 <CheckCircle2 size={18} /> Scope proposal registered and queued for technical review!
               </div>
             )}

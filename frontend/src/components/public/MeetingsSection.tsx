@@ -79,23 +79,23 @@ export const MeetingsSection: React.FC = () => {
 
         {/* Interactive Booking Modal */}
         {selectedMeeting && (
-          <div style={{ marginTop: '2rem', background: 'var(--card, #111827)', border: '1px solid var(--border, #374151)', borderRadius: '16px', padding: '1.5rem', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1)' }}>
+          <div style={{ marginTop: '2.5rem', background: 'var(--card-glass)', border: '1px solid var(--border)', borderRadius: '18px', padding: '1.75rem', backdropFilter: 'blur(12px)', boxShadow: 'var(--card-shadow)' }}>
             {!booked ? (
               <form onSubmit={handleBookMeeting}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border, #374151)', paddingBottom: '0.75rem', marginBottom: '1rem' }}>
-                  <div style={{ fontWeight: 700, fontSize: '1.1rem', color: '#ea580c', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border)', paddingBottom: '0.85rem', marginBottom: '1.25rem' }}>
+                  <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '1.1rem', color: 'var(--primary)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                     <Clock size={18} /> Schedule {selectedMeeting} Session
                   </div>
-                  <button type="button" onClick={() => setSelectedMeeting(null)} style={{ background: 'transparent', border: 'none', color: '#9ca3af', cursor: 'pointer' }}>Close ✕</button>
+                  <button type="button" onClick={() => setSelectedMeeting(null)} style={{ background: 'transparent', border: 'none', color: 'var(--text3)', cursor: 'pointer', fontSize: '1rem' }}>Close ✕</button>
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1.25rem' }}>
                   <div>
-                    <label style={{ fontSize: '0.8rem', fontWeight: 700, display: 'block', marginBottom: '0.3rem' }}>Select Available Slot:</label>
+                    <label style={{ fontSize: '0.825rem', fontWeight: 700, color: 'var(--text)', display: 'block', marginBottom: '0.4rem' }}>Select Available Slot:</label>
                     <select
                       value={selectedDate}
                       onChange={(e) => setSelectedDate(e.target.value)}
-                      style={{ width: '100%', padding: '0.6rem', background: 'var(--surface, #1f2937)', border: '1px solid var(--border, #374151)', color: '#ffffff', borderRadius: '8px' }}
+                      style={{ width: '100%', padding: '0.75rem', background: 'var(--bg2)', border: '1px solid var(--border)', color: 'var(--text)', borderRadius: '10px', fontSize: '0.875rem' }}
                     >
                       <option>Today, 4:00 PM EST</option>
                       <option>Tomorrow, 10:00 AM EST</option>
@@ -105,32 +105,32 @@ export const MeetingsSection: React.FC = () => {
                   </div>
 
                   <div>
-                    <label style={{ fontSize: '0.8rem', fontWeight: 700, display: 'block', marginBottom: '0.3rem' }}>Work Email Address:</label>
+                    <label style={{ fontSize: '0.825rem', fontWeight: 700, color: 'var(--text)', display: 'block', marginBottom: '0.4rem' }}>Work Email Address:</label>
                     <input
                       type="email"
                       required
                       value={clientEmail}
                       onChange={(e) => setClientEmail(e.target.value)}
                       placeholder="alex@company.com"
-                      style={{ width: '100%', padding: '0.6rem', background: 'var(--surface, #1f2937)', border: '1px solid var(--border, #374151)', color: '#ffffff', borderRadius: '8px' }}
+                      style={{ width: '100%', padding: '0.75rem', background: 'var(--bg2)', border: '1px solid var(--border)', color: 'var(--text)', borderRadius: '10px', fontSize: '0.875rem' }}
                     />
                   </div>
                 </div>
 
-                <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'flex-end' }}>
-                  <button type="submit" disabled={isSubmitting} className="btn btn-primary" style={{ background: '#ea580c', borderColor: '#ea580c', display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
-                    {isSubmitting ? 'Syncing with Supabase...' : 'Confirm & Save Meeting'} <ArrowRight size={16} />
+                <div style={{ marginTop: '1.5rem', display: 'flex', justifyContent: 'flex-end' }}>
+                  <button type="submit" disabled={isSubmitting} className="btn btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.75rem 1.5rem' }}>
+                    {isSubmitting ? 'Syncing...' : 'Confirm & Save Meeting'} <ArrowRight size={16} />
                   </button>
                 </div>
               </form>
             ) : (
-              <div style={{ textAlign: 'center', padding: '1rem' }}>
-                <CheckCircle2 size={40} color="#22c55e" style={{ margin: '0 auto 0.5rem auto' }} />
-                <h4 style={{ fontSize: '1.2rem', fontWeight: 800 }}>Meeting Confirmed & Saved to Database!</h4>
-                <p style={{ fontSize: '0.85rem', color: 'var(--text2, #d1d5db)' }}>
+              <div style={{ textAlign: 'center', padding: '1.5rem' }}>
+                <CheckCircle2 size={42} color="#10b981" style={{ margin: '0 auto 0.75rem auto' }} />
+                <h4 style={{ fontFamily: 'var(--font-display)', fontSize: '1.25rem', fontWeight: 800, color: 'var(--text)' }}>Meeting Confirmed & Saved to Database!</h4>
+                <p style={{ fontSize: '0.9rem', color: 'var(--text2)', marginTop: '0.4rem' }}>
                   A {selectedMeeting} calendar invitation for <strong>{selectedDate}</strong> has been dispatched for <strong>{clientEmail}</strong>.
                 </p>
-                <button onClick={() => setSelectedMeeting(null)} className="btn btn-outline" style={{ marginTop: '1rem' }}>Done</button>
+                <button onClick={() => setSelectedMeeting(null)} className="btn btn-outline" style={{ marginTop: '1.25rem' }}>Done</button>
               </div>
             )}
           </div>

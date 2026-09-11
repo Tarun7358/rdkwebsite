@@ -46,7 +46,7 @@ export const Testimonials: React.FC = () => {
                 </div>
               </div>
               <div className="testi-author" style={{ marginTop: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                <div className="avatar" style={{ background: '#ea580c', color: '#ffffff', fontWeight: 800, fontSize: '0.85rem' }}>
+                <div className="avatar" style={{ background: 'var(--primary-gradient)', color: '#ffffff', fontWeight: 800, fontSize: '0.85rem', boxShadow: '0 2px 8px rgba(124, 58, 237, 0.3)' }}>
                   {t.avatar}
                 </div>
                 <div>

@@ -155,7 +155,7 @@ export const Portfolio: React.FC = () => {
                         : 'AI Intelligence'}
                     </span>
                     {isVetri && (
-                      <span style={{ background: '#ea580c', color: '#fff', fontSize: '0.65rem', padding: '0.15rem 0.5rem', borderRadius: '12px', fontWeight: 800 }}>
+                      <span style={{ background: 'var(--primary-gradient)', color: '#fff', fontSize: '0.65rem', padding: '0.2rem 0.6rem', borderRadius: '12px', fontWeight: 800, letterSpacing: '0.04em' }}>
                         INTERACTIVE SUITE
                       </span>
                     )}
@@ -180,7 +180,6 @@ export const Portfolio: React.FC = () => {
                         handleOpenProject(item);
                       }}
                       className={`btn ${isVetri ? 'btn-primary' : 'btn-outline'}`}
-                      style={isVetri ? { background: '#ea580c', borderColor: '#ea580c' } : {}}
                     >
                       {isVetri ? 'Open Live Demo' : 'Inspect Case Study'} <ArrowRight size={14} style={{ marginLeft: '0.3rem' }} />
                     </button>

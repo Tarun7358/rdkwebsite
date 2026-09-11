@@ -59,65 +59,65 @@ export const TicketSection: React.FC = () => {
   };
 
   return (
-    <section className="ticket-section" id="tickets">
+    <section className="ticket-section" id="tickets" style={{ padding: '5rem 0' }}>
       <div className="section-inner" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '3.5rem', alignItems: 'start' }}>
         
         {/* Left Column: Info & Ticket Form */}
         <div>
-          <div className="section-label" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
+          <div className="section-label" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.75rem' }}>
             <LifeBuoy size={14} /> Enterprise Support Infrastructure
           </div>
           <h2 className="section-title">Track Support & Engineering Tickets</h2>
-          <p className="section-sub" style={{ marginBottom: '1.75rem' }}>
+          <p className="section-sub" style={{ marginBottom: '2rem' }}>
             All client accounts include access to dedicated ticketing with real-time SSE notifications, SLA tracking, and developer assignment.
           </p>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.1rem' }}>
             {[
-              { icon: <Ticket size={18} color="#ea580c" />, title: 'Automated Ticket ID & Escrow Tracking' },
-              { icon: <Bell size={18} color="#ea580c" />, title: 'Real-Time Webhook & Email Status Notifications' },
-              { icon: <Paperclip size={18} color="#ea580c" />, title: 'Secure Log Attachments & Diagnostic Dumps' },
-              { icon: <Users size={18} color="#ea580c" />, title: 'Dedicated Lead Engineer Assignment' },
+              { icon: <Ticket size={18} color="var(--primary)" />, title: 'Automated Ticket ID & Escrow Tracking' },
+              { icon: <Bell size={18} color="var(--primary)" />, title: 'Real-Time Webhook & Email Status Notifications' },
+              { icon: <Paperclip size={18} color="var(--primary)" />, title: 'Secure Log Attachments & Diagnostic Dumps' },
+              { icon: <Users size={18} color="var(--primary)" />, title: 'Dedicated Lead Engineer Assignment' },
             ].map((feat, idx) => (
-              <div key={idx} style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
-                <div style={{ width: '38px', height: '38px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg2, #f8f9fa)', border: '1px solid var(--border, #e5e7eb)', borderRadius: '50%', flexShrink: 0 }}>
+              <div key={idx} style={{ display: 'flex', gap: '0.85rem', alignItems: 'center' }}>
+                <div style={{ width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(124, 58, 237, 0.1)', border: '1px solid rgba(124, 58, 237, 0.2)', borderRadius: '10px', flexShrink: 0 }}>
                   {feat.icon}
                 </div>
-                <span style={{ fontSize: '0.9rem', color: 'var(--text, #111827)', fontWeight: 600 }}>{feat.title}</span>
+                <span style={{ fontSize: '0.92rem', color: 'var(--text)', fontWeight: 600 }}>{feat.title}</span>
               </div>
             ))}
           </div>
 
           {/* Interactive Ticket Form */}
-          <div style={{ marginTop: '2rem', background: 'var(--card, #ffffff)', border: '1px solid var(--border, #e5e7eb)', borderRadius: '16px', padding: '1.5rem', boxShadow: 'var(--shadow-lg)' }}>
-            <div style={{ fontSize: '0.825rem', fontWeight: 800, color: '#ea580c', marginBottom: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+          <div style={{ marginTop: '2.5rem', background: 'var(--card-glass)', border: '1px solid var(--border)', borderRadius: '18px', padding: '1.75rem', backdropFilter: 'blur(12px)', boxShadow: 'var(--card-shadow)' }}>
+            <div style={{ fontSize: '0.825rem', fontWeight: 800, color: 'var(--primary)', marginBottom: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
               Create Real-Time Support Ticket
             </div>
-            <form onSubmit={handleSubmitTicket} style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            <form onSubmit={handleSubmitTicket} style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
               <input
                 type="email"
                 required
                 value={clientEmail}
                 onChange={(e) => setClientEmail(e.target.value)}
                 placeholder="Your email address (e.g. client@company.com)..."
-                style={{ padding: '0.75rem 1rem', background: 'var(--bg2, #f8f9fa)', border: '1px solid var(--border, #e5e7eb)', color: 'var(--text, #111827)', borderRadius: '10px', fontSize: '0.875rem' }}
+                style={{ padding: '0.8rem 1rem', background: 'var(--bg2)', border: '1px solid var(--border)', color: 'var(--text)', borderRadius: '10px', fontSize: '0.875rem' }}
               />
-              <div style={{ display: 'flex', gap: '0.5rem' }}>
+              <div style={{ display: 'flex', gap: '0.6rem' }}>
                 <input
                   type="text"
                   required
                   value={ticketTitle}
                   onChange={(e) => setTicketTitle(e.target.value)}
                   placeholder="Ticket title / issue description..."
-                  style={{ flex: 1, padding: '0.75rem 1rem', background: 'var(--bg2, #f8f9fa)', border: '1px solid var(--border, #e5e7eb)', color: 'var(--text, #111827)', borderRadius: '10px', fontSize: '0.875rem' }}
+                  style={{ flex: 1, padding: '0.8rem 1rem', background: 'var(--bg2)', border: '1px solid var(--border)', color: 'var(--text)', borderRadius: '10px', fontSize: '0.875rem' }}
                 />
-                <button type="submit" disabled={isSubmitting} className="btn btn-primary" style={{ background: '#ea580c', borderColor: '#ea580c', display: 'inline-flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.875rem', padding: '0.75rem 1.25rem' }}>
+                <button type="submit" disabled={isSubmitting} className="btn btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.45rem', fontSize: '0.875rem', padding: '0.8rem 1.35rem' }}>
                   {isSubmitting ? 'Submitting...' : 'Submit Ticket'} <Send size={14} />
                 </button>
               </div>
             </form>
             {submitted && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#16a34a', fontSize: '0.825rem', marginTop: '0.75rem', fontWeight: 600 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#10b981', fontSize: '0.85rem', marginTop: '0.85rem', fontWeight: 600 }}>
                 <CheckCircle2 size={16} /> Ticket registered and persisted to real-time database!
               </div>
             )}
@@ -126,24 +126,24 @@ export const TicketSection: React.FC = () => {
 
         {/* Right Column: Live Ticket Feed */}
         <div>
-          <div className="ticket-demo" style={{ background: 'var(--card, #ffffff)', border: '1px solid var(--border, #e5e7eb)', borderRadius: '20px', padding: '1.5rem', boxShadow: 'var(--shadow-lg)' }}>
-            <div style={{ fontSize: '0.775rem', color: 'var(--text2, #6b7280)', fontWeight: 800, textTransform: 'uppercase', marginBottom: '1.25rem', letterSpacing: '0.05em' }}>
+          <div className="ticket-demo" style={{ background: 'var(--card-glass)', border: '1px solid var(--border)', borderRadius: '20px', padding: '1.75rem', backdropFilter: 'blur(12px)', boxShadow: 'var(--card-shadow)' }}>
+            <div style={{ fontSize: '0.775rem', color: 'var(--text2)', fontWeight: 800, textTransform: 'uppercase', marginBottom: '1.25rem', letterSpacing: '0.06em' }}>
               Real-Time Database Ticket Feed
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', maxHeight: '420px', overflowY: 'auto' }}>
               {displayedTickets.map((t) => (
-                <div key={t.id} style={{ background: 'var(--bg2, #f8f9fa)', border: '1px solid var(--border, #e5e7eb)', borderRadius: '14px', padding: '1.15rem' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                    <div style={{ fontWeight: 800, fontSize: '0.95rem', color: 'var(--text, #111827)' }}>{t.title}</div>
-                    <span style={{ background: 'rgba(234, 88, 12, 0.12)', color: '#ea580c', fontSize: '0.725rem', padding: '0.2rem 0.6rem', borderRadius: '6px', fontWeight: 800 }}>
+                <div key={t.id} style={{ background: 'var(--bg2)', border: '1px solid var(--border)', borderRadius: '14px', padding: '1.2rem', transition: 'border-color 0.2s ease' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.6rem' }}>
+                    <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '0.95rem', color: 'var(--text)' }}>{t.title}</div>
+                    <span style={{ background: 'rgba(124, 58, 237, 0.12)', border: '1px solid rgba(124, 58, 237, 0.25)', color: 'var(--primary)', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.725rem', padding: '0.25rem 0.65rem', borderRadius: '6px', fontWeight: 800 }}>
                       {t.id}
                     </span>
                   </div>
-                  <div style={{ display: 'flex', gap: '1rem', fontSize: '0.8rem', color: 'var(--text2, #4b5563)', flexWrap: 'wrap' }}>
-                    <span>Cat: <strong style={{ color: 'var(--text, #111827)' }}>{t.cat}</strong></span>
-                    <span>Status: <strong style={{ color: '#16a34a' }}>● {t.status}</strong></span>
-                    <span>Assignee: <strong style={{ color: 'var(--text, #111827)' }}>{t.assigned}</strong></span>
+                  <div style={{ display: 'flex', gap: '1.25rem', fontSize: '0.8rem', color: 'var(--text2)', flexWrap: 'wrap' }}>
+                    <span>Cat: <strong style={{ color: 'var(--text)' }}>{t.cat}</strong></span>
+                    <span>Status: <strong style={{ color: '#10b981' }}>● {t.status}</strong></span>
+                    <span>Assignee: <strong style={{ color: 'var(--text)' }}>{t.assigned}</strong></span>
                   </div>
                 </div>
               ))}

@@ -210,32 +210,32 @@ export const ClientDashboard: React.FC = () => {
         <div className="dash-card-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.25rem' }}>
           <div className="dash-card" style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '16px', padding: '1.5rem', boxShadow: 'var(--shadow-sm)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-              <div className="dc-num" style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--text)' }}>{activeProjectsCount}</div>
-              <Folder size={24} color="#ea580c" />
+              <div className="dc-num" style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--text)', fontFamily: 'var(--font-mono)' }}>{activeProjectsCount}</div>
+              <Folder size={24} color="var(--primary)" />
             </div>
             <div className="dc-label" style={{ fontSize: '0.85rem', color: 'var(--text2)', fontWeight: 600 }}>Active Projects</div>
           </div>
 
           <div className="dash-card" style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '16px', padding: '1.5rem', boxShadow: 'var(--shadow-sm)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-              <div className="dc-num" style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--text)' }}>{openTicketsCount}</div>
-              <Ticket size={24} color="#ea580c" />
+              <div className="dc-num" style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--text)', fontFamily: 'var(--font-mono)' }}>{openTicketsCount}</div>
+              <Ticket size={24} color="var(--primary)" />
             </div>
             <div className="dc-label" style={{ fontSize: '0.85rem', color: 'var(--text2)', fontWeight: 600 }}>Open Support Tickets</div>
           </div>
 
           <div className="dash-card" style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '16px', padding: '1.5rem', boxShadow: 'var(--shadow-sm)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-              <div className="dc-num" style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--text)' }}>${pendingInvoiceVal}</div>
-              <CreditCard size={24} color="#ea580c" />
+              <div className="dc-num" style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--text)', fontFamily: 'var(--font-mono)' }}>${pendingInvoiceVal}</div>
+              <CreditCard size={24} color="var(--primary)" />
             </div>
             <div className="dc-label" style={{ fontSize: '0.85rem', color: 'var(--text2)', fontWeight: 600 }}>Pending Invoices</div>
           </div>
 
           <div className="dash-card" style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '16px', padding: '1.5rem', boxShadow: 'var(--shadow-sm)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-              <div className="dc-num" style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--text)' }}>{chatMessages.length}</div>
-              <MessageSquare size={24} color="#ea580c" />
+              <div className="dc-num" style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--text)', fontFamily: 'var(--font-mono)' }}>{chatMessages.length}</div>
+              <MessageSquare size={24} color="var(--primary)" />
             </div>
             <div className="dc-label" style={{ fontSize: '0.85rem', color: 'var(--text2)', fontWeight: 600 }}>Message Threads</div>
           </div>
@@ -321,7 +321,7 @@ export const ClientDashboard: React.FC = () => {
                           {p.deliverables?.map((d, idx) => (
                             <li key={idx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                               <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontWeight: 600 }}>
-                                <FileText size={14} color="#ea580c" /> {d.name} ({d.size})
+                                <FileText size={14} color="var(--primary)" /> {d.name} ({d.size})
                               </span>
                               <span style={{ fontSize: '0.7rem', color: 'var(--text3)' }}>{d.date}</span>
                             </li>
@@ -338,10 +338,10 @@ export const ClientDashboard: React.FC = () => {
                             onChange={(e) => setFileName(e.target.value)}
                             style={{ flex: 1, fontSize: '0.8rem', padding: '0.4rem 0.6rem', background: 'var(--bg2)', color: 'var(--text)', border: '1px solid var(--border)', borderRadius: '8px' }}
                           />
-                          <button onClick={() => handleUploadDeliverable(p.id)} className="btn btn-primary" style={{ padding: '0.4rem 0.75rem', fontSize: '0.75rem', background: '#ea580c', borderColor: '#ea580c' }}>Add</button>
+                          <button onClick={() => handleUploadDeliverable(p.id)} className="btn btn-primary" style={{ padding: '0.4rem 0.75rem', fontSize: '0.75rem' }}>Add</button>
                         </div>
                       ) : (
-                        <button onClick={() => setUploadProjId(p.id)} className="btn btn-ghost" style={{ padding: '0.3rem 0.6rem', fontSize: '0.75rem', marginTop: '0.5rem', display: 'inline-flex', alignItems: 'center', gap: '0.3rem', color: '#ea580c' }}>
+                        <button onClick={() => setUploadProjId(p.id)} className="btn btn-ghost" style={{ padding: '0.3rem 0.6rem', fontSize: '0.75rem', marginTop: '0.5rem', display: 'inline-flex', alignItems: 'center', gap: '0.3rem', color: 'var(--primary)' }}>
                           <Plus size={14} /> Upload simulated file
                         </button>
                       )}
@@ -373,7 +373,7 @@ export const ClientDashboard: React.FC = () => {
               <label>Technical Specifications</label>
               <textarea placeholder="Describe required features, framework preferences..." value={projForm.desc} onChange={(e) => setProjForm({ ...projForm, desc: e.target.value })} required style={{ minHeight: '100px' }} />
             </div>
-            <button type="submit" className="btn btn-primary" style={{ width: '100%', background: '#ea580c', borderColor: '#ea580c', fontWeight: 700, padding: '0.7rem' }}>
+            <button type="submit" className="btn btn-primary" style={{ width: '100%', fontWeight: 700, padding: '0.75rem' }}>
               Submit Scope Request
             </button>
           </form>
@@ -402,7 +402,8 @@ export const ClientDashboard: React.FC = () => {
                   onClick={() => setActiveTicketId(t.id)}
                   style={{
                     background: activeTicketId === t.id ? 'var(--bg2)' : 'var(--card)',
-                    border: `1px solid ${activeTicketId === t.id ? '#ea580c' : 'var(--border)'}`,
+                    border: `1px solid ${activeTicketId === t.id ? 'var(--primary)' : 'var(--border)'}`,
+                    boxShadow: activeTicketId === t.id ? '0 0 12px rgba(124, 58, 237, 0.2)' : 'none',
                     borderRadius: '12px',
                     padding: '1rem',
                     cursor: 'pointer',
@@ -410,7 +411,7 @@ export const ClientDashboard: React.FC = () => {
                   }}
                 >
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', marginBottom: '0.35rem' }}>
-                    <span style={{ fontWeight: 800, color: '#ea580c' }}>{t.id}</span>
+                    <span style={{ fontWeight: 800, color: 'var(--primary)', fontFamily: 'var(--font-mono)' }}>{t.id}</span>
                     <Badge status={t.status} />
                   </div>
                   <div style={{ fontWeight: 700, fontSize: '0.875rem', color: 'var(--text)' }}>{t.title}</div>
@@ -426,7 +427,7 @@ export const ClientDashboard: React.FC = () => {
 
           {/* Create Ticket Form */}
           <form onSubmit={handleCreateTicket} className="contact-form" style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '14px', padding: '1.25rem' }}>
-            <div style={{ fontWeight: 800, fontSize: '0.9rem', marginBottom: '0.85rem', color: '#ea580c', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+            <div style={{ fontWeight: 800, fontSize: '0.9rem', marginBottom: '0.85rem', color: 'var(--primary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
               Create New Support Ticket
             </div>
             <div className="form-group" style={{ marginBottom: '0.6rem' }}>
@@ -458,7 +459,7 @@ export const ClientDashboard: React.FC = () => {
               <label style={{ fontSize: '0.75rem', fontWeight: 700 }}>Diagnostic Details *</label>
               <textarea placeholder="Detailed breakdown of the issue or feature request..." value={ticketForm.description} onChange={(e) => setTicketForm({ ...ticketForm, description: e.target.value })} required style={{ height: '70px' }} />
             </div>
-            <button type="submit" className="btn btn-primary" style={{ width: '100%', padding: '0.55rem', fontSize: '0.85rem', background: '#ea580c', borderColor: '#ea580c', fontWeight: 700 }}>
+            <button type="submit" className="btn btn-primary" style={{ width: '100%', padding: '0.55rem', fontSize: '0.85rem', fontWeight: 700 }}>
               Create Ticket
             </button>
           </form>
@@ -471,7 +472,7 @@ export const ClientDashboard: React.FC = () => {
           ) : (
             <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text2)', flexDirection: 'column', gap: '0.75rem' }}>
               <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'var(--bg2)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid var(--border)' }}>
-                <Ticket size={24} color="#ea580c" />
+                <Ticket size={24} color="var(--primary)" />
               </div>
               <div style={{ fontWeight: 600, fontSize: '0.9rem' }}>Select a support ticket from the left panel to open the real-time discussion workspace.</div>
             </div>
@@ -491,7 +492,7 @@ export const ClientDashboard: React.FC = () => {
       <div style={{ maxWidth: '650px', margin: '0 auto', background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '20px', overflow: 'hidden', boxShadow: 'var(--shadow-lg)' }}>
         <div style={{ padding: '1.15rem 1.5rem', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'var(--bg2)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
-            <div style={{ width: '42px', height: '42px', borderRadius: '50%', background: '#ea580c', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800 }}>
+            <div style={{ width: '42px', height: '42px', borderRadius: '12px', background: 'var(--primary-gradient)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800 }}>
               <Bot size={22} />
             </div>
             <div>
@@ -514,7 +515,7 @@ export const ClientDashboard: React.FC = () => {
                 className={`msg ${isMe ? 'msg-out' : 'msg-in'}`}
                 style={{
                   alignSelf: isMe ? 'flex-end' : 'flex-start',
-                  background: isMe ? '#ea580c' : 'var(--bg2)',
+                  background: isMe ? 'var(--primary-gradient)' : 'var(--bg2)',
                   color: isMe ? '#ffffff' : 'var(--text)',
                   padding: '0.7rem 1rem',
                   borderRadius: '14px',
@@ -526,7 +527,7 @@ export const ClientDashboard: React.FC = () => {
                   boxShadow: '0 2px 4px rgba(0,0,0,0.04)'
                 }}
               >
-                <div style={{ fontSize: '0.725rem', fontWeight: 800, marginBottom: '0.2rem', color: isMe ? 'rgba(255,255,255,0.9)' : '#ea580c' }}>
+                <div style={{ fontSize: '0.725rem', fontWeight: 800, marginBottom: '0.2rem', color: isMe ? 'rgba(255,255,255,0.9)' : 'var(--primary)' }}>
                   {m.senderName}
                 </div>
                 <div>{m.text}</div>
@@ -591,7 +592,7 @@ export const ClientDashboard: React.FC = () => {
               fontSize: '0.875rem',
             }}
           />
-          <button type="submit" disabled={isSubmittingChat} className="send-btn" style={{ padding: '0.65rem 1.25rem', background: '#ea580c', color: '#fff', border: 'none', borderRadius: '24px', fontSize: '0.85rem', cursor: 'pointer', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+          <button type="submit" disabled={isSubmittingChat} className="btn btn-primary" style={{ padding: '0.65rem 1.35rem', borderRadius: '24px', fontSize: '0.85rem', cursor: 'pointer', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
             {isSubmittingChat ? 'Sending...' : 'Send'} <Send size={14} />
           </button>
         </form>
@@ -624,7 +625,7 @@ export const ClientDashboard: React.FC = () => {
             <tbody>
               {myInvoices.map((inv) => (
                 <tr key={inv.id} style={{ borderBottom: '1px solid var(--border)' }}>
-                  <td style={{ padding: '1rem 0.5rem', fontWeight: 800, color: '#ea580c' }}>{inv.id}</td>
+                  <td style={{ padding: '1rem 0.5rem', fontWeight: 800, color: 'var(--primary)', fontFamily: 'var(--font-mono)' }}>{inv.id}</td>
                   <td style={{ padding: '1rem 0.5rem', fontWeight: 700 }}>{inv.project}</td>
                   <td style={{ padding: '1rem 0.5rem', color: 'var(--text2)' }}>{inv.items?.join(', ') || 'N/A'}</td>
                   <td style={{ padding: '1rem 0.5rem', fontWeight: 700, color: 'var(--text)' }}>${inv.amount}</td>
@@ -634,7 +635,7 @@ export const ClientDashboard: React.FC = () => {
                   </td>
                   <td style={{ padding: '1rem 0.5rem', textAlign: 'right' }}>
                     {inv.status === 'Unpaid' ? (
-                      <button onClick={() => openPaymentModal(inv.id)} className="btn btn-primary" style={{ padding: '0.4rem 0.85rem', fontSize: '0.8rem', background: '#ea580c', borderColor: '#ea580c', fontWeight: 700 }}>
+                      <button onClick={() => openPaymentModal(inv.id)} className="btn btn-primary" style={{ padding: '0.4rem 0.85rem', fontSize: '0.8rem', fontWeight: 700 }}>
                         Pay Invoice
                       </button>
                     ) : (
@@ -677,7 +678,7 @@ export const ClientDashboard: React.FC = () => {
               <tbody>
                 {myMeetings.map((m) => (
                   <tr key={m.id} style={{ borderBottom: '1px solid var(--border)' }}>
-                    <td style={{ padding: '1rem 0.5rem', fontWeight: 700, color: '#ea580c' }}>MEET-{m.id}</td>
+                    <td style={{ padding: '1rem 0.5rem', fontWeight: 700, color: 'var(--primary)', fontFamily: 'var(--font-mono)' }}>MEET-{m.id}</td>
                     <td style={{ padding: '1rem 0.5rem', fontWeight: 600 }}>{m.type}</td>
                     <td style={{ padding: '1rem 0.5rem' }}>{m.date}</td>
                     <td style={{ padding: '1rem 0.5rem' }}>{m.time}</td>
@@ -712,7 +713,7 @@ export const ClientDashboard: React.FC = () => {
               <label>Preferred Time Slot</label>
               <input type="time" value={meetForm.time} onChange={(e) => setMeetForm({ ...meetForm, time: e.target.value })} required />
             </div>
-            <button type="submit" className="btn btn-primary" style={{ width: '100%', marginTop: '0.5rem', background: '#ea580c', borderColor: '#ea580c', padding: '0.7rem', fontWeight: 700 }}>
+            <button type="submit" className="btn btn-primary" style={{ width: '100%', marginTop: '0.5rem', padding: '0.75rem', fontWeight: 700 }}>
               Schedule Session
             </button>
           </form>

@@ -13,25 +13,24 @@ export const Hero: React.FC = () => {
       </div>
       <div className="hero-inner">
         <div>
-          <div className="hero-badge" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
-            <ShieldCheck size={16} color="#4ade80" /> Enterprise-Grade Software & Engineering Partner
+          <div className="hero-badge" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.45rem' }}>
+            <ShieldCheck size={16} color="#10b981" /> Enterprise-Grade Software & Engineering Partner
           </div>
           <h1>
-            Build software
+            Engineering Digital
             <br />
-            that <span className="grad">scales.</span>
+            Systems That <span className="grad">Scale.</span>
           </h1>
           <p className="hero-sub">
-            We help businesses, startups, creators, and communities build modern
-            websites, mobile apps, Discord bots, AI solutions, automation
-            systems, and custom software.
+            RDK Tech crafts high-performance web platforms, AI agents, cloud architectures,
+            and custom software built for modern startups and industry leaders.
           </p>
           <div className="hero-btns">
-            <a href="#contact" className="btn btn-primary btn-xl" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
+            <a href="#contact" className="btn btn-primary btn-xl" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
               Start a Project <ArrowUpRight size={20} />
             </a>
             <a href="#portfolio" className="btn btn-ghost btn-xl">
-              View Portfolio
+              Explore Portfolio
             </a>
           </div>
         </div>
