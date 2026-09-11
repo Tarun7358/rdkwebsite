@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShieldCheck, ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 
 export const Hero: React.FC = () => {
   return (
@@ -13,9 +13,6 @@ export const Hero: React.FC = () => {
       </div>
       <div className="hero-inner">
         <div>
-          <div className="hero-badge" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.45rem' }}>
-            <ShieldCheck size={16} color="#10b981" /> Enterprise-Grade Software & Engineering Partner
-          </div>
           <h1>
             Engineering Digital
             <br />
