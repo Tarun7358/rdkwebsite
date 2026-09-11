@@ -23,7 +23,7 @@ export const Hero: React.FC = () => {
             and custom software built for modern startups and industry leaders.
           </p>
           <div className="hero-btns">
-            <a href="#contact" className="btn btn-primary btn-xl" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
+            <a href="#meetings" className="btn btn-primary btn-xl" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
               Start a Project <ArrowUpRight size={20} />
             </a>
             <a href="#pricing" className="btn btn-ghost btn-xl">

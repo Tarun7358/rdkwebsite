@@ -36,8 +36,8 @@ export const Pricing: React.FC = () => {
             ))}
           </div>
 
-          <a href="#contact" className="btn btn-primary btn-xl" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
-            Request Engineering Quote <ArrowUpRight size={20} />
+          <a href="#meetings" className="btn btn-primary btn-xl" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
+            Book Consultation & Scope <ArrowUpRight size={20} />
           </a>
         </div>
       </div>

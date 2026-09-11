@@ -8,12 +8,11 @@ import { useAppStore } from '../store/appStore';
 import {
   Hero,
   Stats,
-  Workflow,
   DashboardPreview,
+  Workflow,
   TicketSection,
   MeetingsSection,
   Pricing,
-  Contact,
   Careers
 } from '../components/public';
 import { AuthModal, ToastContainer } from '../components/ui';
@@ -53,7 +52,7 @@ export const Home: React.FC = () => {
             <a href="#pricing">Pricing</a>
             <a href="#about">About</a>
             <a href="#careers">Careers</a>
-            <a href="#contact">Contact</a>
+            <a href="#meetings">Meetings</a>
           </div>
           <div className="nav-right">
             <button id="themeToggle" className="btn btn-ghost" onClick={toggle} style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', padding: '0.4rem' }}>
@@ -63,8 +62,8 @@ export const Home: React.FC = () => {
             <button className="btn btn-ghost" onClick={handleAuthAction}>
               {user ? 'Console' : 'Log in'}
             </button>
-            <a href="#contact" className="btn btn-primary">
-              Start a project
+            <a href="#meetings" className="btn btn-primary">
+              Book a Call
             </a>
           </div>
           <div className="hamburger" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
@@ -82,7 +81,7 @@ export const Home: React.FC = () => {
           <a href="#pricing" onClick={() => setMobileMenuOpen(false)}>Pricing</a>
           <a href="#about" onClick={() => setMobileMenuOpen(false)}>About</a>
           <a href="#careers" onClick={() => setMobileMenuOpen(false)}>Careers</a>
-          <a href="#contact" onClick={() => setMobileMenuOpen(false)}>Contact</a>
+          <a href="#meetings" onClick={() => setMobileMenuOpen(false)}>Meetings</a>
           <button
             className="btn btn-ghost btn-lg"
             onClick={() => {
@@ -92,8 +91,8 @@ export const Home: React.FC = () => {
           >
             {user ? 'Console' : 'Log in'}
           </button>
-          <a href="#contact" className="btn btn-primary btn-lg" onClick={() => setMobileMenuOpen(false)}>
-            Start a project
+          <a href="#meetings" className="btn btn-primary btn-lg" onClick={() => setMobileMenuOpen(false)}>
+            Book a Call
           </a>
         </div>
       )}
@@ -106,7 +105,6 @@ export const Home: React.FC = () => {
       <TicketSection />
       <MeetingsSection />
       <Pricing />
-      <Contact />
       <Careers />
 
       {/* Footer */}
@@ -127,12 +125,13 @@ export const Home: React.FC = () => {
               <span style={{ fontWeight: 700, color: 'var(--text)' }}>Platform</span>
               <a href="#workflow" style={{ color: 'var(--text3)' }}>Workflow</a>
               <a href="#pricing" style={{ color: 'var(--text3)' }}>Pricing</a>
+              <a href="#tickets" style={{ color: 'var(--text3)' }}>Tickets</a>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.85rem' }}>
               <span style={{ fontWeight: 700, color: 'var(--text)' }}>Company</span>
               <a href="#about" style={{ color: 'var(--text3)' }}>About Us</a>
               <a href="#careers" style={{ color: 'var(--text3)' }}>Careers</a>
-              <a href="#contact" style={{ color: 'var(--text3)' }}>Contact</a>
+              <a href="#meetings" style={{ color: 'var(--text3)' }}>Book Consultation</a>
             </div>
           </div>
         </div>

@@ -135,7 +135,7 @@ export const Careers: React.FC = () => {
 
               <div style={{ display: 'flex', justifyContent: 'flex-end', borderTop: '1px solid var(--border)', paddingTop: '1rem' }}>
                 <a
-                  href="#contact"
+                  href="mailto:careers@rdkreations.io?subject=Career%20Application"
                   className={`btn ${job.type === 'Freelance' ? 'btn-outline' : 'btn-primary'}`}
                   style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.85rem', padding: '0.55rem 1.25rem' }}
                 >
