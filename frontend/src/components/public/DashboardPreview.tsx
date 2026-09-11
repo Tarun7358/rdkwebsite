@@ -3,7 +3,9 @@ import { LayoutDashboard, Folder, Ticket, MessageSquare, CreditCard } from 'luci
 
 export const DashboardPreview: React.FC = () => {
   return (
-    <section id="portal-preview" style={{ padding: '5rem 0', position: 'relative' }}>
+    <section id="portal" style={{ padding: '5rem 0', position: 'relative' }}>
+      <span id="portal-preview" style={{ position: 'absolute', top: '-60px' }} />
+      <span id="dashboard-preview" style={{ position: 'absolute', top: '-60px' }} />
       <div className="section-inner">
         <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
           <h2 className="section-title">Track Everything In Real Time</h2>

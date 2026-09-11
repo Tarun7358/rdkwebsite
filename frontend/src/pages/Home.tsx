@@ -49,10 +49,10 @@ export const Home: React.FC = () => {
           </a>
           <div className="nav-links">
             <a href="#workflow">Workflow</a>
-            <a href="#pricing">Pricing</a>
-            <a href="#about">About</a>
-            <a href="#careers">Careers</a>
+            <a href="#tickets">Tickets</a>
             <a href="#meetings">Meetings</a>
+            <a href="#pricing">Pricing</a>
+            <a href="#careers">Careers</a>
           </div>
           <div className="nav-right">
             <button id="themeToggle" className="btn btn-ghost" onClick={toggle} style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', padding: '0.4rem' }}>
@@ -78,10 +78,10 @@ export const Home: React.FC = () => {
       {mobileMenuOpen && (
         <div className="mobile-menu open" id="mobileMenu" style={{ display: 'flex', flexDirection: 'column' }}>
           <a href="#workflow" onClick={() => setMobileMenuOpen(false)}>Workflow</a>
-          <a href="#pricing" onClick={() => setMobileMenuOpen(false)}>Pricing</a>
-          <a href="#about" onClick={() => setMobileMenuOpen(false)}>About</a>
-          <a href="#careers" onClick={() => setMobileMenuOpen(false)}>Careers</a>
+          <a href="#tickets" onClick={() => setMobileMenuOpen(false)}>Tickets</a>
           <a href="#meetings" onClick={() => setMobileMenuOpen(false)}>Meetings</a>
+          <a href="#pricing" onClick={() => setMobileMenuOpen(false)}>Pricing</a>
+          <a href="#careers" onClick={() => setMobileMenuOpen(false)}>Careers</a>
           <button
             className="btn btn-ghost btn-lg"
             onClick={() => {
@@ -123,13 +123,14 @@ export const Home: React.FC = () => {
           <div style={{ display: 'flex', gap: '4rem' }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.85rem' }}>
               <span style={{ fontWeight: 700, color: 'var(--text)' }}>Platform</span>
+              <a href="#portal" style={{ color: 'var(--text3)' }}>Console Preview</a>
               <a href="#workflow" style={{ color: 'var(--text3)' }}>Workflow</a>
-              <a href="#pricing" style={{ color: 'var(--text3)' }}>Pricing</a>
               <a href="#tickets" style={{ color: 'var(--text3)' }}>Tickets</a>
+              <a href="#pricing" style={{ color: 'var(--text3)' }}>Pricing</a>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.85rem' }}>
               <span style={{ fontWeight: 700, color: 'var(--text)' }}>Company</span>
-              <a href="#about" style={{ color: 'var(--text3)' }}>About Us</a>
+              <a href="#workflow" style={{ color: 'var(--text3)' }}>About Us</a>
               <a href="#careers" style={{ color: 'var(--text3)' }}>Careers</a>
               <a href="#meetings" style={{ color: 'var(--text3)' }}>Book Consultation</a>
             </div>

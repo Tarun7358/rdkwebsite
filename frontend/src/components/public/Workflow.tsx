@@ -13,7 +13,8 @@ const workflowSteps = [
 
 export const Workflow: React.FC = () => {
   return (
-    <section className="workflow-section" id="about" style={{ background: 'var(--bg2)', padding: '5rem 0', position: 'relative' }}>
+    <section className="workflow-section" id="workflow" style={{ background: 'var(--bg2)', padding: '5rem 0', position: 'relative' }}>
+      <span id="about" style={{ position: 'absolute', top: '-60px' }} />
       <div className="section-inner">
         <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
           <h2 className="section-title">Structured Engineering Workflow</h2>

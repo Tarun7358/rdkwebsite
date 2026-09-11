@@ -43,7 +43,7 @@ export const MeetingsSection: React.FC = () => {
   };
 
   return (
-    <section>
+    <section id="meetings" style={{ padding: '5rem 0', position: 'relative' }}>
       <div className="section-inner">
         <h2 className="section-title">Schedule an Engineering Session</h2>
         <p className="section-sub">Select your preferred communication channel — real-time booking synced to production database.</p>
