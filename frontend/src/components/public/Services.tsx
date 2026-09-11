@@ -1,6 +1,6 @@
 import React from 'react';
 import { useAppStore } from '../../store/appStore';
-import { Globe, Smartphone, Bot, Zap, Brain, Cloud, Clock, ArrowRight, Layers } from 'lucide-react';
+import { Globe, Smartphone, Bot, Zap, Brain, Cloud, Clock, ArrowRight } from 'lucide-react';
 
 const iconMap: Record<number, React.ReactNode> = {
   1: <Globe size={24} />,
@@ -69,9 +69,6 @@ export const Services: React.FC = () => {
   return (
     <section id="services" style={{ padding: '5rem 0' }}>
       <div className="section-inner">
-        <div className="section-label" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
-          <Layers size={14} /> Core Engineering Capabilities
-        </div>
         <h2 className="section-title">Enterprise Services Built for Scale</h2>
         <p className="section-sub">
           End-to-end software development for teams requiring custom engineering architecture. RDK ships production-grade solutions with guaranteed timelines.
