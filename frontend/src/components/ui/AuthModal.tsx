@@ -90,12 +90,12 @@ export const AuthModal: React.FC = () => {
       >
         {/* ── CARD ── */}
         <div style={{
-          background: 'var(--card, #111827)',
-          border: '1px solid var(--border, #374151)',
+          background: 'var(--card, #ffffff)',
+          border: '1px solid var(--border, #e5e7eb)',
           borderRadius: '24px',
           width: '100%',
           maxWidth: '460px',
-          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.7)',
+          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
           overflow: 'hidden',
           position: 'relative',
           animation: 'authSlideUp 0.35s cubic-bezier(0.34,1.56,0.64,1)',
@@ -104,8 +104,8 @@ export const AuthModal: React.FC = () => {
           {/* Glow accent */}
           <div style={{
             position: 'absolute', top: '-80px', left: '50%', transform: 'translateX(-50%)',
-            width: '300px', height: '200px',
-            background: 'radial-gradient(ellipse at center, rgba(234, 88, 12, 0.2) 0%, transparent 70%)',
+            width: '320px', height: '220px',
+            background: 'radial-gradient(ellipse at center, rgba(124, 58, 237, 0.18) 0%, transparent 70%)',
             pointerEvents: 'none',
           }} />
 
@@ -115,8 +115,8 @@ export const AuthModal: React.FC = () => {
               onClick={() => setIsOpen(false)}
               style={{
                 position: 'absolute', top: '1.25rem', right: '1.25rem',
-                background: 'var(--surface, #1f2937)', border: '1px solid var(--border, #374151)',
-                color: '#9CA3AF', borderRadius: '8px', width: '32px', height: '32px',
+                background: 'var(--bg2, #f3f4f6)', border: '1px solid var(--border, #e5e7eb)',
+                color: 'var(--text2, #6b7280)', borderRadius: '8px', width: '32px', height: '32px',
                 cursor: 'pointer', fontSize: '1rem', display: 'flex', alignItems: 'center',
                 justifyContent: 'center', transition: 'all 0.2s',
               }}
@@ -125,13 +125,13 @@ export const AuthModal: React.FC = () => {
             </button>
 
             {/* Logo mark */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.5rem' }}>
-              <img src="/logo-icon.png" alt="RDK Tech" style={{ width: '40px', height: '40px', objectFit: 'contain', filter: 'drop-shadow(0 2px 10px rgba(124, 58, 237, 0.45))' }} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem' }}>
+              <img src="/logo-icon.png" alt="RDK Tech" style={{ width: '42px', height: '42px', objectFit: 'contain', filter: 'drop-shadow(0 2px 10px rgba(124, 58, 237, 0.35))' }} />
               <div>
-                <div style={{ fontSize: '1.05rem', fontWeight: 900, color: '#fff', letterSpacing: '-0.3px', lineHeight: 1.1 }}>
-                  RDK <span style={{ background: 'linear-gradient(135deg, #818cf8 0%, #c084fc 100%)', WebkitBackgroundClip: 'text', backgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>TECH</span>
+                <div style={{ fontSize: '1.15rem', fontWeight: 900, color: 'var(--text, #111827)', letterSpacing: '-0.3px', lineHeight: 1.1 }}>
+                  RDK <span style={{ background: 'linear-gradient(135deg, #6366f1 0%, #a855f7 100%)', WebkitBackgroundClip: 'text', backgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>TECH</span>
                 </div>
-                <div style={{ fontSize: '0.65rem', color: 'rgba(255, 255, 255, 0.6)', letterSpacing: '0.06em', textTransform: 'uppercase', fontWeight: 600 }}>
+                <div style={{ fontSize: '0.65rem', color: 'var(--text3, #9ca3af)', letterSpacing: '0.08em', textTransform: 'uppercase', fontWeight: 700 }}>
                   Reliable Digital Kreations
                 </div>
               </div>
@@ -139,19 +139,19 @@ export const AuthModal: React.FC = () => {
 
             {tab === 'login' ? (
               <>
-                <h2 style={{ fontSize: '1.7rem', fontWeight: 800, color: '#fff', margin: '0 0 0.4rem', letterSpacing: '-0.5px' }}>
+                <h2 style={{ fontSize: '1.65rem', fontWeight: 800, color: 'var(--text, #111827)', margin: '0 0 0.4rem', letterSpacing: '-0.5px' }}>
                   Enterprise Console Access
                 </h2>
-                <p style={{ fontSize: '0.875rem', color: 'var(--text2, #9ca3af)', margin: '0 0 1.5rem', lineHeight: 1.5 }}>
+                <p style={{ fontSize: '0.875rem', color: 'var(--text2, #6b7280)', margin: '0 0 1.5rem', lineHeight: 1.5 }}>
                   Sign in with your verified credentials or Google Workspace account.
                 </p>
               </>
             ) : (
               <>
-                <h2 style={{ fontSize: '1.7rem', fontWeight: 800, color: '#fff', margin: '0 0 0.4rem', letterSpacing: '-0.5px' }}>
+                <h2 style={{ fontSize: '1.65rem', fontWeight: 800, color: 'var(--text, #111827)', margin: '0 0 0.4rem', letterSpacing: '-0.5px' }}>
                   Register Client Portal
                 </h2>
-                <p style={{ fontSize: '0.875rem', color: 'var(--text2, #9ca3af)', margin: '0 0 1.5rem', lineHeight: 1.5 }}>
+                <p style={{ fontSize: '0.875rem', color: 'var(--text2, #6b7280)', margin: '0 0 1.5rem', lineHeight: 1.5 }}>
                   Join partner organizations leveraging RDK's enterprise software suite.
                 </p>
               </>
@@ -163,21 +163,18 @@ export const AuthModal: React.FC = () => {
               onClick={handleGoogleSignIn}
               style={{
                 width: '100%',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem',
                 padding: '0.75rem 1rem',
-                background: '#ffffff',
-                border: '1px solid #d1d5db',
+                background: 'var(--bg, #ffffff)',
+                border: '1px solid var(--border, #e5e7eb)',
                 borderRadius: '12px',
-                color: '#1f2937',
+                color: 'var(--text, #111827)',
                 fontSize: '0.9rem',
-                fontWeight: 700,
+                fontWeight: 600,
                 cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '0.6rem',
-                boxShadow: '0 2px 4px rgba(0, 0, 0, 0.05)',
                 marginBottom: '1.25rem',
-                transition: 'transform 0.15s ease, background 0.15s ease'
+                boxShadow: '0 1px 3px rgba(0, 0, 0, 0.06)',
+                transition: 'transform 0.15s ease, background 0.15s ease, border-color 0.15s ease',
               }}
             >
               <svg width="18" height="18" viewBox="0 0 24 24">
@@ -190,15 +187,15 @@ export const AuthModal: React.FC = () => {
             </button>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem' }}>
-              <div style={{ flex: 1, height: '1px', background: 'var(--border, #374151)' }}></div>
+              <div style={{ flex: 1, height: '1px', background: 'var(--border, #e5e7eb)' }}></div>
               <span style={{ fontSize: '0.72rem', color: 'var(--text3, #9ca3af)', fontWeight: 700, textTransform: 'uppercase' }}>Or sign in with email</span>
-              <div style={{ flex: 1, height: '1px', background: 'var(--border, #374151)' }}></div>
+              <div style={{ flex: 1, height: '1px', background: 'var(--border, #e5e7eb)' }}></div>
             </div>
 
             {/* ── TAB SWITCHER ── */}
             <div style={{
-              display: 'flex', background: 'var(--surface, #1f2937)',
-              border: '1px solid var(--border, #374151)',
+              display: 'flex', background: 'var(--bg2, #f3f4f6)',
+              border: '1px solid var(--border, #e5e7eb)',
               borderRadius: '12px', padding: '4px', gap: '4px', marginBottom: '1.5rem',
             }}>
               {(['login', 'register'] as const).map((t) => (
@@ -210,10 +207,10 @@ export const AuthModal: React.FC = () => {
                     fontSize: '0.875rem', fontWeight: 600, cursor: 'pointer',
                     transition: 'all 0.2s',
                     background: tab === t
-                      ? '#ea580c'
+                      ? 'linear-gradient(135deg, #6366f1 0%, #7c3aed 100%)'
                       : 'transparent',
-                    color: tab === t ? '#fff' : 'var(--text3, #9ca3af)',
-                    boxShadow: tab === t ? '0 2px 12px rgba(234, 88, 12, 0.35)' : 'none',
+                    color: tab === t ? '#fff' : 'var(--text2, #6b7280)',
+                    boxShadow: tab === t ? '0 2px 12px rgba(124, 58, 237, 0.35)' : 'none',
                   }}
                 >
                   {t === 'login' ? 'Sign In' : 'Create Account'}
@@ -229,7 +226,7 @@ export const AuthModal: React.FC = () => {
             {tab === 'login' && (
               <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
 
-                <Field label="Email Address" icon={<Mail size={16} color="#ea580c" />}>
+                <Field label="Email Address" icon={<Mail size={16} color="#7c3aed" />}>
                   <input
                     type="email"
                     placeholder="name@company.com"
@@ -240,7 +237,7 @@ export const AuthModal: React.FC = () => {
                   />
                 </Field>
 
-                <Field label="Password" icon={<Lock size={16} color="#ea580c" />} right={
+                <Field label="Password" icon={<Lock size={16} color="#7c3aed" />} right={
                   <button type="button" onClick={() => setShowPwd(!showPwd)} style={eyeBtn}>
                     {showPwd ? <EyeOff size={16} /> : <Eye size={16} />}
                   </button>
@@ -257,11 +254,11 @@ export const AuthModal: React.FC = () => {
 
                 <SubmitButton loading={isSubmitting} label="Authenticate & Sign In" loadingLabel="Authenticating…" />
 
-                <div style={{ textAlign: 'center', fontSize: '0.8rem', color: 'var(--text3, #9ca3af)', marginTop: '0.5rem' }}>
+                <div style={{ textAlign: 'center', fontSize: '0.82rem', color: 'var(--text3, #9ca3af)', marginTop: '0.5rem' }}>
                   Don't have a corporate account?{' '}
                   <span
                     onClick={() => setTab('register')}
-                    style={{ color: '#ea580c', fontWeight: 600, cursor: 'pointer' }}
+                    style={{ color: '#7c3aed', fontWeight: 600, cursor: 'pointer' }}
                   >
                     Register here
                   </span>
@@ -272,7 +269,7 @@ export const AuthModal: React.FC = () => {
             {/* ─── REGISTER FORM ─── */}
             {tab === 'register' && (
               <form onSubmit={handleRegister} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                <Field label="Full Name" icon={<User size={16} color="#ea580c" />}>
+                <Field label="Full Name" icon={<User size={16} color="#7c3aed" />}>
                   <input
                     type="text"
                     placeholder="Alex Johnson"
@@ -283,7 +280,7 @@ export const AuthModal: React.FC = () => {
                   />
                 </Field>
 
-                <Field label="Work Email" icon={<Mail size={16} color="#ea580c" />}>
+                <Field label="Work Email" icon={<Mail size={16} color="#7c3aed" />}>
                   <input
                     type="email"
                     placeholder="alex@company.com"
@@ -294,7 +291,7 @@ export const AuthModal: React.FC = () => {
                   />
                 </Field>
 
-                <Field label="Password" icon={<Lock size={16} color="#ea580c" />} right={
+                <Field label="Password" icon={<Lock size={16} color="#7c3aed" />} right={
                   <button type="button" onClick={() => setShowPwd(!showPwd)} style={eyeBtn}>
                     {showPwd ? <EyeOff size={16} /> : <Eye size={16} />}
                   </button>
@@ -313,11 +310,11 @@ export const AuthModal: React.FC = () => {
 
                 <SubmitButton loading={isSubmitting} label="Create Enterprise Account" loadingLabel="Creating account…" />
 
-                <div style={{ textAlign: 'center', fontSize: '0.8rem', color: 'var(--text3, #9ca3af)' }}>
+                <div style={{ textAlign: 'center', fontSize: '0.82rem', color: 'var(--text3, #9ca3af)' }}>
                   Already have an account?{' '}
                   <span
                     onClick={() => setTab('login')}
-                    style={{ color: '#ea580c', fontWeight: 600, cursor: 'pointer' }}
+                    style={{ color: '#7c3aed', fontWeight: 600, cursor: 'pointer' }}
                   >
                     Sign in
                   </span>
@@ -330,12 +327,12 @@ export const AuthModal: React.FC = () => {
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               gap: '1.25rem', marginTop: '1.5rem',
               paddingTop: '1.25rem',
-              borderTop: '1px solid var(--border, #374151)',
+              borderTop: '1px solid var(--border, #e5e7eb)',
             }}>
               {[
-                { icon: <ShieldCheck size={14} color="#ea580c" />, text: 'End-to-End Encryption' },
-                { icon: <CheckCircle2 size={14} color="#4ade80" />, text: 'SOC 2 Ready' },
-                { icon: <Globe size={14} color="#38bdf8" />, text: '99.9% Uptime SLA' },
+                { icon: <ShieldCheck size={14} color="#7c3aed" />, text: 'End-to-End Encryption' },
+                { icon: <CheckCircle2 size={14} color="#10b981" />, text: 'SOC 2 Ready' },
+                { icon: <Globe size={14} color="#6366f1" />, text: '99.9% Uptime SLA' },
               ].map((b, idx) => (
                 <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.7rem', color: 'var(--text3, #9ca3af)' }}>
                   {b.icon}<span>{b.text}</span>
@@ -359,7 +356,7 @@ const Field: React.FC<{
 }> = ({ label, icon, right, children }) => (
   <div>
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
-      <label style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--text3, #9ca3af)', textTransform: 'uppercase', letterSpacing: '0.06em', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+      <label style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--text2, #4b5563)', textTransform: 'uppercase', letterSpacing: '0.06em', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
         {icon}
         {label}
       </label>
@@ -377,8 +374,8 @@ const SubmitButton: React.FC<{ loading: boolean; label: string; loadingLabel: st
       width: '100%',
       padding: '0.85rem',
       background: loading
-        ? 'rgba(234, 88, 12, 0.5)'
-        : '#ea580c',
+        ? 'rgba(124, 58, 237, 0.5)'
+        : 'linear-gradient(135deg, #6366f1 0%, #7c3aed 100%)',
       border: 'none',
       borderRadius: '12px',
       color: '#fff',
@@ -387,7 +384,7 @@ const SubmitButton: React.FC<{ loading: boolean; label: string; loadingLabel: st
       cursor: loading ? 'not-allowed' : 'pointer',
       letterSpacing: '-0.2px',
       transition: 'all 0.2s',
-      boxShadow: loading ? 'none' : '0 4px 24px rgba(234, 88, 12, 0.45)',
+      boxShadow: loading ? 'none' : '0 4px 20px rgba(124, 58, 237, 0.4)',
       marginTop: '0.25rem',
     }}
   >
@@ -399,10 +396,10 @@ const SubmitButton: React.FC<{ loading: boolean; label: string; loadingLabel: st
 const inputStyle: React.CSSProperties = {
   width: '100%',
   padding: '0.75rem 1rem',
-  background: 'var(--surface, #1f2937)',
-  border: '1px solid var(--border, #374151)',
+  background: 'var(--bg2, #f9fafb)',
+  border: '1px solid var(--border, #e5e7eb)',
   borderRadius: '10px',
-  color: '#F9FAFB',
+  color: 'var(--text, #111827)',
   fontSize: '0.9rem',
   outline: 'none',
   boxSizing: 'border-box',
@@ -410,7 +407,7 @@ const inputStyle: React.CSSProperties = {
 
 const eyeBtn: React.CSSProperties = {
   background: 'none', border: 'none', cursor: 'pointer',
-  fontSize: '0.85rem', color: '#9CA3AF', padding: '0',
+  fontSize: '0.85rem', color: 'var(--text3, #9ca3af)', padding: '0',
 };
 
 export default AuthModal;
