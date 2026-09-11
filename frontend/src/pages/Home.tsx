@@ -101,8 +101,8 @@ export const Home: React.FC = () => {
       {/* Sections */}
       <Hero />
       <Stats />
-      <Workflow />
       <DashboardPreview />
+      <Workflow />
       <TicketSection />
       <MeetingsSection />
       <Pricing />
