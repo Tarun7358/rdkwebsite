@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { 
   Mail, Bot, MapPin, Clock, Send, ArrowRight, LifeBuoy, CheckCircle2,
   User, Building2, MessageSquare, Layers, Cpu, Calendar, FileText,
-  ShieldCheck, ChevronDown, Lock, Zap
+  ChevronDown
 } from 'lucide-react';
 import { projectsApi } from '../../api/projects';
 import { useAppStore } from '../../store/appStore';
@@ -133,18 +133,6 @@ export const Contact: React.FC = () => {
 
           {/* Form */}
           <form className="contact-form" onSubmit={handleSubmit}>
-            {/* Form Header Badge */}
-            <div className="proposal-card-header">
-              <div className="proposal-status-badge">
-                <span className="proposal-status-dot" />
-                <span>Direct Engineering Pipeline Active</span>
-              </div>
-              <div className="proposal-sla-badge">
-                <Zap size={13} style={{ color: 'var(--primary)' }} />
-                <span>Response SLA &lt; 2 Hours</span>
-              </div>
-            </div>
-
             <div className="form-row">
               <div className="form-group">
                 <label className="field-label">
@@ -313,22 +301,6 @@ export const Contact: React.FC = () => {
                 </>
               )}
             </button>
-
-            {/* Trust & Security Badges */}
-            <div className="form-trust-footer">
-              <span className="trust-item">
-                <Lock size={13} style={{ color: 'var(--primary)' }} />
-                <span>256-Bit SSL Encrypted</span>
-              </span>
-              <span className="trust-item">
-                <ShieldCheck size={13} style={{ color: '#10b981' }} />
-                <span>Strict NDA Protected</span>
-              </span>
-              <span className="trust-item">
-                <Zap size={13} style={{ color: '#f59e0b' }} />
-                <span>Lead Architect Review</span>
-              </span>
-            </div>
 
             {submitted && (
               <div style={{

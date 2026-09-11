@@ -12,21 +12,14 @@ export const TicketSection: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  const defaultTickets = [
-    { id: 'WEB-2026-0041', title: 'E-commerce Checkout Timeout', cat: 'Web Engineering', priority: 'High', status: 'Active', assigned: 'Sarah K.' },
-    { id: 'APP-2026-0112', title: 'Biometrics Sync Latency Audit', cat: 'Mobile & IoT', priority: 'Medium', status: 'In Review', assigned: 'RDK Core Team' },
-  ];
-
-  const displayedTickets = storeTickets && storeTickets.length > 0
-    ? storeTickets.map(t => ({
-        id: t.id,
-        title: t.title,
-        cat: t.category,
-        priority: t.priority,
-        status: t.status,
-        assigned: t.assignedTo || 'Unassigned'
-      }))
-    : defaultTickets;
+  const displayedTickets = (storeTickets || []).map((t) => ({
+    id: t.id,
+    title: t.title,
+    cat: t.category,
+    priority: t.priority,
+    status: t.status,
+    assigned: t.assignedTo || 'Unassigned'
+  }));
 
   const handleSubmitTicket = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -129,21 +122,28 @@ export const TicketSection: React.FC = () => {
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', maxHeight: '420px', overflowY: 'auto' }}>
-              {displayedTickets.map((t) => (
-                <div key={t.id} style={{ background: 'var(--bg2)', border: '1px solid var(--border)', borderRadius: '14px', padding: '1.2rem', transition: 'border-color 0.2s ease' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.6rem' }}>
-                    <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '0.95rem', color: 'var(--text)' }}>{t.title}</div>
-                    <span style={{ background: 'rgba(124, 58, 237, 0.12)', border: '1px solid rgba(124, 58, 237, 0.25)', color: 'var(--primary)', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.725rem', padding: '0.25rem 0.65rem', borderRadius: '6px', fontWeight: 800 }}>
-                      {t.id}
-                    </span>
-                  </div>
-                  <div style={{ display: 'flex', gap: '1.25rem', fontSize: '0.8rem', color: 'var(--text2)', flexWrap: 'wrap' }}>
-                    <span>Cat: <strong style={{ color: 'var(--text)' }}>{t.cat}</strong></span>
-                    <span>Status: <strong style={{ color: '#10b981' }}>● {t.status}</strong></span>
-                    <span>Assignee: <strong style={{ color: 'var(--text)' }}>{t.assigned}</strong></span>
-                  </div>
+              {displayedTickets.length === 0 ? (
+                <div style={{ padding: '2.5rem 1.5rem', textAlign: 'center', background: 'var(--bg2)', borderRadius: '14px', border: '1px solid var(--border)' }}>
+                  <div style={{ color: 'var(--text)', fontSize: '0.9rem', fontWeight: 700, marginBottom: '0.35rem' }}>No Active Tickets in Queue</div>
+                  <div style={{ color: 'var(--text2)', fontSize: '0.8rem' }}>Create a support ticket to see real-time updates streamed directly here.</div>
                 </div>
-              ))}
+              ) : (
+                displayedTickets.map((t) => (
+                  <div key={t.id} style={{ background: 'var(--bg2)', border: '1px solid var(--border)', borderRadius: '14px', padding: '1.2rem', transition: 'border-color 0.2s ease' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.6rem' }}>
+                      <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '0.95rem', color: 'var(--text)' }}>{t.title}</div>
+                      <span style={{ background: 'rgba(124, 58, 237, 0.12)', border: '1px solid rgba(124, 58, 237, 0.25)', color: 'var(--primary)', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.725rem', padding: '0.25rem 0.65rem', borderRadius: '6px', fontWeight: 800 }}>
+                        {t.id}
+                      </span>
+                    </div>
+                    <div style={{ display: 'flex', gap: '1.25rem', fontSize: '0.8rem', color: 'var(--text2)', flexWrap: 'wrap' }}>
+                      <span>Cat: <strong style={{ color: 'var(--text)' }}>{t.cat}</strong></span>
+                      <span>Status: <strong style={{ color: '#10b981' }}>● {t.status}</strong></span>
+                      <span>Assignee: <strong style={{ color: 'var(--text)' }}>{t.assigned}</strong></span>
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </div>
         </div>
