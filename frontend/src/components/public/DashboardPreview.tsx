@@ -6,9 +6,6 @@ export const DashboardPreview: React.FC = () => {
     <section id="portal-preview" style={{ padding: '5rem 0', position: 'relative' }}>
       <div className="section-inner">
         <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-          <div className="section-label" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', margin: '0 auto 0.75rem' }}>
-            <LayoutDashboard size={14} /> Enterprise Client Console
-          </div>
           <h2 className="section-title">Track Everything In Real Time</h2>
           <p className="section-sub" style={{ margin: '0 auto' }}>
             A unified client portal to monitor sprint progress, inspect deliverables, review architecture tickets, and communicate directly with engineers.

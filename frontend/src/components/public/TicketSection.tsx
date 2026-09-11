@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Ticket, Bell, Paperclip, Users, LifeBuoy, Send, CheckCircle2 } from 'lucide-react';
+import { Ticket, Bell, Paperclip, Users, Send, CheckCircle2 } from 'lucide-react';
 import { ticketsApi } from '../../api/tickets';
 import { useAppStore } from '../../store/appStore';
 
@@ -64,9 +64,6 @@ export const TicketSection: React.FC = () => {
         
         {/* Left Column: Info & Ticket Form */}
         <div>
-          <div className="section-label" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.75rem' }}>
-            <LifeBuoy size={14} /> Enterprise Support Infrastructure
-          </div>
           <h2 className="section-title">Track Support & Engineering Tickets</h2>
           <p className="section-sub" style={{ marginBottom: '2rem' }}>
             All client accounts include access to dedicated ticketing with real-time SSE notifications, SLA tracking, and developer assignment.

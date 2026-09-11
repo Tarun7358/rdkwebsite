@@ -155,9 +155,6 @@ export const ChatPreview: React.FC = () => {
 
         {/* Feature Copy */}
         <div>
-          <div className="section-label" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.75rem' }}>
-            <MessageSquare size={14} /> Direct Developer Channels
-          </div>
           <h2 className="section-title">Transparent Project Communication</h2>
           <p className="section-sub" style={{ marginBottom: '2rem' }}>
             Direct, real-time message streams with your designated engineering leads powered by Supabase SSE streams.

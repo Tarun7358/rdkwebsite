@@ -47,7 +47,7 @@ const defaultCareers: CareerItem[] = [
   }
 ];
 
-import { Briefcase, Globe, ArrowRight } from 'lucide-react';
+import { Globe, ArrowRight } from 'lucide-react';
 
 export const Careers: React.FC = () => {
   const storeCareers = useAppStore((s) => s.careers);
@@ -57,9 +57,6 @@ export const Careers: React.FC = () => {
     <section id="careers" style={{ padding: '5rem 0', background: 'var(--bg2)' }}>
       <div className="section-inner">
         <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-          <div className="section-label" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', margin: '0 auto 0.75rem' }}>
-            <Briefcase size={14} /> Join The Core Engineering Team
-          </div>
           <h2 className="section-title">Open Positions at RDK</h2>
           <p className="section-sub" style={{ margin: '0 auto' }}>
             We're building mission-critical systems and looking for world-class builders. All roles are 100% remote.

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Video, MonitorPlay, Bot, PhoneCall, Calendar, Clock, CheckCircle2, ArrowRight } from 'lucide-react';
+import { Video, MonitorPlay, Bot, PhoneCall, Clock, CheckCircle2, ArrowRight } from 'lucide-react';
 import { meetingsApi } from '../../api/meetings';
 import { useAppStore } from '../../store/appStore';
 
@@ -45,9 +45,6 @@ export const MeetingsSection: React.FC = () => {
   return (
     <section>
       <div className="section-inner">
-        <div className="section-label" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
-          <Calendar size={14} /> Live Technical Consultations
-        </div>
         <h2 className="section-title">Schedule an Engineering Session</h2>
         <p className="section-sub">Select your preferred communication channel — real-time booking synced to production database.</p>
         

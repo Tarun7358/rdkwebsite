@@ -1,5 +1,5 @@
 import React from 'react';
-import { Star, Award } from 'lucide-react';
+import { Star } from 'lucide-react';
 
 
 const testimonialsData = [
@@ -27,9 +27,6 @@ export const Testimonials: React.FC = () => {
   return (
     <section>
       <div className="section-inner">
-        <div className="section-label" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
-          <Award size={14} /> Client Endorsements
-        </div>
         <h2 className="section-title">Verified Client Feedback</h2>
         <p className="section-sub">Here is how engineering leaders and founders evaluate our software delivery.</p>
         <div className="testi-grid">

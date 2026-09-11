@@ -60,9 +60,6 @@ export const Contact: React.FC = () => {
   return (
     <section id="contact">
       <div className="section-inner">
-        <div className="section-label" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
-          <Mail size={14} /> Direct Engagement
-        </div>
         <h2 className="section-title">Initiate Your Software Project</h2>
         <p className="section-sub" style={{ marginBottom: '2.5rem' }}>
           Provide your technical specifications and our engineering leads will deliver a formal scope proposal within 24 hours.

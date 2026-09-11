@@ -1,13 +1,10 @@
 import React from 'react';
-import { Briefcase, CheckCircle2, ArrowUpRight, DollarSign } from 'lucide-react';
+import { Briefcase, CheckCircle2, ArrowUpRight } from 'lucide-react';
 
 export const Pricing: React.FC = () => {
   return (
     <section id="pricing">
       <div className="section-inner">
-        <div className="section-label" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
-          <DollarSign size={14} /> Transparent Engagement Models
-        </div>
         <h2 className="section-title">Tailored Project Engineering Quotes</h2>
         <p className="section-sub">
           We don't sell generic templates. Tell us your exact specifications and we will engineer a custom proposal matching your requirements and milestone schedule.
