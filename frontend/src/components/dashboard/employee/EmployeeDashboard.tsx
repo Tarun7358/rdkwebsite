@@ -27,10 +27,7 @@ export const EmployeeDashboard: React.FC = () => {
   // Tracker state
   const [isTracking, setIsTracking] = useState(false);
   const [timeSecs, setTimeSecs] = useState(0);
-  const [trackLogs, setTrackLogs] = useState<Array<{ project: string; duration: string; date: string }>>([
-    { project: 'Luxora Marketplace v2', duration: '03:15:00', date: 'Jul 13, 2026' },
-    { project: 'Mobile App Redesign', duration: '01:45:00', date: 'Jul 12, 2026' },
-  ]);
+  const [trackLogs, setTrackLogs] = useState<Array<{ project: string; duration: string; date: string }>>([]);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   // Sync selected project ID if it gets loaded
@@ -309,15 +306,21 @@ export const EmployeeDashboard: React.FC = () => {
         <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '12px', padding: '1.5rem' }}>
           <h3 style={{ fontSize: '1.1rem', fontWeight: 800, marginBottom: '1rem' }}>Tracking logs history</h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', maxHeight: '300px', overflowY: 'auto' }}>
-            {trackLogs.map((log, idx) => (
-              <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem' }}>
-                <div>
-                  <div style={{ fontWeight: 700, fontSize: '0.85rem' }}>{log.project}</div>
-                  <span style={{ fontSize: '0.7rem', color: 'var(--text3)' }}>{log.date}</span>
-                </div>
-                <div style={{ fontWeight: 700, color: 'var(--blue)', fontSize: '0.9rem' }}>{log.duration}</div>
+            {trackLogs.length === 0 ? (
+              <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--text3)', fontSize: '0.85rem' }}>
+                No active time logs. Start the timer above to log work sessions.
               </div>
-            ))}
+            ) : (
+              trackLogs.map((log, idx) => (
+                <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem' }}>
+                  <div>
+                    <div style={{ fontWeight: 700, fontSize: '0.85rem' }}>{log.project}</div>
+                    <span style={{ fontSize: '0.7rem', color: 'var(--text3)' }}>{log.date}</span>
+                  </div>
+                  <div style={{ fontWeight: 700, color: 'var(--primary)', fontSize: '0.9rem' }}>{log.duration}</div>
+                </div>
+              ))
+            )}
           </div>
         </div>
       </div>
