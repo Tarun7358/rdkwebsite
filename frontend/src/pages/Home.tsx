@@ -12,7 +12,6 @@ import {
   Workflow,
   DashboardPreview,
   TicketSection,
-  ChatPreview,
   MeetingsSection,
   Testimonials,
   Pricing,
@@ -108,7 +107,6 @@ export const Home: React.FC = () => {
       <Workflow />
       <DashboardPreview />
       <TicketSection />
-      <ChatPreview />
       <MeetingsSection />
       <Testimonials />
       <Pricing />
