@@ -435,27 +435,75 @@ app.post('/api/auth/signup', async (req, res) => {
     sendRdkEmail(
       email,
       'Welcome to RDK Tech — Reliable Digital Kreations',
-      `<div style="font-family:Inter,Arial,sans-serif;max-width:600px;margin:0 auto;background:#0b0f19;color:#f3f4f6;padding:32px;border-radius:16px;border:1px solid #1f2937;">
-        <div style="font-size:12px;font-weight:800;letter-spacing:0.1em;color:#a855f7;text-transform:uppercase;">RDK TECH • RELIABLE DIGITAL KREATIONS</div>
-        <h1 style="margin:10px 0 8px;font-size:24px;color:#ffffff;">Welcome, ${fullName}!</h1>
-        <p style="color:#9ca3af;font-size:14px;line-height:1.6;">
-          Thank you for creating your RDK Tech Client Portal account. You now have direct access to our engineering team, live project tracking, support tickets, and software licensing.
-        </p>
-        <div style="background:#111827;border:1px solid #1f2937;border-radius:12px;padding:18px;margin:20px 0;">
-          <div style="font-size:13px;font-weight:700;color:#ffffff;margin-bottom:10px;">What We Provide at RDK Tech:</div>
-          <ul style="margin:0;padding-left:18px;color:#d1d5db;font-size:13px;line-height:1.8;">
-            <li><b>Web &amp; Full-Stack Platforms:</b> Custom SaaS, e-commerce, Next.js, Node.js, and SQL databases</li>
-            <li><b>Rage Optimiser Enterprise:</b> Flagship Discord Anti-Nuke, UPM Snapshots, Gmail 2FA &amp; Rage Pro (₹99 / 30 days)</li>
-            <li><b>Mobile &amp; Enterprise IoT:</b> Flutter, React Native, fleet telemetry, and biometric integrations</li>
-            <li><b>AI &amp; Cloud DevOps:</b> Custom LLM assistants, automation pipelines, Docker, and Linux VPS hosting</li>
-          </ul>
-        </div>
-        <div style="margin-top:20px;">
-          <a href="https://rdkweb.netlify.app/dashboard" style="display:inline-block;background:#7c3aed;color:#ffffff;text-decoration:none;padding:11px 20px;border-radius:8px;font-weight:700;font-size:13px;margin-right:8px;">Open Client Portal</a>
-          <a href="https://rdkweb.netlify.app/#tickets" style="display:inline-block;background:#1f2937;color:#f3f4f6;text-decoration:none;padding:11px 20px;border-radius:8px;font-weight:700;font-size:13px;">Create Support Ticket</a>
-        </div>
-        <p style="margin-top:24px;font-size:12px;color:#6b7280;">Need help? Reply directly to <a href="mailto:rdksupport@ragefps.in" style="color:#a855f7;">rdksupport@ragefps.in</a>.</p>
-      </div>`
+      `<table width="100%" cellpadding="0" cellspacing="0" style="background:#f3f4f6;padding:32px 12px;font-family:Inter,Segoe UI,Arial,sans-serif;">
+        <tr><td align="center">
+          <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:18px;overflow:hidden;border:1px solid #e5e7eb;box-shadow:0 10px 30px rgba(15,23,42,0.08);">
+            <tr>
+              <td style="background:linear-gradient(135deg,#0f172a 0%,#312e81 55%,#6d28d9 100%);padding:30px 32px;text-align:left;">
+                <table cellpadding="0" cellspacing="0"><tr>
+                  <td style="padding-right:14px;"><img src="https://rdkweb.netlify.app/logo-icon.png" width="44" height="44" alt="RDK Tech" style="display:block;border-radius:10px;" /></td>
+                  <td>
+                    <div style="font-size:11px;font-weight:800;letter-spacing:0.12em;color:#38bdf8;text-transform:uppercase;">RDK TECH • RELIABLE DIGITAL KREATIONS</div>
+                    <div style="font-size:22px;font-weight:800;color:#ffffff;margin-top:4px;">Welcome aboard, ${fullName}!</div>
+                  </td>
+                </tr></table>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:28px 32px;color:#1f2937;">
+                <p style="margin:0 0 18px;font-size:14px;line-height:1.65;color:#4b5563;">
+                  Your <b>RDK Tech Client Portal</b> account is active. Manage software projects, open engineering tickets, track invoices, and license <b>Rage Optimiser</b> from one place.
+                </p>
+                <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:20px;">
+                  <tr>
+                    <td width="48%" valign="top" style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:12px;padding:14px;">
+                      <div style="font-size:11px;font-weight:800;color:#6d28d9;text-transform:uppercase;">Web &amp; SaaS</div>
+                      <div style="font-size:13px;font-weight:700;color:#111827;margin:4px 0;">Full-Stack Platforms</div>
+                      <div style="font-size:12px;color:#6b7280;line-height:1.5;">Next.js, React, Node.js, REST APIs &amp; SQL architectures.</div>
+                    </td>
+                    <td width="4%"></td>
+                    <td width="48%" valign="top" style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:12px;padding:14px;">
+                      <div style="font-size:11px;font-weight:800;color:#059669;text-transform:uppercase;">Discord Suite</div>
+                      <div style="font-size:13px;font-weight:700;color:#111827;margin:4px 0;">Rage Optimiser</div>
+                      <div style="font-size:12px;color:#6b7280;line-height:1.5;">Anti-Nuke, UPM Snapshots, Gmail 2FA &amp; Box UI.</div>
+                    </td>
+                  </tr>
+                  <tr><td colspan="3" height="12"></td></tr>
+                  <tr>
+                    <td width="48%" valign="top" style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:12px;padding:14px;">
+                      <div style="font-size:11px;font-weight:800;color:#0284c7;text-transform:uppercase;">Mobile &amp; IoT</div>
+                      <div style="font-size:13px;font-weight:700;color:#111827;margin:4px 0;">Enterprise Apps</div>
+                      <div style="font-size:12px;color:#6b7280;line-height:1.5;">Flutter, React Native, fleet GPS &amp; biometrics.</div>
+                    </td>
+                    <td width="4%"></td>
+                    <td width="48%" valign="top" style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:12px;padding:14px;">
+                      <div style="font-size:11px;font-weight:800;color:#d97706;text-transform:uppercase;">AI &amp; Cloud</div>
+                      <div style="font-size:13px;font-weight:700;color:#111827;margin:4px 0;">Automation &amp; VPS</div>
+                      <div style="font-size:12px;color:#6b7280;line-height:1.5;">LLM agents, RAG pipelines, Docker &amp; CI/CD.</div>
+                    </td>
+                  </tr>
+                </table>
+                <div style="background:#f5f3ff;border:1px solid #ddd6fe;border-radius:12px;padding:14px 16px;margin-bottom:22px;font-size:13px;color:#4c1d95;">
+                  <b>Rage Pro (₹99 / 30 Days):</b> Verify your Discord Server ownership directly on our Pricing section to unlock Gmail 2FA, unlimited backups, and custom bot branding.
+                </div>
+                <table cellpadding="0" cellspacing="0"><tr>
+                  <td style="padding-right:10px;">
+                    <a href="https://rdkweb.netlify.app/dashboard" style="display:inline-block;background:#6d28d9;color:#ffffff;text-decoration:none;padding:12px 22px;border-radius:10px;font-weight:700;font-size:13px;">Open Client Portal</a>
+                  </td>
+                  <td>
+                    <a href="https://rdkweb.netlify.app/#tickets" style="display:inline-block;background:#111827;color:#ffffff;text-decoration:none;padding:12px 22px;border-radius:10px;font-weight:700;font-size:13px;">Create Ticket</a>
+                  </td>
+                </tr></table>
+              </td>
+            </tr>
+            <tr>
+              <td style="background:#f9fafb;border-top:1px solid #e5e7eb;padding:16px 32px;font-size:12px;color:#6b7280;text-align:center;">
+                RDK Tech — Reliable Digital Kreations • Support: <a href="mailto:rdksupport@ragefps.in" style="color:#6d28d9;text-decoration:none;">rdksupport@ragefps.in</a>
+              </td>
+            </tr>
+          </table>
+        </td></tr>
+      </table>`
     );
     res.json({ data: { user, session: { access_token, user } }, error: null });
   } catch (err) {
