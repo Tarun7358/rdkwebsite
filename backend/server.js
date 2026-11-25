@@ -434,73 +434,38 @@ app.post('/api/auth/signup', async (req, res) => {
     const access_token = jwt.sign({ id, email, full_name: fullName, role: 'client' }, JWT_SECRET, { expiresIn: '7d' });
     sendRdkEmail(
       email,
-      'Welcome to RDK Tech — Reliable Digital Kreations',
-      `<table width="100%" cellpadding="0" cellspacing="0" style="background:#f3f4f6;padding:32px 12px;font-family:Inter,Segoe UI,Arial,sans-serif;">
+      'Welcome to RDK Tech',
+      `<table width="100%" cellpadding="0" cellspacing="0" style="background:#f8f7ff;padding:36px 12px;font-family:Inter,Segoe UI,Arial,sans-serif;">
         <tr><td align="center">
-          <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:18px;overflow:hidden;border:1px solid #e5e7eb;box-shadow:0 10px 30px rgba(15,23,42,0.08);">
-            <tr>
-              <td style="background:linear-gradient(135deg,#0f172a 0%,#312e81 55%,#6d28d9 100%);padding:30px 32px;text-align:left;">
-                <table cellpadding="0" cellspacing="0"><tr>
-                  <td style="padding-right:14px;"><img src="https://rdkweb.netlify.app/logo-icon.png" width="44" height="44" alt="RDK Tech" style="display:block;border-radius:10px;" /></td>
-                  <td>
-                    <div style="font-size:11px;font-weight:800;letter-spacing:0.12em;color:#38bdf8;text-transform:uppercase;">RDK TECH • RELIABLE DIGITAL KREATIONS</div>
-                    <div style="font-size:22px;font-weight:800;color:#ffffff;margin-top:4px;">Welcome aboard, ${fullName}!</div>
-                  </td>
-                </tr></table>
-              </td>
-            </tr>
-            <tr>
-              <td style="padding:28px 32px;color:#1f2937;">
-                <p style="margin:0 0 18px;font-size:14px;line-height:1.65;color:#4b5563;">
-                  Your <b>RDK Tech Client Portal</b> account is active. Manage software projects, open engineering tickets, track invoices, and license <b>Rage Optimiser</b> from one place.
-                </p>
-                <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:20px;">
-                  <tr>
-                    <td width="48%" valign="top" style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:12px;padding:14px;">
-                      <div style="font-size:11px;font-weight:800;color:#6d28d9;text-transform:uppercase;">Web &amp; SaaS</div>
-                      <div style="font-size:13px;font-weight:700;color:#111827;margin:4px 0;">Full-Stack Platforms</div>
-                      <div style="font-size:12px;color:#6b7280;line-height:1.5;">Next.js, React, Node.js, REST APIs &amp; SQL architectures.</div>
-                    </td>
-                    <td width="4%"></td>
-                    <td width="48%" valign="top" style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:12px;padding:14px;">
-                      <div style="font-size:11px;font-weight:800;color:#059669;text-transform:uppercase;">Discord Suite</div>
-                      <div style="font-size:13px;font-weight:700;color:#111827;margin:4px 0;">Rage Optimiser</div>
-                      <div style="font-size:12px;color:#6b7280;line-height:1.5;">Anti-Nuke, UPM Snapshots, Gmail 2FA &amp; Box UI.</div>
-                    </td>
-                  </tr>
-                  <tr><td colspan="3" height="12"></td></tr>
-                  <tr>
-                    <td width="48%" valign="top" style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:12px;padding:14px;">
-                      <div style="font-size:11px;font-weight:800;color:#0284c7;text-transform:uppercase;">Mobile &amp; IoT</div>
-                      <div style="font-size:13px;font-weight:700;color:#111827;margin:4px 0;">Enterprise Apps</div>
-                      <div style="font-size:12px;color:#6b7280;line-height:1.5;">Flutter, React Native, fleet GPS &amp; biometrics.</div>
-                    </td>
-                    <td width="4%"></td>
-                    <td width="48%" valign="top" style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:12px;padding:14px;">
-                      <div style="font-size:11px;font-weight:800;color:#d97706;text-transform:uppercase;">AI &amp; Cloud</div>
-                      <div style="font-size:13px;font-weight:700;color:#111827;margin:4px 0;">Automation &amp; VPS</div>
-                      <div style="font-size:12px;color:#6b7280;line-height:1.5;">LLM agents, RAG pipelines, Docker &amp; CI/CD.</div>
-                    </td>
-                  </tr>
-                </table>
-                <div style="background:#f5f3ff;border:1px solid #ddd6fe;border-radius:12px;padding:14px 16px;margin-bottom:22px;font-size:13px;color:#4c1d95;">
-                  <b>Rage Pro (₹99 / 30 Days):</b> Verify your Discord Server ownership directly on our Pricing section to unlock Gmail 2FA, unlimited backups, and custom bot branding.
-                </div>
-                <table cellpadding="0" cellspacing="0"><tr>
-                  <td style="padding-right:10px;">
-                    <a href="https://rdkweb.netlify.app/dashboard" style="display:inline-block;background:#6d28d9;color:#ffffff;text-decoration:none;padding:12px 22px;border-radius:10px;font-weight:700;font-size:13px;">Open Client Portal</a>
-                  </td>
-                  <td>
-                    <a href="https://rdkweb.netlify.app/#tickets" style="display:inline-block;background:#111827;color:#ffffff;text-decoration:none;padding:12px 22px;border-radius:10px;font-weight:700;font-size:13px;">Create Ticket</a>
-                  </td>
-                </tr></table>
-              </td>
-            </tr>
-            <tr>
-              <td style="background:#f9fafb;border-top:1px solid #e5e7eb;padding:16px 32px;font-size:12px;color:#6b7280;text-align:center;">
-                RDK Tech — Reliable Digital Kreations • Support: <a href="mailto:rdksupport@ragefps.in" style="color:#6d28d9;text-decoration:none;">rdksupport@ragefps.in</a>
-              </td>
-            </tr>
+          <table width="540" cellpadding="0" cellspacing="0" style="max-width:540px;width:100%;background:#ffffff;border-radius:16px;border:1px solid #ede9fe;padding:32px;">
+            <tr><td>
+              <table cellpadding="0" cellspacing="0" style="margin-bottom:24px;"><tr>
+                <td style="padding-right:10px;"><img src="https://rdkweb.netlify.app/logo-icon.png" width="32" height="32" alt="RDK Tech" style="display:block;" /></td>
+                <td style="font-size:16px;font-weight:800;color:#111827;">RDK <span style="color:#7c3aed;">TECH</span></td>
+              </tr></table>
+
+              <h1 style="margin:0 0 10px;font-size:22px;font-weight:800;color:#111827;">Welcome, ${fullName}</h1>
+              <p style="margin:0 0 22px;font-size:14px;line-height:1.65;color:#4b5563;">
+                Your RDK Tech Client Portal account is ready. Here is what you can access and build with us:
+              </p>
+
+              <table width="100%" cellpadding="0" cellspacing="0" style="background:#faf8ff;border:1px solid #ede9fe;border-radius:12px;padding:18px 20px;margin-bottom:24px;">
+                <tr><td style="font-size:13px;line-height:1.9;color:#374151;">
+                  <div><span style="color:#7c3aed;font-weight:800;">•</span> <b>Web &amp; SaaS Engineering</b> — Custom platforms, portals &amp; APIs</div>
+                  <div><span style="color:#7c3aed;font-weight:800;">•</span> <b>Rage Optimiser Enterprise</b> — Discord security &amp; Rage Pro (₹99 / 30d)</div>
+                  <div><span style="color:#7c3aed;font-weight:800;">•</span> <b>Mobile, AI &amp; Cloud</b> — Cross-platform apps, automation &amp; VPS</div>
+                  <div><span style="color:#7c3aed;font-weight:800;">•</span> <b>24/7 Client Support</b> — Live tickets, invoices &amp; project tracking</div>
+                </td></tr>
+              </table>
+
+              <a href="https://rdkweb.netlify.app/dashboard" style="display:inline-block;background:#7c3aed;color:#ffffff;text-decoration:none;padding:12px 24px;border-radius:10px;font-weight:700;font-size:14px;">Open Client Portal</a>
+              <span style="display:inline-block;padding:0 10px;color:#d1d5db;">|</span>
+              <a href="https://rdkweb.netlify.app/#tickets" style="color:#7c3aed;text-decoration:none;font-weight:600;font-size:13px;">Create a Ticket</a>
+
+              <p style="margin:28px 0 0;padding-top:18px;border-top:1px solid #f3f4f6;font-size:12px;color:#9ca3af;">
+                RDK Tech — Reliable Digital Kreations • <a href="mailto:rdksupport@ragefps.in" style="color:#7c3aed;text-decoration:none;">rdksupport@ragefps.in</a>
+              </p>
+            </td></tr>
           </table>
         </td></tr>
       </table>`
