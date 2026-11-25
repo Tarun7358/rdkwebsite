@@ -321,7 +321,7 @@ export const AdminDashboard: React.FC = () => {
               <Mail size={20} color="var(--primary)" />
             </div>
             <div style={{ fontSize: '0.85rem', fontWeight: 700, marginTop: '0.5rem', color: 'var(--text)' }}>
-              admin@rdktech.com
+              rdksupport@ragefps.in
             </div>
             <span style={{ fontSize: '0.725rem', color: '#10b981' }}>● Dispatches Active</span>
           </div>
@@ -332,7 +332,7 @@ export const AdminDashboard: React.FC = () => {
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
             <Mail size={18} color="var(--primary)" />
             <span style={{ fontSize: '0.85rem', color: 'var(--text)' }}>
-              <strong>Configured Email Alerts:</strong> Inbound client tickets and responses are synced and mirrored to <code style={{ color: 'var(--primary)', fontWeight: 700 }}>admin@rdktech.com</code>.
+              <strong>Configured Email Alerts:</strong> Inbound client tickets and responses are synced and mirrored to <code style={{ color: 'var(--primary)', fontWeight: 700 }}>rdksupport@ragefps.in</code>.
             </span>
           </div>
           <span style={{ fontSize: '0.775rem', color: 'var(--text3)', fontWeight: 600 }}>
