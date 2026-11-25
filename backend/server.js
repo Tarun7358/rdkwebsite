@@ -256,6 +256,42 @@ const DISCORD_CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET || 'WdbpuKs8Ehgk
 const DISCORD_REDIRECT_URI = process.env.DISCORD_REDIRECT_URI || 'https://rdkweb.netlify.app/api/discord/callback';
 
 // ── Google OAuth2 (Account Login & Registration) ──────────────────────────────
+function sendWelcomeEmail(email, fullName) {
+  return sendRdkEmail(
+    email,
+    'Welcome to RDK Tech',
+    `<table width="100%" cellpadding="0" cellspacing="0" style="background:#f8f7ff;padding:36px 12px;font-family:Inter,Segoe UI,Arial,sans-serif;">
+      <tr><td align="center">
+        <table width="540" cellpadding="0" cellspacing="0" style="max-width:540px;width:100%;background:#ffffff;border-radius:16px;border:1px solid #ede9fe;padding:32px;">
+          <tr><td>
+            <table cellpadding="0" cellspacing="0" style="margin-bottom:24px;"><tr>
+              <td style="padding-right:10px;"><img src="https://rdkweb.netlify.app/logo-icon.png" width="32" height="32" alt="RDK Tech" style="display:block;" /></td>
+              <td style="font-size:16px;font-weight:800;color:#111827;">RDK <span style="color:#7c3aed;">TECH</span></td>
+            </tr></table>
+            <h1 style="margin:0 0 10px;font-size:22px;font-weight:800;color:#111827;">Welcome, ${fullName}</h1>
+            <p style="margin:0 0 22px;font-size:14px;line-height:1.65;color:#4b5563;">
+              Your RDK Tech Client Portal account is ready. Here is what you can access and build with us:
+            </p>
+            <table width="100%" cellpadding="0" cellspacing="0" style="background:#faf8ff;border:1px solid #ede9fe;border-radius:12px;padding:18px 20px;margin-bottom:24px;">
+              <tr><td style="font-size:13px;line-height:1.9;color:#374151;">
+                <div><span style="color:#7c3aed;font-weight:800;">•</span> <b>Web &amp; SaaS Engineering</b> — Custom platforms, portals &amp; APIs</div>
+                <div><span style="color:#7c3aed;font-weight:800;">•</span> <b>Rage Optimiser Enterprise</b> — Discord security &amp; Rage Pro (₹99 / 30d)</div>
+                <div><span style="color:#7c3aed;font-weight:800;">•</span> <b>Mobile, AI &amp; Cloud</b> — Cross-platform apps, automation &amp; VPS</div>
+                <div><span style="color:#7c3aed;font-weight:800;">•</span> <b>24/7 Client Support</b> — Live tickets, invoices &amp; project tracking</div>
+              </td></tr>
+            </table>
+            <a href="https://rdkweb.netlify.app/dashboard" style="display:inline-block;background:#7c3aed;color:#ffffff;text-decoration:none;padding:12px 24px;border-radius:10px;font-weight:700;font-size:14px;">Open Client Portal</a>
+            <span style="display:inline-block;padding:0 10px;color:#d1d5db;">|</span>
+            <a href="https://rdkweb.netlify.app/#tickets" style="color:#7c3aed;text-decoration:none;font-weight:600;font-size:13px;">Create a Ticket</a>
+            <p style="margin:28px 0 0;padding-top:18px;border-top:1px solid #f3f4f6;font-size:12px;color:#9ca3af;">
+              RDK Tech — Reliable Digital Kreations • <a href="mailto:rdksupport@ragefps.in" style="color:#7c3aed;text-decoration:none;">rdksupport@ragefps.in</a>
+            </p>
+          </td></tr>
+        </table>
+      </td></tr>
+    </table>`
+  );
+}
 const GOOGLE_CLIENT_ID = (process.env.GOOGLE_CLIENT_ID || '').trim();
 const GOOGLE_CLIENT_SECRET = (process.env.GOOGLE_CLIENT_SECRET || '').trim();
 const GOOGLE_REDIRECT_URI = (process.env.GOOGLE_REDIRECT_URI || 'https://rdkweb.netlify.app/api/auth/google/callback').trim();
@@ -314,6 +350,7 @@ app.get('/api/auth/google/callback', async (req, res) => {
         [id, email, fullName]
       );
       row = await get('SELECT * FROM profiles WHERE email = ?', [email]);
+      sendWelcomeEmail(email, fullName);
     }
     const token = jwt.sign({ id: row.id, email: row.email, role: row.role, full_name: row.name }, JWT_SECRET, { expiresIn: '7d' });
     const sessionPayload = JSON.stringify({
@@ -974,44 +1011,7 @@ app.post('/api/auth/signup', async (req, res) => {
 
     const user = { id, email, user_metadata: { full_name: fullName, role: 'client' } };
     const access_token = jwt.sign({ id, email, full_name: fullName, role: 'client' }, JWT_SECRET, { expiresIn: '7d' });
-    sendRdkEmail(
-      email,
-      'Welcome to RDK Tech',
-      `<table width="100%" cellpadding="0" cellspacing="0" style="background:#f8f7ff;padding:36px 12px;font-family:Inter,Segoe UI,Arial,sans-serif;">
-        <tr><td align="center">
-          <table width="540" cellpadding="0" cellspacing="0" style="max-width:540px;width:100%;background:#ffffff;border-radius:16px;border:1px solid #ede9fe;padding:32px;">
-            <tr><td>
-              <table cellpadding="0" cellspacing="0" style="margin-bottom:24px;"><tr>
-                <td style="padding-right:10px;"><img src="https://rdkweb.netlify.app/logo-icon.png" width="32" height="32" alt="RDK Tech" style="display:block;" /></td>
-                <td style="font-size:16px;font-weight:800;color:#111827;">RDK <span style="color:#7c3aed;">TECH</span></td>
-              </tr></table>
-
-              <h1 style="margin:0 0 10px;font-size:22px;font-weight:800;color:#111827;">Welcome, ${fullName}</h1>
-              <p style="margin:0 0 22px;font-size:14px;line-height:1.65;color:#4b5563;">
-                Your RDK Tech Client Portal account is ready. Here is what you can access and build with us:
-              </p>
-
-              <table width="100%" cellpadding="0" cellspacing="0" style="background:#faf8ff;border:1px solid #ede9fe;border-radius:12px;padding:18px 20px;margin-bottom:24px;">
-                <tr><td style="font-size:13px;line-height:1.9;color:#374151;">
-                  <div><span style="color:#7c3aed;font-weight:800;">•</span> <b>Web &amp; SaaS Engineering</b> — Custom platforms, portals &amp; APIs</div>
-                  <div><span style="color:#7c3aed;font-weight:800;">•</span> <b>Rage Optimiser Enterprise</b> — Discord security &amp; Rage Pro (₹99 / 30d)</div>
-                  <div><span style="color:#7c3aed;font-weight:800;">•</span> <b>Mobile, AI &amp; Cloud</b> — Cross-platform apps, automation &amp; VPS</div>
-                  <div><span style="color:#7c3aed;font-weight:800;">•</span> <b>24/7 Client Support</b> — Live tickets, invoices &amp; project tracking</div>
-                </td></tr>
-              </table>
-
-              <a href="https://rdkweb.netlify.app/dashboard" style="display:inline-block;background:#7c3aed;color:#ffffff;text-decoration:none;padding:12px 24px;border-radius:10px;font-weight:700;font-size:14px;">Open Client Portal</a>
-              <span style="display:inline-block;padding:0 10px;color:#d1d5db;">|</span>
-              <a href="https://rdkweb.netlify.app/#tickets" style="color:#7c3aed;text-decoration:none;font-weight:600;font-size:13px;">Create a Ticket</a>
-
-              <p style="margin:28px 0 0;padding-top:18px;border-top:1px solid #f3f4f6;font-size:12px;color:#9ca3af;">
-                RDK Tech — Reliable Digital Kreations • <a href="mailto:rdksupport@ragefps.in" style="color:#7c3aed;text-decoration:none;">rdksupport@ragefps.in</a>
-              </p>
-            </td></tr>
-          </table>
-        </td></tr>
-      </table>`
-    );
+    sendWelcomeEmail(email, fullName);
     res.json({ data: { user, session: { access_token, user } }, error: null });
   } catch (err) {
     res.status(500).json({ error: { message: err.message } });
