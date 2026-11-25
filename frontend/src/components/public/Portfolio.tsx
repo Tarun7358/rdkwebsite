@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useAppStore } from '../../store/appStore';
 import type { PortfolioItem } from '../../types';
-import { VetriGasModal } from './VetriGasModal';
 import { CaseStudyModal } from './CaseStudyModal';
 import { Flame, ShoppingCart, Smartphone, Bot, Brain, Activity, ArrowRight, Layers, Shield } from 'lucide-react';
 
@@ -93,17 +92,12 @@ export const Portfolio: React.FC = () => {
   const portfolio = storePortfolio && storePortfolio.length > 0 ? storePortfolio : defaultPortfolio;
   const [filter, setFilter] = useState<'all' | 'web' | 'mobile' | 'discord' | 'ai'>('all');
   
-  const [isVetriGasOpen, setIsVetriGasOpen] = useState(false);
   const [selectedCaseStudy, setSelectedCaseStudy] = useState<PortfolioItem | null>(null);
 
   const filteredItems = portfolio.filter((item) => filter === 'all' || item.cat === filter);
 
   const handleOpenProject = (item: PortfolioItem) => {
-    if (item.title.includes('Vetri Gas')) {
-      setIsVetriGasOpen(true);
-    } else {
-      setSelectedCaseStudy(item);
-    }
+    setSelectedCaseStudy(item);
   };
 
   return (
@@ -137,9 +131,7 @@ export const Portfolio: React.FC = () => {
 
         {/* Grid */}
         <div className="portfolio-grid" id="portfolioGrid">
-          {filteredItems.map((item) => {
-            const isVetri = item.title.includes('Vetri Gas');
-            return (
+          {filteredItems.map((item) => (
               <div
                 key={item.id}
                 className="port-card visible"
@@ -162,11 +154,6 @@ export const Portfolio: React.FC = () => {
                         ? 'Discord Bot System'
                         : 'AI Intelligence'}
                     </span>
-                    {isVetri && (
-                      <span style={{ background: 'var(--primary-gradient)', color: '#fff', fontSize: '0.65rem', padding: '0.2rem 0.6rem', borderRadius: '12px', fontWeight: 800, letterSpacing: '0.04em' }}>
-                        INTERACTIVE SUITE
-                      </span>
-                    )}
                   </div>
 
                   <div className="port-title">{item.title}</div>
@@ -187,21 +174,19 @@ export const Portfolio: React.FC = () => {
                         e.stopPropagation();
                         handleOpenProject(item);
                       }}
-                      className={`btn ${isVetri ? 'btn-primary' : 'btn-outline'}`}
+                      className="btn btn-outline"
                     >
-                      {isVetri ? 'Open Live Demo' : 'Inspect Case Study'} <ArrowRight size={14} style={{ marginLeft: '0.3rem' }} />
+                      Inspect Case Study <ArrowRight size={14} style={{ marginLeft: '0.3rem' }} />
                     </button>
                   </div>
 
                 </div>
               </div>
-            );
-          })}
+          ))}
         </div>
       </div>
 
       {/* Modals */}
-      <VetriGasModal isOpen={isVetriGasOpen} onClose={() => setIsVetriGasOpen(false)} />
       <CaseStudyModal item={selectedCaseStudy} isOpen={!!selectedCaseStudy} onClose={() => setSelectedCaseStudy(null)} />
     </section>
   );
