@@ -400,6 +400,19 @@ app.post('/api/payments/razorpay/verify', async (req, res) => {
     if (invoiceId) {
       await run(`UPDATE invoices SET status = ? WHERE id = ?`, ['Paid', invoiceId]);
       inv = await get('SELECT * FROM invoices WHERE id = ?', [invoiceId]);
+      if (invoiceId.startsWith('INV-RAGE-') && inv && process.env.RAGE_OPTIMISER_API_URL) {
+        const match = String(inv.items || '').match(/\((\d{15,22})\)/);
+        if (match) {
+          fetch(`${process.env.RAGE_OPTIMISER_API_URL.replace(/\/$/, '')}/api/payments/rdkweb/activate`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'x-rage-secret': process.env.RAGE_INTERNAL_SECRET || ''
+            },
+            body: JSON.stringify({ guildId: match[1], paymentId, orderId, purchasedBy: inv.client || 'rdkweb' })
+          }).catch(() => {});
+        }
+      }
     }
     const recipient = (email && email.includes('@')) ? email : (inv?.client && String(inv.client).includes('@') ? String(inv.client) : '');
     if (recipient) {
