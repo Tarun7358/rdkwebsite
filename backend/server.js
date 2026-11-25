@@ -382,6 +382,119 @@ app.post('/api/payments/razorpay/create-order', async (req, res) => {
   }
 });
 
+// ── Razorpay Auto-Pay Subscriptions (Monthly Recurring) ───────────────────────
+app.post('/api/payments/razorpay/create-subscription', async (req, res) => {
+  try {
+    const invoiceId = String(req.body?.invoiceId || '').trim();
+    const guildId = String(req.body?.guildId || '').trim();
+    const productId = String(req.body?.productId || 'rage-pro').trim();
+    const amount = Number(req.body?.amount || 99);
+    const auth = Buffer.from(`${RAZORPAY_KEY_ID}:${RAZORPAY_KEY_SECRET}`).toString('base64');
+
+    const planKey = `rzp_plan_${productId}_${amount}`;
+    const existingPlan = await get('SELECT value FROM app_config WHERE key = ?', [planKey]);
+    let planId = existingPlan?.value ? String(existingPlan.value) : '';
+
+    if (!planId) {
+      const planRes = await fetch('https://api.razorpay.com/v1/plans', {
+        method: 'POST',
+        headers: { 'Authorization': `Basic ${auth}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          period: 'monthly',
+          interval: 1,
+          item: { name: `RDK ${productId} Monthly`, amount: Math.round(amount * 100), currency: 'INR' }
+        })
+      });
+      const planData = await planRes.json();
+      if (!planRes.ok || !planData.id) {
+        return res.status(planRes.status || 500).json({ error: planData?.error?.description || 'Failed to create Razorpay plan.' });
+      }
+      planId = planData.id;
+      await run(`INSERT OR REPLACE INTO app_config (key, value) VALUES (?, ?)`, [planKey, planId]);
+    }
+
+    const subRes = await fetch('https://api.razorpay.com/v1/subscriptions', {
+      method: 'POST',
+      headers: { 'Authorization': `Basic ${auth}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        plan_id: planId,
+        total_count: 120,
+        customer_notify: 1,
+        notes: { invoiceId, guildId, productId }
+      })
+    });
+    const subData = await subRes.json();
+    if (!subRes.ok || !subData.id) {
+      return res.status(subRes.status || 500).json({ error: subData?.error?.description || 'Failed to create Razorpay subscription.' });
+    }
+    res.json({ subscriptionId: subData.id, keyId: RAZORPAY_KEY_ID, invoiceId });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post('/api/payments/razorpay/verify-subscription', async (req, res) => {
+  try {
+    const invoiceId = String(req.body?.invoiceId || '').trim();
+    const paymentId = String(req.body?.razorpay_payment_id || '').trim();
+    const subscriptionId = String(req.body?.razorpay_subscription_id || '').trim();
+    const signature = String(req.body?.razorpay_signature || '').trim();
+    const email = String(req.body?.email || '').trim();
+    if (!paymentId || !subscriptionId || !signature) {
+      return res.status(400).json({ error: 'Missing Razorpay subscription verification fields.' });
+    }
+    const expected = crypto.createHmac('sha256', RAZORPAY_KEY_SECRET).update(`${paymentId}|${subscriptionId}`).digest('hex');
+    if (expected !== signature) {
+      return res.status(400).json({ error: 'Invalid Razorpay subscription signature.' });
+    }
+    let inv = null;
+    if (invoiceId) {
+      await run(`UPDATE invoices SET status = ? WHERE id = ?`, ['Paid', invoiceId]);
+      inv = await get('SELECT * FROM invoices WHERE id = ?', [invoiceId]);
+      if (invoiceId.startsWith('INV-RAGE-') && inv && process.env.RAGE_OPTIMISER_API_URL) {
+        const match = String(inv.items || '').match(/\((\d{15,22})\)/);
+        if (match) {
+          fetch(`${process.env.RAGE_OPTIMISER_API_URL.replace(/\/$/, '')}/api/payments/rdkweb/activate`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'x-rage-secret': process.env.RAGE_INTERNAL_SECRET || ''
+            },
+            body: JSON.stringify({ guildId: match[1], paymentId, orderId: subscriptionId, purchasedBy: inv.client || 'rdkweb-autopay' })
+          }).catch(() => {});
+        }
+      }
+    }
+    const recipient = (email && email.includes('@')) ? email : (inv?.client && String(inv.client).includes('@') ? String(inv.client) : '');
+    if (recipient) {
+      sendRdkEmail(
+        recipient,
+        `Auto-Pay Activated — ${invoiceId || subscriptionId}`,
+        `<table width="100%" cellpadding="0" cellspacing="0" style="background:#f8f7ff;padding:32px 12px;font-family:Inter,Segoe UI,Arial,sans-serif;">
+          <tr><td align="center">
+            <table width="520" cellpadding="0" cellspacing="0" style="max-width:520px;width:100%;background:#ffffff;border-radius:16px;border:1px solid #ede9fe;padding:28px;">
+              <tr><td>
+                <div style="font-size:15px;font-weight:800;color:#111827;margin-bottom:14px;">RDK <span style="color:#7c3aed;">TECH</span></div>
+                <h2 style="margin:0 0 8px;font-size:20px;color:#111827;">Auto-Pay Subscription Active</h2>
+                <p style="margin:0 0 16px;font-size:14px;line-height:1.6;color:#4b5563;">Your monthly Razorpay Auto-Pay subscription has been verified and activated.</p>
+                <div style="background:#faf8ff;border:1px solid #ede9fe;border-radius:10px;padding:12px 14px;font-size:13px;color:#374151;">
+                  <b>Invoice:</b> ${invoiceId || 'Direct'}<br/>
+                  <b>Subscription ID:</b> ${subscriptionId}<br/>
+                  <b>Payment ID:</b> ${paymentId}
+                </div>
+                <p style="margin:20px 0 0;font-size:12px;color:#9ca3af;">RDK Tech • <a href="mailto:rdksupport@ragefps.in" style="color:#7c3aed;text-decoration:none;">rdksupport@ragefps.in</a></p>
+              </td></tr>
+            </table>
+          </td></tr>
+        </table>`
+      );
+    }
+    res.json({ success: true, invoiceId, paymentId, subscriptionId, status: 'Paid' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 app.post('/api/payments/razorpay/verify', async (req, res) => {
   try {
     const invoiceId = String(req.body?.invoiceId || '').trim();

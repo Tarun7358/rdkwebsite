@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Briefcase, CheckCircle2, ArrowUpRight, Shield, Zap, X, Copy } from 'lucide-react';
 import { useAppStore } from '../../store/appStore';
 
@@ -242,9 +243,9 @@ export const Pricing: React.FC = () => {
                 ))}
               </div>
             </div>
-            <button onClick={() => { setCheckout(null); setShowProModal(true); }} className="btn btn-primary" style={{ justifyContent: 'center', width: '100%' }}>
+            <Link to="/pay/rage-pro" className="btn btn-primary" style={{ justifyContent: 'center', width: '100%' }}>
               Upgrade to Rage Pro (₹99) <ArrowUpRight size={16} />
-            </button>
+            </Link>
           </div>
         </div>
 
