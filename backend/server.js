@@ -108,6 +108,21 @@ async function initDb() {
       items TEXT DEFAULT '[]',
       date TEXT
     );`,
+    `CREATE TABLE IF NOT EXISTS subscriptions (
+      id TEXT PRIMARY KEY,
+      client_email TEXT,
+      product_id TEXT,
+      product_name TEXT,
+      guild_id TEXT,
+      guild_name TEXT,
+      billing_mode TEXT DEFAULT 'onetime',
+      amount REAL,
+      status TEXT DEFAULT 'Active',
+      razorpay_subscription_id TEXT,
+      next_due_date TEXT,
+      last_paid_date TEXT,
+      reminder_sent_at TEXT
+    );`,
     `CREATE TABLE IF NOT EXISTS meetings (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       client TEXT,
@@ -245,7 +260,8 @@ app.get('/api/discord/login', (_req, res) => {
     client_id: DISCORD_CLIENT_ID,
     redirect_uri: DISCORD_REDIRECT_URI,
     response_type: 'code',
-    scope: 'identify guilds'
+    scope: 'identify guilds',
+    prompt: 'consent'
   });
   res.redirect(`https://discord.com/api/oauth2/authorize?${params.toString()}`);
 });
@@ -344,6 +360,85 @@ async function sendDiscordWebhook(body) {
     });
   } catch {}
 }
+
+async function recordProductSubscription({ clientEmail, productId, productName, guildId, guildName, billingMode, amount, razorpaySubId }) {
+  if (!clientEmail || !String(clientEmail).includes('@')) return null;
+  const now = new Date();
+  const lastPaid = now.toISOString().slice(0, 10);
+  const nextDue = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+  const subId = `${productId || 'rage-pro'}_${guildId || 'direct'}_${String(clientEmail).toLowerCase()}`;
+  await run(
+    `INSERT INTO subscriptions (id, client_email, product_id, product_name, guild_id, guild_name, billing_mode, amount, status, razorpay_subscription_id, next_due_date, last_paid_date, reminder_sent_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'Active', ?, ?, ?, NULL)
+     ON CONFLICT(id) DO UPDATE SET
+       billing_mode = excluded.billing_mode,
+       amount = excluded.amount,
+       status = 'Active',
+       razorpay_subscription_id = COALESCE(excluded.razorpay_subscription_id, subscriptions.razorpay_subscription_id),
+       next_due_date = excluded.next_due_date,
+       last_paid_date = excluded.last_paid_date,
+       reminder_sent_at = NULL`,
+    [subId, String(clientEmail).toLowerCase(), productId || 'rage-pro', productName || 'Rage Optimiser Pro', guildId || '', guildName || '', billingMode || 'onetime', Number(amount || 99), razorpaySubId || null, nextDue, lastPaid]
+  );
+  return { subId, lastPaid, nextDue };
+}
+
+async function runDueReminderSweep() {
+  try {
+    const now = new Date();
+    const in3Days = new Date(now.getTime() + 3 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+    const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+    const dueRows = await all(
+      `SELECT * FROM subscriptions WHERE status = 'Active' AND next_due_date <= ? AND (reminder_sent_at IS NULL OR reminder_sent_at < ?)`,
+      [in3Days, sevenDaysAgo]
+    );
+    for (const s of dueRows) {
+      if (!s.client_email || !s.client_email.includes('@')) continue;
+      const isAuto = s.billing_mode === 'autopay';
+      await sendRdkEmail(
+        s.client_email,
+        `Upcoming Renewal Due (${s.next_due_date}) — ${s.product_name}`,
+        `<table width="100%" cellpadding="0" cellspacing="0" style="background:#f8f7ff;padding:32px 12px;font-family:Inter,Segoe UI,Arial,sans-serif;">
+          <tr><td align="center">
+            <table width="520" cellpadding="0" cellspacing="0" style="max-width:520px;width:100%;background:#ffffff;border-radius:16px;border:1px solid #ede9fe;padding:28px;">
+              <tr><td>
+                <div style="font-size:15px;font-weight:800;color:#111827;margin-bottom:14px;">RDK <span style="color:#7c3aed;">TECH</span></div>
+                <h2 style="margin:0 0 8px;font-size:20px;color:#111827;">Upcoming Renewal Reminder</h2>
+                <p style="margin:0 0 16px;font-size:14px;line-height:1.6;color:#4b5563;">${isAuto
+                  ? 'Your subscription is on Auto-Pay and will renew automatically on the due date below.'
+                  : 'Your 30-day license is due soon. Please renew on rdkweb to avoid service interruption.'}</p>
+                <div style="background:#faf8ff;border:1px solid #ede9fe;border-radius:10px;padding:12px 14px;font-size:13px;color:#374151;">
+                  <b>Product:</b> ${s.product_name}<br/>
+                  ${s.guild_name ? `<b>Server:</b> ${s.guild_name}<br/>` : ''}
+                  <b>Amount:</b> ₹${s.amount}<br/>
+                  <b>Due Date:</b> ${s.next_due_date}<br/>
+                  <b>Billing Mode:</b> ${isAuto ? 'Auto-Pay Monthly' : 'Manual Renewal'}
+                </div>
+                ${!isAuto ? `<p style="margin:18px 0 0;"><a href="https://rdkweb.netlify.app/pay/${s.product_id || 'rage-pro'}?guildId=${encodeURIComponent(s.guild_id || '')}" style="display:inline-block;background:#7c3aed;color:#ffffff;padding:10px 18px;border-radius:10px;text-decoration:none;font-weight:700;font-size:13px;">Renew Now</a></p>` : ''}
+                <p style="margin:20px 0 0;font-size:12px;color:#9ca3af;">RDK Tech • <a href="mailto:rdksupport@ragefps.in" style="color:#7c3aed;text-decoration:none;">rdksupport@ragefps.in</a></p>
+              </td></tr>
+            </table>
+          </td></tr>
+        </table>`
+      );
+      await run(`UPDATE subscriptions SET reminder_sent_at = ? WHERE id = ?`, [now.toISOString().slice(0, 10), s.id]);
+    }
+  } catch (err) {
+    console.warn('[DueReminder] Sweep error:', err.message);
+  }
+}
+
+app.get('/api/subscriptions/my', async (req, res) => {
+  try {
+    const token = (req.headers.authorization || '').replace(/^Bearer\s+/i, '');
+    if (!token) return res.status(401).json({ error: 'Authentication required.' });
+    const decoded = jwt.verify(token, JWT_SECRET);
+    const rows = await all(`SELECT * FROM subscriptions WHERE client_email = ? ORDER BY next_due_date ASC`, [String(decoded.email || '').toLowerCase()]);
+    res.json({ subscriptions: rows });
+  } catch (err) {
+    res.status(401).json({ error: 'Invalid or expired session.' });
+  }
+});
 
 // ── Razorpay Order Creation & Signature Verification ──────────────────────────
 app.post('/api/payments/razorpay/create-order', async (req, res) => {
@@ -448,11 +543,25 @@ app.post('/api/payments/razorpay/verify-subscription', async (req, res) => {
       return res.status(400).json({ error: 'Invalid Razorpay subscription signature.' });
     }
     let inv = null;
+    let subDates = null;
     if (invoiceId) {
       await run(`UPDATE invoices SET status = ? WHERE id = ?`, ['Paid', invoiceId]);
       inv = await get('SELECT * FROM invoices WHERE id = ?', [invoiceId]);
+      const match = String(inv?.items || '').match(/Server:\s*(.+?)\s*\((\d{15,22})\)/);
+      const clientEmail = (email && email.includes('@')) ? email : (inv?.client && String(inv.client).includes('@') ? String(inv.client) : '');
+      if (invoiceId.startsWith('INV-RAGE-') && inv) {
+        subDates = await recordProductSubscription({
+          clientEmail,
+          productId: 'rage-pro',
+          productName: 'Rage Optimiser Pro',
+          guildId: match?.[2] || '',
+          guildName: match?.[1] || inv.project,
+          billingMode: 'autopay',
+          amount: inv.amount || 99,
+          razorpaySubId: subscriptionId
+        });
+      }
       if (invoiceId.startsWith('INV-RAGE-') && inv && process.env.RAGE_OPTIMISER_API_URL) {
-        const match = String(inv.items || '').match(/\((\d{15,22})\)/);
         if (match) {
           fetch(`${process.env.RAGE_OPTIMISER_API_URL.replace(/\/$/, '')}/api/payments/rdkweb/activate`, {
             method: 'POST',
@@ -460,7 +569,7 @@ app.post('/api/payments/razorpay/verify-subscription', async (req, res) => {
               'Content-Type': 'application/json',
               'x-rage-secret': process.env.RAGE_INTERNAL_SECRET || ''
             },
-            body: JSON.stringify({ guildId: match[1], paymentId, orderId: subscriptionId, purchasedBy: inv.client || 'rdkweb-autopay' })
+            body: JSON.stringify({ guildId: match[2], paymentId, orderId: subscriptionId, purchasedBy: inv.client || 'rdkweb-autopay' })
           }).catch(() => {});
         }
       }
@@ -480,7 +589,8 @@ app.post('/api/payments/razorpay/verify-subscription', async (req, res) => {
                 <div style="background:#faf8ff;border:1px solid #ede9fe;border-radius:10px;padding:12px 14px;font-size:13px;color:#374151;">
                   <b>Invoice:</b> ${invoiceId || 'Direct'}<br/>
                   <b>Subscription ID:</b> ${subscriptionId}<br/>
-                  <b>Payment ID:</b> ${paymentId}
+                  <b>Payment ID:</b> ${paymentId}<br/>
+                  ${subDates ? `<b>Next Auto-Charge Date:</b> ${subDates.nextDue}` : ''}
                 </div>
                 <p style="margin:20px 0 0;font-size:12px;color:#9ca3af;">RDK Tech • <a href="mailto:rdksupport@ragefps.in" style="color:#7c3aed;text-decoration:none;">rdksupport@ragefps.in</a></p>
               </td></tr>
@@ -510,11 +620,24 @@ app.post('/api/payments/razorpay/verify', async (req, res) => {
       return res.status(400).json({ error: 'Invalid Razorpay payment signature.' });
     }
     let inv = null;
+    let subDates = null;
     if (invoiceId) {
       await run(`UPDATE invoices SET status = ? WHERE id = ?`, ['Paid', invoiceId]);
       inv = await get('SELECT * FROM invoices WHERE id = ?', [invoiceId]);
+      const match = String(inv?.items || '').match(/Server:\s*(.+?)\s*\((\d{15,22})\)/);
+      const clientEmail = (email && email.includes('@')) ? email : (inv?.client && String(inv.client).includes('@') ? String(inv.client) : '');
+      if (invoiceId.startsWith('INV-RAGE-') && inv) {
+        subDates = await recordProductSubscription({
+          clientEmail,
+          productId: 'rage-pro',
+          productName: 'Rage Optimiser Pro',
+          guildId: match?.[2] || '',
+          guildName: match?.[1] || inv.project,
+          billingMode: 'onetime',
+          amount: inv.amount || 99
+        });
+      }
       if (invoiceId.startsWith('INV-RAGE-') && inv && process.env.RAGE_OPTIMISER_API_URL) {
-        const match = String(inv.items || '').match(/\((\d{15,22})\)/);
         if (match) {
           fetch(`${process.env.RAGE_OPTIMISER_API_URL.replace(/\/$/, '')}/api/payments/rdkweb/activate`, {
             method: 'POST',
@@ -522,7 +645,7 @@ app.post('/api/payments/razorpay/verify', async (req, res) => {
               'Content-Type': 'application/json',
               'x-rage-secret': process.env.RAGE_INTERNAL_SECRET || ''
             },
-            body: JSON.stringify({ guildId: match[1], paymentId, orderId, purchasedBy: inv.client || 'rdkweb' })
+            body: JSON.stringify({ guildId: match[2], paymentId, orderId, purchasedBy: inv.client || 'rdkweb' })
           }).catch(() => {});
         }
       }
@@ -538,11 +661,12 @@ app.post('/api/payments/razorpay/verify', async (req, res) => {
               <tr><td>
                 <div style="font-size:15px;font-weight:800;color:#111827;margin-bottom:14px;">RDK <span style="color:#7c3aed;">TECH</span></div>
                 <h2 style="margin:0 0 8px;font-size:20px;color:#111827;">Payment Confirmed</h2>
-                <p style="margin:0 0 16px;font-size:14px;line-height:1.6;color:#4b5563;">Thank you! Your Razorpay payment has been verified and marked as Paid.</p>
+                <p style="margin:0 0 16px;font-size:14px;line-height:1.6;color:#4b5563;">Thank you! Your Razorpay payment has been verified and marked as Paid in your RDK Console.</p>
                 <div style="background:#faf8ff;border:1px solid #ede9fe;border-radius:10px;padding:12px 14px;font-size:13px;color:#374151;">
                   <b>Invoice:</b> ${invoiceId || 'Direct Payment'}<br/>
                   <b>Payment ID:</b> ${paymentId}<br/>
-                  <b>Amount:</b> ₹${inv?.amount || req.body?.amount || 'Paid'}
+                  <b>Amount:</b> ₹${inv?.amount || req.body?.amount || 'Paid'}<br/>
+                  ${subDates ? `<b>Billing Mode:</b> Pay Monthly (Manual)<br/><b>Next Due Date:</b> ${subDates.nextDue}` : ''}
                 </div>
                 <p style="margin:20px 0 0;font-size:12px;color:#9ca3af;">RDK Tech • <a href="mailto:rdksupport@ragefps.in" style="color:#7c3aed;text-decoration:none;">rdksupport@ragefps.in</a></p>
               </td></tr>
@@ -1080,6 +1204,8 @@ initDb().then(() => {
   app.listen(PORT, '0.0.0.0', () => {
     console.log(`[rdkwebsite-api] Running on http://0.0.0.0:${PORT} with SQLite at ${DB_PATH}`);
   });
+  runDueReminderSweep();
+  setInterval(runDueReminderSweep, 6 * 60 * 60 * 1000);
 }).catch((err) => {
   console.error('Failed to init SQLite DB:', err);
   process.exit(1);

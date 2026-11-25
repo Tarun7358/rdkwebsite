@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useAppStore } from '../../../store/appStore';
 import { useAuthStore } from '../../../store/authStore';
 import { useDashboardStore } from '../../../store/dashboardStore';
+import { supabase } from '../../../lib/supabase';
 import { projectsApi } from '../../../api/projects';
 import { ticketsApi } from '../../../api/tickets';
 import { meetingsApi } from '../../../api/meetings';
@@ -52,6 +54,21 @@ export const ClientDashboard: React.FC = () => {
   const [isSubmittingChat, setIsSubmittingChat] = useState(false);
   const [uploadProjId, setUploadProjId] = useState('');
   const [fileName, setFileName] = useState('');
+  const [mySubscriptions, setMySubscriptions] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (!user?.email) return;
+    supabase.auth.getSession().then(({ data }) => {
+      const token = data?.session?.access_token;
+      if (!token) return;
+      fetch('/api/subscriptions/my', { headers: { Authorization: `Bearer ${token}` } })
+        .then((r) => r.json())
+        .then((d) => {
+          if (Array.isArray(d.subscriptions)) setMySubscriptions(d.subscriptions);
+        })
+        .catch(() => {});
+    });
+  }, [user?.email, activeTab]);
 
   const handleRequestProject = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -762,6 +779,56 @@ export const ClientDashboard: React.FC = () => {
             <div style={{ fontSize: '0.78rem', color: 'var(--primary)', fontWeight: 700 }}>Pending Balance</div>
             <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--primary)', marginTop: '0.25rem' }}>${unpaidTotal}</div>
           </div>
+        </div>
+
+        {/* Active Products & Upcoming Dues */}
+        <div style={{ background: 'var(--card)', border: '1px solid rgba(124, 58, 237, 0.25)', borderRadius: '16px', padding: '1.5rem', boxShadow: 'var(--shadow-sm)', overflowX: 'auto' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+            <h3 style={{ fontSize: '1.15rem', fontWeight: 800, margin: 0, color: 'var(--text)' }}>Active Products &amp; Upcoming Dues</h3>
+            <Link to="/pay/rage-pro" className="btn btn-outline" style={{ fontSize: '0.78rem', padding: '0.4rem 0.85rem', borderColor: 'rgba(124, 58, 237, 0.35)', color: 'var(--primary)' }}>
+              + New Product License
+            </Link>
+          </div>
+          {mySubscriptions.length === 0 ? (
+            <div style={{ padding: '1.5rem', textAlign: 'center', color: 'var(--text2)', background: 'var(--bg2)', borderRadius: '12px', fontSize: '0.86rem' }}>
+              No active product subscriptions or upcoming dues yet.
+            </div>
+          ) : (
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.875rem', textAlign: 'left' }}>
+              <thead>
+                <tr style={{ borderBottom: '1px solid var(--border)', color: 'var(--text2)' }}>
+                  <th style={{ padding: '0.65rem 0.5rem' }}>Product</th>
+                  <th style={{ padding: '0.65rem 0.5rem' }}>Server / Target</th>
+                  <th style={{ padding: '0.65rem 0.5rem' }}>Billing Mode</th>
+                  <th style={{ padding: '0.65rem 0.5rem' }}>Amount</th>
+                  <th style={{ padding: '0.65rem 0.5rem' }}>Next Due Date</th>
+                  <th style={{ padding: '0.65rem 0.5rem' }}>Status</th>
+                  <th style={{ padding: '0.65rem 0.5rem', textAlign: 'right' }}>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {mySubscriptions.map((sub) => (
+                  <tr key={sub.id} style={{ borderBottom: '1px solid var(--border)' }}>
+                    <td style={{ padding: '0.85rem 0.5rem', fontWeight: 700 }}>{sub.product_name}</td>
+                    <td style={{ padding: '0.85rem 0.5rem', color: 'var(--text2)' }}>{sub.guild_name || 'Direct'}</td>
+                    <td style={{ padding: '0.85rem 0.5rem' }}>{sub.billing_mode === 'autopay' ? 'Auto-Pay Monthly' : 'Pay Monthly'}</td>
+                    <td style={{ padding: '0.85rem 0.5rem', fontWeight: 800 }}>₹{sub.amount}</td>
+                    <td style={{ padding: '0.85rem 0.5rem', fontWeight: 700, color: 'var(--primary)' }}>{sub.next_due_date}</td>
+                    <td style={{ padding: '0.85rem 0.5rem' }}><Badge status={sub.status} /></td>
+                    <td style={{ padding: '0.85rem 0.5rem', textAlign: 'right' }}>
+                      <Link
+                        to={`/pay/${sub.product_id || 'rage-pro'}?guildId=${encodeURIComponent(sub.guild_id || '')}`}
+                        className="btn btn-outline"
+                        style={{ padding: '0.35rem 0.75rem', fontSize: '0.76rem', borderColor: 'rgba(124,58,237,0.35)', color: 'var(--primary)' }}
+                      >
+                        Renew / Manage
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
 
         <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '16px', padding: '1.5rem', boxShadow: 'var(--shadow-sm)', overflowX: 'auto' }}>

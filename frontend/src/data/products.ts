@@ -32,3 +32,4 @@ export const RDK_PRODUCTS: Record<string, RdkProduct> = {
 };
 
 export const DEFAULT_PRODUCT_ID = 'rage-pro';
+

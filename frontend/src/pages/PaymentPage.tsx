@@ -5,14 +5,18 @@ import {
   ArrowUpRight,
   CheckCircle2,
   CreditCard,
+  ExternalLink,
+  LogOut,
   RefreshCw,
   Shield,
   ShieldCheck,
   Sparkles,
-  ExternalLink,
+  UserPlus,
 } from 'lucide-react';
 import { DEFAULT_PRODUCT_ID, RDK_PRODUCTS } from '../data/products';
 import { useAppStore } from '../store/appStore';
+import { useAuthStore } from '../store/authStore';
+import { supabase } from '../lib/supabase';
 
 interface OwnedGuild {
   id: string;
@@ -29,16 +33,25 @@ export default function PaymentPage() {
   const { productId } = useParams<{ productId?: string }>();
   const [searchParams] = useSearchParams();
   const addToast = useAppStore((s) => s.addToast);
+  const user = useAuthStore((s) => s.user);
+  const logoutRdk = useAuthStore((s) => s.logout);
 
   const resolvedId = productId && RDK_PRODUCTS[productId] ? productId : DEFAULT_PRODUCT_ID;
   const product = RDK_PRODUCTS[resolvedId];
   const queryGuildId = searchParams.get('guildId') || '';
 
+  // Inline RDK Account Auth state
+  const [authMode, setAuthMode] = useState<'signup' | 'login'>('signup');
+  const [authName, setAuthName] = useState('');
+  const [authEmail, setAuthEmail] = useState('');
+  const [authPassword, setAuthPassword] = useState('');
+  const [authLoading, setAuthLoading] = useState(false);
+
+  // Checkout state
   const [billingMode, setBillingMode] = useState<'onetime' | 'autopay'>('onetime');
   const [discordUser, setDiscordUser] = useState<DiscordUser | null>(null);
   const [ownedGuilds, setOwnedGuilds] = useState<OwnedGuild[]>([]);
   const [selectedGuildId, setSelectedGuildId] = useState(queryGuildId);
-  const [clientEmail, setClientEmail] = useState('');
   const [confirmedOwner, setConfirmedOwner] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [paidInfo, setPaidInfo] = useState<{ paymentId: string; mode: string; invoiceId: string } | null>(null);
@@ -54,6 +67,7 @@ export default function PaymentPage() {
         } else if (guilds.length > 0) {
           setSelectedGuildId(guilds[0].id);
         }
+        setConfirmedOwner(false);
         addToast(`Discord connected as ${event.data.user?.username}`, 'success');
       }
     };
@@ -67,12 +81,51 @@ export default function PaymentPage() {
       (discordUser?.id === '1140892126402596905' || selectedGuild?.id === '1266048940101599293')
   );
 
+  const handleRdkAuth = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setAuthLoading(true);
+    try {
+      if (authMode === 'signup') {
+        const { error } = await supabase.auth.signUp({
+          email: authEmail.trim(),
+          password: authPassword,
+          options: { data: { full_name: authName.trim() || authEmail.split('@')[0], role: 'client' } },
+        });
+        if (error) throw error;
+        addToast('RDK Tech account created & signed in!', 'success');
+      } else {
+        const { error } = await supabase.auth.signInWithPassword({
+          email: authEmail.trim(),
+          password: authPassword,
+        });
+        if (error) throw error;
+        addToast('Signed in to your RDK Tech account!', 'success');
+      }
+    } catch (err: any) {
+      addToast(err.message || 'Authentication failed', 'error');
+    } finally {
+      setAuthLoading(false);
+    }
+  };
+
   const handleDiscordAuth = () => {
     window.open('/api/discord/login', 'rdk_discord_oauth', 'width=520,height=720');
   };
 
+  const handleDiscordLogout = () => {
+    setDiscordUser(null);
+    setOwnedGuilds([]);
+    setSelectedGuildId(queryGuildId);
+    setConfirmedOwner(false);
+    addToast('Discord account disconnected. Connect another account anytime.', 'info');
+  };
+
   const handlePay = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!user) {
+      addToast('Please sign in or create an RDK Tech account first.', 'error');
+      return;
+    }
     if (product.requiresDiscordGuild && (!discordUser || !selectedGuild)) {
       addToast('Please connect Discord and select your server first.', 'error');
       return;
@@ -95,8 +148,8 @@ export default function PaymentPage() {
           guildId: selectedGuild?.id || 'direct',
           guildName: selectedGuild?.name || product.name,
           ownerId: discordUser?.id || 'web',
-          ownerUsername: discordUser?.global_name || discordUser?.username || 'Web Client',
-          email: clientEmail.trim(),
+          ownerUsername: discordUser?.global_name || discordUser?.username || user.name,
+          email: user.email,
         }),
       });
       const checkoutData = await checkoutRes.json();
@@ -122,7 +175,7 @@ export default function PaymentPage() {
           subscription_id: subData.subscriptionId,
           name: `RDK Tech — ${product.name}`,
           description: `Monthly Auto-Pay (₹${product.priceInr}/mo) • ${selectedGuild?.name || ''}`,
-          prefill: { email: clientEmail.trim() || undefined },
+          prefill: { email: user.email, name: user.name },
           theme: { color: '#7c3aed' },
           modal: { ondismiss: () => setIsLoading(false) },
           handler: async (response: any) => {
@@ -132,7 +185,7 @@ export default function PaymentPage() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                   invoiceId: checkoutData.invoiceId,
-                  email: clientEmail.trim(),
+                  email: user.email,
                   razorpay_payment_id: response.razorpay_payment_id,
                   razorpay_subscription_id: response.razorpay_subscription_id,
                   razorpay_signature: response.razorpay_signature,
@@ -168,7 +221,7 @@ export default function PaymentPage() {
         name: `RDK Tech — ${product.name}`,
         description: `${product.periodLabel} License • ${selectedGuild?.name || ''}`,
         order_id: order.orderId,
-        prefill: { email: clientEmail.trim() || undefined },
+        prefill: { email: user.email, name: user.name },
         theme: { color: '#7c3aed' },
         modal: { ondismiss: () => setIsLoading(false) },
         handler: async (response: any) => {
@@ -178,7 +231,7 @@ export default function PaymentPage() {
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
                 invoiceId: checkoutData.invoiceId,
-                email: clientEmail.trim(),
+                email: user.email,
                 razorpay_order_id: response.razorpay_order_id,
                 razorpay_payment_id: response.razorpay_payment_id,
                 razorpay_signature: response.razorpay_signature,
@@ -217,15 +270,22 @@ export default function PaymentPage() {
             <ArrowLeft size={16} color="#7c3aed" />
             RDK <span style={{ color: '#7c3aed' }}>TECH</span> Checkout
           </Link>
-          <a
-            href={discordReturnUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="btn btn-outline"
-            style={{ fontSize: '0.82rem', padding: '0.45rem 0.9rem', borderColor: 'rgba(124,58,237,0.35)', color: '#7c3aed', display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}
-          >
-            Back to Discord <ExternalLink size={14} />
-          </a>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+            {user && (
+              <Link to="/dashboard" className="btn btn-outline" style={{ fontSize: '0.82rem', padding: '0.45rem 0.9rem', borderColor: 'rgba(124,58,237,0.35)', color: '#7c3aed' }}>
+                Client Console
+              </Link>
+            )}
+            <a
+              href={discordReturnUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="btn btn-outline"
+              style={{ fontSize: '0.82rem', padding: '0.45rem 0.9rem', borderColor: 'rgba(124,58,237,0.35)', color: '#7c3aed', display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}
+            >
+              Back to Discord <ExternalLink size={14} />
+            </a>
+          </div>
         </div>
       </header>
 
@@ -259,15 +319,76 @@ export default function PaymentPage() {
           </div>
         </section>
 
-        {/* Right: Checkout Card */}
+        {/* Right: Account + Discord + Checkout Card */}
         <section style={{ background: '#ffffff', border: '1px solid #ede9fe', borderRadius: '20px', padding: '2rem', boxShadow: '0 8px 30px rgba(124, 58, 237, 0.08)' }}>
           <h2 style={{ fontSize: '1.25rem', fontWeight: 800, margin: '0 0 0.35rem', color: '#111827' }}>Complete Your Upgrade</h2>
           <p style={{ fontSize: '0.84rem', color: '#6b7280', margin: '0 0 1.25rem' }}>
-            Choose one-time manual renewal or monthly Auto-Pay via Razorpay.
+            Sign in to your RDK Tech account so invoices, receipts &amp; upcoming due dates sync to your Console.
           </p>
 
+          {/* Step 1: RDK Account Required */}
+          {!user ? (
+            <form onSubmit={handleRdkAuth} style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', padding: '1.1rem', background: '#faf8ff', border: '1px solid #ede9fe', borderRadius: '14px', marginBottom: '1rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', fontWeight: 800, fontSize: '0.9rem', color: '#7c3aed' }}>
+                  <UserPlus size={16} /> {authMode === 'signup' ? 'Create RDK Tech Account' : 'Sign In to RDK Tech'}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setAuthMode(authMode === 'signup' ? 'login' : 'signup')}
+                  style={{ background: 'none', border: 'none', color: '#7c3aed', fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer', textDecoration: 'underline' }}
+                >
+                  {authMode === 'signup' ? 'Already have an account?' : 'Create new account'}
+                </button>
+              </div>
+              {authMode === 'signup' && (
+                <input
+                  type="text"
+                  required
+                  value={authName}
+                  onChange={(e) => setAuthName(e.target.value)}
+                  placeholder="Full Name"
+                  style={{ padding: '0.7rem 0.85rem', background: '#ffffff', border: '1px solid #d1d5db', borderRadius: '10px', fontSize: '0.86rem' }}
+                />
+              )}
+              <input
+                type="email"
+                required
+                value={authEmail}
+                onChange={(e) => setAuthEmail(e.target.value)}
+                placeholder="Email address (for invoices & due alerts)"
+                style={{ padding: '0.7rem 0.85rem', background: '#ffffff', border: '1px solid #d1d5db', borderRadius: '10px', fontSize: '0.86rem' }}
+              />
+              <input
+                type="password"
+                required
+                minLength={6}
+                value={authPassword}
+                onChange={(e) => setAuthPassword(e.target.value)}
+                placeholder="Password (min 6 chars)"
+                style={{ padding: '0.7rem 0.85rem', background: '#ffffff', border: '1px solid #d1d5db', borderRadius: '10px', fontSize: '0.86rem' }}
+              />
+              <button type="submit" disabled={authLoading} className="btn btn-primary" style={{ justifyContent: 'center', background: '#7c3aed', border: 'none', fontWeight: 700 }}>
+                {authLoading ? 'Please wait...' : authMode === 'signup' ? 'Create Account & Continue' : 'Sign In & Continue'}
+              </button>
+            </form>
+          ) : (
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.7rem 0.9rem', background: '#faf8ff', border: '1px solid #ede9fe', borderRadius: '10px', fontSize: '0.83rem', marginBottom: '1rem' }}>
+              <div>
+                <span style={{ color: '#6b7280' }}>RDK Account:</span> <strong>{user.email}</strong>
+              </div>
+              <button
+                type="button"
+                onClick={logoutRdk}
+                style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem', background: 'none', border: 'none', color: '#7c3aed', fontWeight: 700, fontSize: '0.78rem', cursor: 'pointer' }}
+              >
+                <LogOut size={13} /> Switch
+              </button>
+            </div>
+          )}
+
           {paidInfo ? (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
               <div style={{ padding: '1.15rem', borderRadius: '14px', background: 'rgba(16,185,129,0.1)', border: '1px solid #10b981', color: '#065f46' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 800, fontSize: '1rem', color: '#059669' }}>
                   <CheckCircle2 size={20} /> Payment Confirmed!
@@ -279,6 +400,13 @@ export default function PaymentPage() {
                   <div><strong>Payment ID:</strong> {paidInfo.paymentId}</div>
                 </div>
               </div>
+              <Link
+                to="/dashboard"
+                className="btn btn-outline"
+                style={{ justifyContent: 'center', padding: '0.8rem', fontWeight: 700, borderColor: '#7c3aed', color: '#7c3aed' }}
+              >
+                View Invoice &amp; Upcoming Due in RDK Console
+              </Link>
               <a
                 href={discordReturnUrl}
                 className="btn btn-primary"
@@ -287,7 +415,7 @@ export default function PaymentPage() {
                 Return to Discord Server <ExternalLink size={16} />
               </a>
             </div>
-          ) : (
+          ) : user ? (
             <form onSubmit={handlePay} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               {/* Billing Mode Selector */}
               {product.supportsAutoPay && (
@@ -339,7 +467,7 @@ export default function PaymentPage() {
                 </div>
               )}
 
-              {/* Discord Connection */}
+              {/* Discord Connection + Logout */}
               {product.requiresDiscordGuild && (
                 !discordUser ? (
                   <button
@@ -352,8 +480,17 @@ export default function PaymentPage() {
                   </button>
                 ) : (
                   <>
-                    <div style={{ padding: '0.7rem 0.9rem', background: '#faf8ff', border: '1px solid #ede9fe', borderRadius: '10px', fontSize: '0.84rem', color: '#374151' }}>
-                      <strong>Discord Owner:</strong> {discordUser.global_name || discordUser.username} (<code>{discordUser.id}</code>)
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.7rem 0.9rem', background: '#faf8ff', border: '1px solid #ede9fe', borderRadius: '10px', fontSize: '0.83rem', color: '#374151', gap: '0.5rem' }}>
+                      <div>
+                        <strong>Discord:</strong> {discordUser.global_name || discordUser.username} (<code>{discordUser.id}</code>)
+                      </div>
+                      <button
+                        type="button"
+                        onClick={handleDiscordLogout}
+                        style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem', background: 'none', border: 'none', color: '#ef4444', fontWeight: 700, fontSize: '0.78rem', cursor: 'pointer', flexShrink: 0 }}
+                      >
+                        <LogOut size={13} /> Logout Discord
+                      </button>
                     </div>
 
                     {ownedGuilds.length === 0 ? (
@@ -384,14 +521,6 @@ export default function PaymentPage() {
               ) : (
                 discordUser && ownedGuilds.length > 0 && (
                   <>
-                    <input
-                      type="email"
-                      value={clientEmail}
-                      onChange={(e) => setClientEmail(e.target.value)}
-                      placeholder="Email for invoice & receipt (optional)"
-                      style={{ padding: '0.75rem 0.9rem', background: '#f9fafb', border: '1px solid #d1d5db', color: '#111827', borderRadius: '10px', fontSize: '0.875rem' }}
-                    />
-
                     <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.82rem', color: '#4b5563', cursor: 'pointer' }}>
                       <input type="checkbox" checked={confirmedOwner} onChange={(e) => setConfirmedOwner(e.target.checked)} />
                       <span>
@@ -420,7 +549,7 @@ export default function PaymentPage() {
                 <ShieldCheck size={14} color="#7c3aed" /> Secured by Razorpay • Instant Discord Activation
               </div>
             </form>
-          )}
+          ) : null}
         </section>
       </main>
     </div>
