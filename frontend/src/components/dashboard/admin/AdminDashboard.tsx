@@ -217,86 +217,141 @@ export const AdminDashboard: React.FC = () => {
     );
   }
 
+  const [projFilter, setProjFilter] = useState<string>('all');
+
   // Projects Tab
   if (activeTab === 'projects') {
+    const filteredProjects = projFilter === 'all'
+      ? projects
+      : projects.filter((p) => (projectStatus[p.id] ?? p.status) === projFilter);
+
     return (
-      <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '16px', padding: '1.5rem', boxShadow: 'var(--shadow-sm)', overflowX: 'auto' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '1.15rem' }}>
-          <FolderKanban size={20} color="var(--primary)" />
-          <h3 style={{ fontSize: '1.2rem', fontWeight: 800, margin: 0 }}>Manage All Projects</h3>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+        {/* Header & Filter Pills */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '16px', padding: '1.15rem 1.5rem', boxShadow: 'var(--shadow-sm)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+            <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: 'rgba(124, 58, 237, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <FolderKanban size={18} color="var(--primary)" />
+            </div>
+            <div>
+              <h3 style={{ fontSize: '1.1rem', fontWeight: 800, margin: 0 }}>Projects Workspace</h3>
+              <div style={{ fontSize: '0.78rem', color: 'var(--text2)' }}>{projects.length} total project{projects.length === 1 ? '' : 's'}</div>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap' }}>
+            {['all', 'Proposed', 'In progress', 'Review', 'Done'].map((f) => {
+              const active = projFilter === f;
+              return (
+                <button
+                  key={f}
+                  onClick={() => setProjFilter(f)}
+                  style={{
+                    padding: '0.38rem 0.85rem',
+                    borderRadius: '999px',
+                    fontSize: '0.78rem',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    border: active ? '1px solid var(--primary)' : '1px solid var(--border)',
+                    background: active ? 'var(--primary)' : 'var(--bg2)',
+                    color: active ? '#ffffff' : 'var(--text2)',
+                  }}
+                >
+                  {f === 'all' ? 'All' : f}
+                </button>
+              );
+            })}
+          </div>
         </div>
-        {projects.length === 0 ? (
-          <div style={{ padding: '2.5rem', textAlign: 'center', color: 'var(--text2)', background: 'var(--bg2)', borderRadius: '12px' }}>
-            No client projects yet.
+
+        {filteredProjects.length === 0 ? (
+          <div style={{ padding: '3rem', textAlign: 'center', color: 'var(--text2)', background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '16px' }}>
+            No projects match the selected filter.
           </div>
         ) : (
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem', textAlign: 'left' }}>
-            <thead>
-              <tr style={{ borderBottom: '1px solid var(--border)', color: 'var(--text2)' }}>
-                <th style={{ padding: '0.75rem 0.5rem' }}>Project ID</th>
-                <th style={{ padding: '0.75rem 0.5rem' }}>Name</th>
-                <th style={{ padding: '0.75rem 0.5rem' }}>Client</th>
-                <th style={{ padding: '0.75rem 0.5rem' }}>Developer</th>
-                <th style={{ padding: '0.75rem 0.5rem' }}>Progress</th>
-                <th style={{ padding: '0.75rem 0.5rem' }}>Status</th>
-                <th style={{ padding: '0.75rem 0.5rem', textAlign: 'right' }}>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {projects.map((p) => {
-                const currentDev = devAssignment[p.id] ?? p.assignedTo;
-                const currentStatus = projectStatus[p.id] ?? p.status;
-                const currentProgress = projectProgress[p.id] ?? p.progress;
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '1.25rem' }}>
+            {filteredProjects.map((p) => {
+              const currentDev = devAssignment[p.id] ?? p.assignedTo;
+              const currentStatus = projectStatus[p.id] ?? p.status;
+              const currentProgress = projectProgress[p.id] ?? p.progress;
 
-                return (
-                  <tr key={p.id} style={{ borderBottom: '1px solid var(--border)' }}>
-                    <td style={{ padding: '1rem 0.5rem', fontWeight: 700, fontFamily: 'var(--font-mono)', color: 'var(--primary)' }}>{p.id}</td>
-                    <td style={{ padding: '1rem 0.5rem', fontWeight: 700 }}>{p.name}</td>
-                    <td style={{ padding: '1rem 0.5rem', color: 'var(--text2)' }}>{p.client}</td>
-                    <td style={{ padding: '1rem 0.5rem' }}>
+              return (
+                <div key={p.id} style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '18px', padding: '1.5rem', boxShadow: 'var(--shadow-sm)', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                  {/* Card Top */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.5rem' }}>
+                    <span style={{ padding: '0.25rem 0.65rem', borderRadius: '8px', background: 'rgba(124, 58, 237, 0.1)', color: 'var(--primary)', fontFamily: 'var(--font-mono)', fontSize: '0.76rem', fontWeight: 700 }}>
+                      {p.id}
+                    </span>
+                    <Badge status={currentStatus} />
+                  </div>
+
+                  {/* Title & Client */}
+                  <div>
+                    <h4 style={{ fontSize: '1.08rem', fontWeight: 800, margin: '0 0 0.25rem', color: 'var(--text)' }}>{p.name}</h4>
+                    <div style={{ fontSize: '0.82rem', color: 'var(--text2)' }}>
+                      Client: <strong style={{ color: 'var(--text)' }}>{p.client}</strong>
+                    </div>
+                    {p.desc && (
+                      <p style={{ fontSize: '0.8rem', color: 'var(--text2)', margin: '0.5rem 0 0', lineHeight: 1.45 }}>
+                        {p.desc}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Progress Slider */}
+                  <div style={{ background: 'var(--bg2)', borderRadius: '12px', padding: '0.85rem 1rem', border: '1px solid var(--border)' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', fontWeight: 700, marginBottom: '0.45rem' }}>
+                      <span style={{ color: 'var(--text2)' }}>Completion Progress</span>
+                      <span style={{ color: 'var(--primary)' }}>{currentProgress}%</span>
+                    </div>
+                    <input
+                      type="range"
+                      min="0"
+                      max="100"
+                      value={currentProgress}
+                      onChange={(e) => setProjectProgress({ ...projectProgress, [p.id]: parseInt(e.target.value) })}
+                      style={{ width: '100%', accentColor: '#7c3aed', cursor: 'pointer' }}
+                    />
+                  </div>
+
+                  {/* Developer & Status Controls */}
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 700, color: 'var(--text2)', marginBottom: '0.3rem', textTransform: 'uppercase' }}>
+                        Developer
+                      </label>
                       <input
                         type="text"
                         value={currentDev}
                         onChange={(e) => setDevAssignment({ ...devAssignment, [p.id]: e.target.value })}
-                        placeholder="Assign dev email"
-                        style={{ padding: '0.35rem 0.6rem', background: 'var(--bg2)', color: 'var(--text)', border: '1px solid var(--border)', borderRadius: '8px', fontSize: '0.8rem', width: '140px' }}
+                        placeholder="dev@rdk.com"
+                        style={{ width: '100%', padding: '0.5rem 0.7rem', background: 'var(--bg2)', color: 'var(--text)', border: '1px solid var(--border)', borderRadius: '10px', fontSize: '0.82rem' }}
                       />
-                    </td>
-                    <td style={{ padding: '1rem 0.5rem' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                        <input
-                          type="range"
-                          min="0"
-                          max="100"
-                          value={currentProgress}
-                          onChange={(e) => setProjectProgress({ ...projectProgress, [p.id]: parseInt(e.target.value) })}
-                          style={{ width: '80px', accentColor: 'var(--primary)' }}
-                        />
-                        <span style={{ fontWeight: 700, fontSize: '0.8rem' }}>{currentProgress}%</span>
-                      </div>
-                    </td>
-                    <td style={{ padding: '1rem 0.5rem' }}>
+                    </div>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 700, color: 'var(--text2)', marginBottom: '0.3rem', textTransform: 'uppercase' }}>
+                        Status
+                      </label>
                       <select
                         value={currentStatus}
                         onChange={(e) => setProjectStatus({ ...projectStatus, [p.id]: e.target.value })}
-                        style={{ padding: '0.35rem 0.6rem', background: 'var(--bg2)', color: 'var(--text)', border: '1px solid var(--border)', borderRadius: '8px', fontSize: '0.8rem' }}
+                        style={{ width: '100%', padding: '0.5rem 0.7rem', background: 'var(--bg2)', color: 'var(--text)', border: '1px solid var(--border)', borderRadius: '10px', fontSize: '0.82rem' }}
                       >
                         <option>Proposed</option>
                         <option>In progress</option>
                         <option>Review</option>
                         <option>Done</option>
                       </select>
-                    </td>
-                    <td style={{ padding: '1rem 0.5rem', textAlign: 'right' }}>
-                      <button onClick={() => handleUpdateProject(p.id)} className="btn btn-primary" style={{ padding: '0.4rem 0.85rem', fontSize: '0.76rem' }}>
-                        Save
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+                    </div>
+                  </div>
+
+                  <button onClick={() => handleUpdateProject(p.id)} className="btn btn-primary" style={{ width: '100%', justifyContent: 'center', padding: '0.65rem', fontSize: '0.84rem', fontWeight: 700 }}>
+                    Save Changes
+                  </button>
+                </div>
+              );
+            })}
+          </div>
         )}
       </div>
     );
