@@ -173,55 +173,6 @@ async function initDb() {
 
   for (const s of schemas) await run(s);
 
-  // Seed initial data if empty
-  const projCount = await get('SELECT COUNT(*) as c FROM projects');
-  if ((projCount?.c || 0) === 0) {
-    await run(
-      `INSERT OR IGNORE INTO projects (id, name, client, assigned_to, status, progress, description, milestones, tasks, deliverables) VALUES
-       ('PROJ-101', 'Luxora Marketplace v2', 'demo', 'employee@rdk.com', 'In progress', 72,
-        'Scale core Stripe transactions and optimize page index latency.',
-        '[{"name":"Database Index Tuning","completed":true},{"name":"Webhook Payload Security","completed":true},{"name":"Analytics Dashboard UI","completed":false}]',
-        '[{"id":1,"title":"Configure postgres queries","status":"Done"},{"id":2,"title":"Integrate stripe webhooks","status":"Done"},{"id":3,"title":"Create charts UI component","status":"In Progress"},{"id":4,"title":"Write backend unit tests","status":"To Do"}]',
-        '[{"name":"luxora-stripe-handler-v1.zip","size":"2.4 MB","date":"2026-06-20"}]'),
-       ('PROJ-102', 'Mobile App Redesign', 'demo', 'freelancer@rdk.com', 'Review', 90,
-        'React Native upgrade and unified Dark Mode style guides.',
-        '[{"name":"Figma Mockup Sign-off","completed":true},{"name":"Styles Refactoring","completed":true},{"name":"V1 Build to TestFlight","completed":false}]',
-        '[{"id":5,"title":"Export SVG icons","status":"Done"},{"id":6,"title":"Migrate styling sheets","status":"Done"},{"id":7,"title":"Test build on iOS emulator","status":"In Review"}]',
-        '[{"name":"fit-track-figma-handsoff.pdf","size":"12.8 MB","date":"2026-06-22"}]')`
-    );
-  }
-
-  await run(
-    `INSERT OR IGNORE INTO tickets (id, client, category, priority, status, assigned_to, title, description, messages) VALUES
-     ('WEB-2026-0041', 'demo', 'Website Dev', 'Critical', 'Active', 'employee@rdk.com',
-      'E-commerce Bug Report', 'Stripe webhooks are timing out after 5s on the production server.',
-      '[{"sender":"client","senderName":"Client","text":"Stripe webhooks are timing out during peak traffic hours.","time":"10:32 AM"},{"sender":"employee","senderName":"Sarah K.","text":"Investigating the database locking during webhook updates. Will push a fix today.","time":"10:45 AM"}]')`
-  );
-
-  await run(
-    `INSERT OR IGNORE INTO invoices (id, client, project, amount, status, items, date) VALUES
-     ('INV-2026-001', 'demo', 'Luxora Marketplace v2', 1500, 'Paid', '["Stripe webhook configuration","Milestone 1 release payment"]', '2026-06-15'),
-     ('INV-2026-002', 'demo', 'Mobile App Redesign', 2800, 'Unpaid', '["React Native layout development","Milestone 2 release payment"]', '2026-06-28')`
-  );
-
-  const meetCount = await get('SELECT COUNT(*) as c FROM meetings');
-  if ((meetCount?.c || 0) === 0) {
-    await run(`INSERT INTO meetings (client, type, date, time, duration, status) VALUES ('demo', 'Google Meet', '2026-07-02', '14:00', '30 min', 'Scheduled')`);
-  }
-
-  const chatCount = await get('SELECT COUNT(*) as c FROM chat_messages');
-  if ((chatCount?.c || 0) === 0) {
-    await run(`INSERT INTO chat_messages (sender, sender_name, text, time) VALUES
-      ('in', 'RDK Support', 'Hey! Quick update — the payment integration is complete ✅', '10:32 AM'),
-      ('out', 'You', 'That''s great news! Can I review the staging environment?', '10:34 AM')`);
-  }
-
-  await run(
-    `INSERT OR IGNORE INTO freelancer_profiles (email, skills, availability, rate, contracts) VALUES
-     ('demo-freelancer', 'Flutter, React Native, iOS, Android, Figma', 'available', '45',
-      '[{"id":"CON-101","title":"Mobile App Redesign Layouts","rate":"45","status":"Active"}]')`
-  );
-
   await run(
     `INSERT OR IGNORE INTO cms_config (key, value) VALUES
      ('services', '[{"id":1,"name":"Website development","icon":"🌐","desc":"Custom websites, landing pages, CMS platforms and e-commerce solutions.","tags":["Next.js","WordPress","Shopify","Webflow"],"delivery":"2-8 weeks"},{"id":2,"name":"Mobile development","icon":"📱","desc":"Native and cross-platform apps for iOS and Android.","tags":["Flutter","React Native","iOS","Android"],"delivery":"4-12 weeks"},{"id":3,"name":"Discord development","icon":"🤖","desc":"Custom bots, dashboards, verification and moderation systems.","tags":["Discord.js","Python","AI bots","Dashboard"],"delivery":"1-4 weeks"},{"id":4,"name":"Full-stack development","icon":"⚡","desc":"Production-ready apps with Next.js, NestJS, PostgreSQL and REST APIs.","tags":["Next.js","NestJS","PostgreSQL","GraphQL"],"delivery":"6-16 weeks"},{"id":5,"name":"AI solutions","icon":"🧠","desc":"Custom AI assistants, LLM integrations and automation pipelines.","tags":["OpenAI","LangChain","RAG","Voice AI"],"delivery":"3-10 weeks"},{"id":6,"name":"Cloud & DevOps","icon":"☁️","desc":"Docker, AWS, CI/CD pipelines and Linux server management.","tags":["Docker","AWS","CI/CD","Linux"],"delivery":"1-6 weeks"}]'),
@@ -230,11 +181,6 @@ async function initDb() {
   );
 
   await run(`INSERT OR IGNORE INTO app_config (key, value) VALUES ('theme', 'light')`);
-
-  const appCount = await get('SELECT COUNT(*) as c FROM applications');
-  if ((appCount?.c || 0) === 0) {
-    await run(`INSERT INTO applications (name, email, position, status, resume) VALUES ('Marcus Miller', 'marcus.miller@gmail.com', 'Senior Frontend Developer', 'Interviewing', 'marcus_resume.pdf')`);
-  }
 
   // Ensure primary owner account has admin role
   await run(`UPDATE auth_users SET role = 'admin' WHERE lower(email) = 'rdxyzprvt@gmail.com'`);
