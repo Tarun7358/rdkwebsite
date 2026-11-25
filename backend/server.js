@@ -434,8 +434,28 @@ app.post('/api/auth/signup', async (req, res) => {
     const access_token = jwt.sign({ id, email, full_name: fullName, role: 'client' }, JWT_SECRET, { expiresIn: '7d' });
     sendRdkEmail(
       email,
-      'Welcome to RDK Tech Client Portal',
-      `<h2>Welcome to RDK Tech, ${fullName}!</h2><p>Your account is ready. You can now manage projects, support tickets, and Rage Pro subscriptions at <a href="https://rdkweb.netlify.app">rdkweb.netlify.app</a>.</p>`
+      'Welcome to RDK Tech — Reliable Digital Kreations',
+      `<div style="font-family:Inter,Arial,sans-serif;max-width:600px;margin:0 auto;background:#0b0f19;color:#f3f4f6;padding:32px;border-radius:16px;border:1px solid #1f2937;">
+        <div style="font-size:12px;font-weight:800;letter-spacing:0.1em;color:#a855f7;text-transform:uppercase;">RDK TECH • RELIABLE DIGITAL KREATIONS</div>
+        <h1 style="margin:10px 0 8px;font-size:24px;color:#ffffff;">Welcome, ${fullName}!</h1>
+        <p style="color:#9ca3af;font-size:14px;line-height:1.6;">
+          Thank you for creating your RDK Tech Client Portal account. You now have direct access to our engineering team, live project tracking, support tickets, and software licensing.
+        </p>
+        <div style="background:#111827;border:1px solid #1f2937;border-radius:12px;padding:18px;margin:20px 0;">
+          <div style="font-size:13px;font-weight:700;color:#ffffff;margin-bottom:10px;">What We Provide at RDK Tech:</div>
+          <ul style="margin:0;padding-left:18px;color:#d1d5db;font-size:13px;line-height:1.8;">
+            <li><b>Web &amp; Full-Stack Platforms:</b> Custom SaaS, e-commerce, Next.js, Node.js, and SQL databases</li>
+            <li><b>Rage Optimiser Enterprise:</b> Flagship Discord Anti-Nuke, UPM Snapshots, Gmail 2FA &amp; Rage Pro (₹99 / 30 days)</li>
+            <li><b>Mobile &amp; Enterprise IoT:</b> Flutter, React Native, fleet telemetry, and biometric integrations</li>
+            <li><b>AI &amp; Cloud DevOps:</b> Custom LLM assistants, automation pipelines, Docker, and Linux VPS hosting</li>
+          </ul>
+        </div>
+        <div style="margin-top:20px;">
+          <a href="https://rdkweb.netlify.app/dashboard" style="display:inline-block;background:#7c3aed;color:#ffffff;text-decoration:none;padding:11px 20px;border-radius:8px;font-weight:700;font-size:13px;margin-right:8px;">Open Client Portal</a>
+          <a href="https://rdkweb.netlify.app/#tickets" style="display:inline-block;background:#1f2937;color:#f3f4f6;text-decoration:none;padding:11px 20px;border-radius:8px;font-weight:700;font-size:13px;">Create Support Ticket</a>
+        </div>
+        <p style="margin-top:24px;font-size:12px;color:#6b7280;">Need help? Reply directly to <a href="mailto:rdksupport@ragefps.in" style="color:#a855f7;">rdksupport@ragefps.in</a>.</p>
+      </div>`
     );
     res.json({ data: { user, session: { access_token, user } }, error: null });
   } catch (err) {
