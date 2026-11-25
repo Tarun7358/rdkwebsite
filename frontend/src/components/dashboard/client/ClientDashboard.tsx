@@ -228,7 +228,7 @@ export const ClientDashboard: React.FC = () => {
               Welcome back, {user?.name || 'Partner'}
             </h2>
             <p style={{ fontSize: '0.85rem', color: 'var(--text2)', margin: 0 }}>
-              Track your active builds, open engineering tickets, or manage your Rage Pro subscription.
+              Track your active builds, open engineering tickets, and manage your project milestones.
             </p>
           </div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.6rem' }}>
@@ -238,9 +238,9 @@ export const ClientDashboard: React.FC = () => {
             <button onClick={() => setActiveTab('tickets')} className="btn btn-outline" style={{ fontSize: '0.82rem', padding: '0.55rem 1rem' }}>
               <Ticket size={15} /> Open Ticket
             </button>
-            <a href="/#pricing" className="btn btn-outline" style={{ fontSize: '0.82rem', padding: '0.55rem 1rem', borderColor: 'rgba(124, 58, 237, 0.35)', color: 'var(--primary)' }}>
-              Rage Pro (₹99)
-            </a>
+            <button onClick={() => setActiveTab('meetings')} className="btn btn-outline" style={{ fontSize: '0.82rem', padding: '0.55rem 1rem', borderColor: 'rgba(124, 58, 237, 0.35)', color: 'var(--primary)' }}>
+              Book a Call
+            </button>
           </div>
         </div>
 
@@ -249,8 +249,8 @@ export const ClientDashboard: React.FC = () => {
           {[
             { label: 'Active Projects', value: activeProjectsCount, icon: <Folder size={20} color="var(--primary)" />, tab: 'projects' as const },
             { label: 'Open Support Tickets', value: openTicketsCount, icon: <Ticket size={20} color="var(--primary)" />, tab: 'tickets' as const },
-            { label: 'Pending Invoices', value: `₹${pendingInvoiceVal}`, icon: <CreditCard size={20} color="var(--primary)" />, tab: 'invoices' as const },
-            { label: 'Message Threads', value: chatMessages.length, icon: <MessageSquare size={20} color="var(--primary)" />, tab: 'messages' as const },
+            { label: 'Pending Invoices', value: `$${pendingInvoiceVal}`, icon: <CreditCard size={20} color="var(--primary)" />, tab: 'invoices' as const },
+            { label: 'Message Threads', value: chatMessages.length, icon: <MessageSquare size={20} color="var(--primary)" />, tab: 'chat' as const },
           ].map((stat, idx) => (
             <div
               key={idx}
@@ -341,7 +341,7 @@ export const ClientDashboard: React.FC = () => {
               </div>
               {myTickets.length === 0 ? (
                 <div style={{ fontSize: '0.84rem', color: 'var(--text2)', padding: '1rem', background: 'var(--bg2)', borderRadius: '12px', textAlign: 'center' }}>
-                  No tickets opened yet. Need help with a project or Rage Optimiser?
+                  No tickets opened yet. Need help with your project?
                 </div>
               ) : (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
@@ -359,37 +359,39 @@ export const ClientDashboard: React.FC = () => {
             </div>
           </div>
 
-          {/* Right: Rage Pro & Billing / Meetings Summary */}
+          {/* Right: Upcoming Meetings & Billing Summary */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-            <div style={{
-              background: 'var(--card)',
-              border: '1px solid rgba(124, 58, 237, 0.35)',
-              borderRadius: '18px',
-              padding: '1.4rem',
-              boxShadow: '0 8px 24px rgba(124, 58, 237, 0.08)'
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
-                <span style={{ fontSize: '0.72rem', fontWeight: 800, color: 'var(--primary)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-                  Flagship Software
-                </span>
-                <span style={{ fontSize: '0.82rem', fontWeight: 800, color: 'var(--primary)', background: 'rgba(124, 58, 237, 0.1)', padding: '0.2rem 0.6rem', borderRadius: '999px' }}>
-                  ₹99 / 30d
-                </span>
+            <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '18px', padding: '1.4rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                <h3 style={{ fontSize: '1.05rem', fontWeight: 800, color: 'var(--text)', margin: 0 }}>Upcoming Meetings</h3>
+                <button onClick={() => setActiveTab('meetings')} style={{ background: 'none', border: 'none', color: 'var(--primary)', fontSize: '0.8rem', fontWeight: 700, cursor: 'pointer' }}>
+                  Schedule →
+                </button>
               </div>
-              <h3 style={{ fontSize: '1.08rem', fontWeight: 800, color: 'var(--text)', margin: '0 0 0.45rem' }}>Rage Optimiser Pro</h3>
-              <p style={{ fontSize: '0.84rem', color: 'var(--text2)', lineHeight: 1.55, margin: '0 0 1rem' }}>
-                Verify your Discord Server ownership to unlock Gmail 2FA Sentinel, unlimited backups, custom bot avatar &amp; 24/7 voice.
-              </p>
-              <a href="/#pricing" className="btn btn-primary" style={{ width: '100%', justifyContent: 'center', fontSize: '0.84rem' }}>
-                Verify Server &amp; Upgrade (₹99)
-              </a>
+              {myMeetings.length === 0 ? (
+                <div style={{ padding: '1.25rem', background: 'var(--bg2)', borderRadius: '12px', textAlign: 'center', fontSize: '0.84rem', color: 'var(--text2)' }}>
+                  No meetings scheduled yet. Book a consultation anytime.
+                </div>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+                  {myMeetings.slice(0, 3).map((m) => (
+                    <div key={m.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.75rem 0.9rem', background: 'var(--bg2)', borderRadius: '10px', border: '1px solid var(--border)' }}>
+                      <div>
+                        <div style={{ fontWeight: 700, fontSize: '0.85rem', color: 'var(--text)' }}>{m.type}</div>
+                        <div style={{ fontSize: '0.75rem', color: 'var(--text3)' }}>{m.date} at {m.time}</div>
+                      </div>
+                      <Badge status={m.status} />
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '18px', padding: '1.4rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                <h3 style={{ fontSize: '1.05rem', fontWeight: 800, color: 'var(--text)', margin: 0 }}>Invoices &amp; Meetings</h3>
+                <h3 style={{ fontSize: '1.05rem', fontWeight: 800, color: 'var(--text)', margin: 0 }}>Billing Summary</h3>
                 <button onClick={() => setActiveTab('invoices')} style={{ background: 'none', border: 'none', color: 'var(--primary)', fontSize: '0.8rem', fontWeight: 700, cursor: 'pointer' }}>
-                  Billing →
+                  View Invoices →
                 </button>
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', fontSize: '0.84rem' }}>
@@ -398,8 +400,8 @@ export const ClientDashboard: React.FC = () => {
                   <strong style={{ color: 'var(--text)' }}>{myInvoices.length}</strong>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.75rem 0.9rem', background: 'var(--bg2)', borderRadius: '10px' }}>
-                  <span style={{ color: 'var(--text2)' }}>Scheduled Calls</span>
-                  <strong style={{ color: 'var(--text)' }}>{myMeetings.length}</strong>
+                  <span style={{ color: 'var(--text2)' }}>Outstanding Balance</span>
+                  <strong style={{ color: 'var(--primary)' }}>${pendingInvoiceVal}</strong>
                 </div>
               </div>
             </div>
@@ -682,10 +684,10 @@ export const ClientDashboard: React.FC = () => {
         {/* Quick Requirement Scoping Prompts */}
         <div className="no-scrollbar" style={{ padding: '0.65rem 1rem', borderTop: '1px solid var(--border)', background: 'var(--bg2)', display: 'flex', gap: '0.5rem', overflowX: 'auto', msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
           {[
-            '📋 Get Project Requirement Estimate',
-            '🛒 Need E-Commerce Website with Auth & Payments',
-            '📱 Need Mobile App with Real-time DB',
-            '🤖 Need AI & Automation System'
+            'Get Project Requirement Estimate',
+            'Need E-Commerce Website with Auth & Payments',
+            'Need Mobile App with Real-time DB',
+            'Need AI & Automation System'
           ].map((prompt, idx) => (
             <button
               key={idx}
@@ -742,53 +744,73 @@ export const ClientDashboard: React.FC = () => {
 
   // Invoices Tab
   if (activeTab === 'invoices') {
+    const paidTotal = myInvoices.filter((i) => i.status !== 'Unpaid').reduce((s, i) => s + i.amount, 0);
+    const unpaidTotal = myInvoices.filter((i) => i.status === 'Unpaid').reduce((s, i) => s + i.amount, 0);
+
     return (
-      <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '16px', padding: '1.5rem', boxShadow: 'var(--shadow-sm)' }}>
-        <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '1.25rem', color: 'var(--text)' }}>Invoices & Payments</h3>
-        {myInvoices.length === 0 ? (
-          <div style={{ padding: '2.5rem', textAlign: 'center', color: 'var(--text2)', background: 'var(--bg2)', borderRadius: '12px', border: '1px solid var(--border)' }}>
-            No pending or active invoices for this account.
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem' }}>
+          <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '14px', padding: '1.15rem 1.25rem' }}>
+            <div style={{ fontSize: '0.78rem', color: 'var(--text2)', fontWeight: 600 }}>Total Invoices</div>
+            <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--text)', marginTop: '0.25rem' }}>{myInvoices.length}</div>
           </div>
-        ) : (
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.875rem', textAlign: 'left' }}>
-            <thead>
-              <tr style={{ borderBottom: '1px solid var(--border)', color: 'var(--text2)' }}>
-                <th style={{ padding: '0.75rem 0.5rem' }}>Invoice ID</th>
-                <th style={{ padding: '0.75rem 0.5rem' }}>Project</th>
-                <th style={{ padding: '0.75rem 0.5rem' }}>Scope Items</th>
-                <th style={{ padding: '0.75rem 0.5rem' }}>Amount</th>
-                <th style={{ padding: '0.75rem 0.5rem' }}>Due Date</th>
-                <th style={{ padding: '0.75rem 0.5rem' }}>Status</th>
-                <th style={{ padding: '0.75rem 0.5rem', textAlign: 'right' }}>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {myInvoices.map((inv) => (
-                <tr key={inv.id} style={{ borderBottom: '1px solid var(--border)' }}>
-                  <td style={{ padding: '1rem 0.5rem', fontWeight: 800, color: 'var(--primary)', fontFamily: 'var(--font-mono)' }}>{inv.id}</td>
-                  <td style={{ padding: '1rem 0.5rem', fontWeight: 700 }}>{inv.project}</td>
-                  <td style={{ padding: '1rem 0.5rem', color: 'var(--text2)' }}>{inv.items?.join(', ') || 'N/A'}</td>
-                  <td style={{ padding: '1rem 0.5rem', fontWeight: 700, color: 'var(--text)' }}>${inv.amount}</td>
-                  <td style={{ padding: '1rem 0.5rem', color: 'var(--text3)' }}>{inv.date}</td>
-                  <td style={{ padding: '1rem 0.5rem' }}>
-                    <Badge status={inv.status} />
-                  </td>
-                  <td style={{ padding: '1rem 0.5rem', textAlign: 'right' }}>
-                    {inv.status === 'Unpaid' ? (
-                      <button onClick={() => openPaymentModal(inv.id)} className="btn btn-primary" style={{ padding: '0.4rem 0.85rem', fontSize: '0.8rem', fontWeight: 700 }}>
-                        Pay Invoice
-                      </button>
-                    ) : (
-                      <span style={{ fontSize: '0.8rem', color: '#16a34a', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
-                        <Check size={16} /> Paid & Verified
-                      </span>
-                    )}
-                  </td>
+          <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '14px', padding: '1.15rem 1.25rem' }}>
+            <div style={{ fontSize: '0.78rem', color: 'var(--text2)', fontWeight: 600 }}>Paid Amount</div>
+            <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#16a34a', marginTop: '0.25rem' }}>${paidTotal}</div>
+          </div>
+          <div style={{ background: 'var(--card)', border: '1px solid rgba(124, 58, 237, 0.25)', borderRadius: '14px', padding: '1.15rem 1.25rem' }}>
+            <div style={{ fontSize: '0.78rem', color: 'var(--primary)', fontWeight: 700 }}>Pending Balance</div>
+            <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--primary)', marginTop: '0.25rem' }}>${unpaidTotal}</div>
+          </div>
+        </div>
+
+        <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '16px', padding: '1.5rem', boxShadow: 'var(--shadow-sm)', overflowX: 'auto' }}>
+          <h3 style={{ fontSize: '1.15rem', fontWeight: 800, marginBottom: '1.1rem', color: 'var(--text)' }}>Invoices &amp; Payments</h3>
+          {myInvoices.length === 0 ? (
+            <div style={{ padding: '2.5rem', textAlign: 'center', color: 'var(--text2)', background: 'var(--bg2)', borderRadius: '12px', border: '1px dashed rgba(124, 58, 237, 0.3)' }}>
+              No pending or active invoices for this account.
+            </div>
+          ) : (
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.875rem', textAlign: 'left' }}>
+              <thead>
+                <tr style={{ background: 'rgba(124, 58, 237, 0.06)', color: 'var(--text2)' }}>
+                  <th style={{ padding: '0.8rem 0.75rem', borderRadius: '8px 0 0 8px' }}>Invoice ID</th>
+                  <th style={{ padding: '0.8rem 0.75rem' }}>Project</th>
+                  <th style={{ padding: '0.8rem 0.75rem' }}>Scope Items</th>
+                  <th style={{ padding: '0.8rem 0.75rem' }}>Amount</th>
+                  <th style={{ padding: '0.8rem 0.75rem' }}>Due Date</th>
+                  <th style={{ padding: '0.8rem 0.75rem' }}>Status</th>
+                  <th style={{ padding: '0.8rem 0.75rem', textAlign: 'right', borderRadius: '0 8px 8px 0' }}>Action</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
+              </thead>
+              <tbody>
+                {myInvoices.map((inv) => (
+                  <tr key={inv.id} style={{ borderBottom: '1px solid var(--border)' }}>
+                    <td style={{ padding: '1rem 0.75rem', fontWeight: 800, color: 'var(--primary)', fontFamily: 'var(--font-mono)' }}>{inv.id}</td>
+                    <td style={{ padding: '1rem 0.75rem', fontWeight: 700 }}>{inv.project}</td>
+                    <td style={{ padding: '1rem 0.75rem', color: 'var(--text2)' }}>{inv.items?.join(', ') || 'N/A'}</td>
+                    <td style={{ padding: '1rem 0.75rem', fontWeight: 700, color: 'var(--text)' }}>${inv.amount}</td>
+                    <td style={{ padding: '1rem 0.75rem', color: 'var(--text3)' }}>{inv.date}</td>
+                    <td style={{ padding: '1rem 0.75rem' }}>
+                      <Badge status={inv.status} />
+                    </td>
+                    <td style={{ padding: '1rem 0.75rem', textAlign: 'right' }}>
+                      {inv.status === 'Unpaid' ? (
+                        <button onClick={() => openPaymentModal(inv.id)} className="btn btn-primary" style={{ padding: '0.4rem 0.85rem', fontSize: '0.8rem', fontWeight: 700 }}>
+                          Pay Invoice
+                        </button>
+                      ) : (
+                        <span style={{ fontSize: '0.8rem', color: '#16a34a', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
+                          <Check size={16} /> Paid &amp; Verified
+                        </span>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
       </div>
     );
   }
