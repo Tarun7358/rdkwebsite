@@ -306,10 +306,14 @@ app.get('/api/auth/google/callback', async (req, res) => {
       const id = crypto.randomUUID();
       const hash = await bcrypt.hash(crypto.randomBytes(24).toString('hex'), 10);
       await run(
-        `INSERT INTO profiles (id, email, name, role, details, password_hash) VALUES (?, ?, ?, 'client', 'Google Account', ?)`,
-        [id, email, fullName, hash]
+        `INSERT OR IGNORE INTO auth_users (id, email, password_hash, full_name, role) VALUES (?, ?, ?, ?, 'client')`,
+        [id, email, hash, fullName]
       );
-      row = await get('SELECT * FROM profiles WHERE id = ?', [id]);
+      await run(
+        `INSERT OR IGNORE INTO profiles (id, email, name, role, details) VALUES (?, ?, ?, 'client', 'Google Account')`,
+        [id, email, fullName]
+      );
+      row = await get('SELECT * FROM profiles WHERE email = ?', [email]);
     }
     const token = jwt.sign({ id: row.id, email: row.email, role: row.role, full_name: row.name }, JWT_SECRET, { expiresIn: '7d' });
     const sessionPayload = JSON.stringify({
