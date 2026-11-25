@@ -26,6 +26,7 @@ import {
 export const ClientDashboard: React.FC = () => {
   const user = useAuthStore((s) => s.user);
   const activeTab = useDashboardStore((s) => s.activeTab);
+  const setActiveTab = useDashboardStore((s) => s.setActiveTab);
   const activeTicketId = useDashboardStore((s) => s.activeTicketId);
   const setActiveTicketId = useDashboardStore((s) => s.setActiveTicketId);
   const openPaymentModal = useDashboardStore((s) => s.openPaymentModal);
@@ -206,64 +207,203 @@ export const ClientDashboard: React.FC = () => {
       .reduce((sum, current) => sum + current.amount, 0);
 
     return (
-      <div className="dash-overview">
-        <div className="dash-card-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.25rem' }}>
-          <div className="dash-card" style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '16px', padding: '1.5rem', boxShadow: 'var(--shadow-sm)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-              <div className="dc-num" style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--text)', fontFamily: 'var(--font-mono)' }}>{activeProjectsCount}</div>
-              <Folder size={24} color="var(--primary)" />
+      <div className="dash-overview" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+        {/* Welcome & Quick Actions Banner */}
+        <div style={{
+          background: 'linear-gradient(135deg, var(--card) 0%, rgba(124, 58, 237, 0.08) 100%)',
+          border: '1px solid rgba(124, 58, 237, 0.22)',
+          borderRadius: '18px',
+          padding: '1.5rem 1.75rem',
+          display: 'flex',
+          flexWrap: 'wrap',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: '1rem'
+        }}>
+          <div>
+            <div style={{ fontSize: '0.72rem', fontWeight: 800, color: 'var(--primary)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+              RDK Tech • Client Workspace
             </div>
-            <div className="dc-label" style={{ fontSize: '0.85rem', color: 'var(--text2)', fontWeight: 600 }}>Active Projects</div>
+            <h2 style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--text)', margin: '0.25rem 0 0.25rem' }}>
+              Welcome back, {user?.name || 'Partner'}
+            </h2>
+            <p style={{ fontSize: '0.85rem', color: 'var(--text2)', margin: 0 }}>
+              Track your active builds, open engineering tickets, or manage your Rage Pro subscription.
+            </p>
           </div>
-
-          <div className="dash-card" style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '16px', padding: '1.5rem', boxShadow: 'var(--shadow-sm)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-              <div className="dc-num" style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--text)', fontFamily: 'var(--font-mono)' }}>{openTicketsCount}</div>
-              <Ticket size={24} color="var(--primary)" />
-            </div>
-            <div className="dc-label" style={{ fontSize: '0.85rem', color: 'var(--text2)', fontWeight: 600 }}>Open Support Tickets</div>
-          </div>
-
-          <div className="dash-card" style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '16px', padding: '1.5rem', boxShadow: 'var(--shadow-sm)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-              <div className="dc-num" style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--text)', fontFamily: 'var(--font-mono)' }}>${pendingInvoiceVal}</div>
-              <CreditCard size={24} color="var(--primary)" />
-            </div>
-            <div className="dc-label" style={{ fontSize: '0.85rem', color: 'var(--text2)', fontWeight: 600 }}>Pending Invoices</div>
-          </div>
-
-          <div className="dash-card" style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '16px', padding: '1.5rem', boxShadow: 'var(--shadow-sm)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-              <div className="dc-num" style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--text)', fontFamily: 'var(--font-mono)' }}>{chatMessages.length}</div>
-              <MessageSquare size={24} color="var(--primary)" />
-            </div>
-            <div className="dc-label" style={{ fontSize: '0.85rem', color: 'var(--text2)', fontWeight: 600 }}>Message Threads</div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.6rem' }}>
+            <button onClick={() => setActiveTab('projects')} className="btn btn-primary" style={{ fontSize: '0.82rem', padding: '0.55rem 1rem' }}>
+              <Plus size={15} /> Request Project
+            </button>
+            <button onClick={() => setActiveTab('tickets')} className="btn btn-outline" style={{ fontSize: '0.82rem', padding: '0.55rem 1rem' }}>
+              <Ticket size={15} /> Open Ticket
+            </button>
+            <a href="/#pricing" className="btn btn-outline" style={{ fontSize: '0.82rem', padding: '0.55rem 1rem', borderColor: 'rgba(124, 58, 237, 0.35)', color: 'var(--primary)' }}>
+              Rage Pro (₹99)
+            </a>
           </div>
         </div>
 
-        <div style={{ marginTop: '2rem' }}>
-          <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '1rem', color: 'var(--text)' }}>Your Active Projects</h3>
-          {myProjects.length === 0 ? (
-            <div style={{ padding: '2.5rem', background: 'var(--bg2)', borderRadius: '16px', textAlign: 'center', border: '1px solid var(--border)', color: 'var(--text2)' }}>
-              No active projects found. Submit a request using the Projects tab to initiate sprint development.
-            </div>
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              {myProjects.map((p) => (
-                <div key={p.id} className="proj-item" style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '14px', padding: '1.25rem' }}>
-                  <div className="proj-top" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.75rem', alignItems: 'center' }}>
-                    <span className="proj-name" style={{ fontWeight: 800, fontSize: '1rem', color: 'var(--text)' }}>{p.name}</span>
-                    <Badge status={p.status} />
-                  </div>
-                  <ProgressBar progress={p.progress} />
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', color: 'var(--text2)', marginTop: '0.5rem', fontWeight: 600 }}>
-                    <span>{p.progress}% Complete</span>
-                    <span>Deadline: {p.deadline || 'Flexible'}</span>
-                  </div>
+        {/* 4 Interactive KPI Stat Cards */}
+        <div className="dash-card-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.15rem' }}>
+          {[
+            { label: 'Active Projects', value: activeProjectsCount, icon: <Folder size={20} color="var(--primary)" />, tab: 'projects' as const },
+            { label: 'Open Support Tickets', value: openTicketsCount, icon: <Ticket size={20} color="var(--primary)" />, tab: 'tickets' as const },
+            { label: 'Pending Invoices', value: `₹${pendingInvoiceVal}`, icon: <CreditCard size={20} color="var(--primary)" />, tab: 'invoices' as const },
+            { label: 'Message Threads', value: chatMessages.length, icon: <MessageSquare size={20} color="var(--primary)" />, tab: 'messages' as const },
+          ].map((stat, idx) => (
+            <div
+              key={idx}
+              onClick={() => setActiveTab(stat.tab)}
+              className="dash-card"
+              style={{
+                background: 'var(--card)',
+                border: '1px solid var(--border)',
+                borderRadius: '16px',
+                padding: '1.35rem 1.4rem',
+                boxShadow: 'var(--shadow-sm)',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                transition: 'border-color 0.2s ease'
+              }}
+            >
+              <div>
+                <div className="dc-num" style={{ fontSize: '1.85rem', fontWeight: 800, color: 'var(--text)', fontFamily: 'var(--font-mono)', lineHeight: 1.1 }}>
+                  {stat.value}
                 </div>
-              ))}
+                <div className="dc-label" style={{ fontSize: '0.82rem', color: 'var(--text2)', fontWeight: 600, marginTop: '0.35rem' }}>
+                  {stat.label}
+                </div>
+              </div>
+              <div style={{
+                width: '44px',
+                height: '44px',
+                borderRadius: '12px',
+                background: 'rgba(124, 58, 237, 0.1)',
+                border: '1px solid rgba(124, 58, 237, 0.2)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0
+              }}>
+                {stat.icon}
+              </div>
             </div>
-          )}
+          ))}
+        </div>
+
+        {/* 2-Column Workspace Grid */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem', alignItems: 'start' }}>
+          {/* Left: Active Projects & Recent Tickets */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+            <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '18px', padding: '1.4rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                <h3 style={{ fontSize: '1.05rem', fontWeight: 800, color: 'var(--text)', margin: 0 }}>Your Active Projects</h3>
+                <button onClick={() => setActiveTab('projects')} style={{ background: 'none', border: 'none', color: 'var(--primary)', fontSize: '0.8rem', fontWeight: 700, cursor: 'pointer' }}>
+                  View All →
+                </button>
+              </div>
+              {myProjects.length === 0 ? (
+                <div style={{ padding: '1.75rem 1.25rem', background: 'var(--bg2)', borderRadius: '14px', textAlign: 'center', border: '1px dashed rgba(124, 58, 237, 0.3)' }}>
+                  <div style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--text)', marginBottom: '0.35rem' }}>No active projects yet</div>
+                  <div style={{ fontSize: '0.82rem', color: 'var(--text2)', marginBottom: '1rem' }}>Start a custom web, mobile, or Discord bot sprint with our engineering team.</div>
+                  <button onClick={() => setActiveTab('projects')} className="btn btn-primary" style={{ fontSize: '0.8rem', padding: '0.5rem 1rem' }}>
+                    <Plus size={14} /> Request New Project
+                  </button>
+                </div>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+                  {myProjects.map((p) => (
+                    <div key={p.id} className="proj-item" style={{ background: 'var(--bg2)', border: '1px solid var(--border)', borderRadius: '12px', padding: '1rem' }}>
+                      <div className="proj-top" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.6rem', alignItems: 'center' }}>
+                        <span className="proj-name" style={{ fontWeight: 800, fontSize: '0.95rem', color: 'var(--text)' }}>{p.name}</span>
+                        <Badge status={p.status} />
+                      </div>
+                      <ProgressBar progress={p.progress} />
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', color: 'var(--text2)', marginTop: '0.45rem', fontWeight: 600 }}>
+                        <span>{p.progress}% Complete</span>
+                        <span>Deadline: {p.deadline || 'Flexible'}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '18px', padding: '1.4rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                <h3 style={{ fontSize: '1.05rem', fontWeight: 800, color: 'var(--text)', margin: 0 }}>Recent Support Tickets</h3>
+                <button onClick={() => setActiveTab('tickets')} style={{ background: 'none', border: 'none', color: 'var(--primary)', fontSize: '0.8rem', fontWeight: 700, cursor: 'pointer' }}>
+                  Open Desk →
+                </button>
+              </div>
+              {myTickets.length === 0 ? (
+                <div style={{ fontSize: '0.84rem', color: 'var(--text2)', padding: '1rem', background: 'var(--bg2)', borderRadius: '12px', textAlign: 'center' }}>
+                  No tickets opened yet. Need help with a project or Rage Optimiser?
+                </div>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+                  {myTickets.slice(0, 3).map((t) => (
+                    <div key={t.id} onClick={() => { setActiveTicketId(t.id); setActiveTab('tickets'); }} style={{ padding: '0.85rem 1rem', background: 'var(--bg2)', border: '1px solid var(--border)', borderRadius: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' }}>
+                      <div>
+                        <div style={{ fontWeight: 700, fontSize: '0.88rem', color: 'var(--text)' }}>{t.title}</div>
+                        <div style={{ fontSize: '0.74rem', color: 'var(--text3)' }}>{t.id} • {t.category}</div>
+                      </div>
+                      <Badge status={t.status} />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Right: Rage Pro & Billing / Meetings Summary */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+            <div style={{
+              background: 'var(--card)',
+              border: '1px solid rgba(124, 58, 237, 0.35)',
+              borderRadius: '18px',
+              padding: '1.4rem',
+              boxShadow: '0 8px 24px rgba(124, 58, 237, 0.08)'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
+                <span style={{ fontSize: '0.72rem', fontWeight: 800, color: 'var(--primary)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                  Flagship Software
+                </span>
+                <span style={{ fontSize: '0.82rem', fontWeight: 800, color: 'var(--primary)', background: 'rgba(124, 58, 237, 0.1)', padding: '0.2rem 0.6rem', borderRadius: '999px' }}>
+                  ₹99 / 30d
+                </span>
+              </div>
+              <h3 style={{ fontSize: '1.08rem', fontWeight: 800, color: 'var(--text)', margin: '0 0 0.45rem' }}>Rage Optimiser Pro</h3>
+              <p style={{ fontSize: '0.84rem', color: 'var(--text2)', lineHeight: 1.55, margin: '0 0 1rem' }}>
+                Verify your Discord Server ownership to unlock Gmail 2FA Sentinel, unlimited backups, custom bot avatar &amp; 24/7 voice.
+              </p>
+              <a href="/#pricing" className="btn btn-primary" style={{ width: '100%', justifyContent: 'center', fontSize: '0.84rem' }}>
+                Verify Server &amp; Upgrade (₹99)
+              </a>
+            </div>
+
+            <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '18px', padding: '1.4rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                <h3 style={{ fontSize: '1.05rem', fontWeight: 800, color: 'var(--text)', margin: 0 }}>Invoices &amp; Meetings</h3>
+                <button onClick={() => setActiveTab('invoices')} style={{ background: 'none', border: 'none', color: 'var(--primary)', fontSize: '0.8rem', fontWeight: 700, cursor: 'pointer' }}>
+                  Billing →
+                </button>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', fontSize: '0.84rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.75rem 0.9rem', background: 'var(--bg2)', borderRadius: '10px' }}>
+                  <span style={{ color: 'var(--text2)' }}>Total Invoices</span>
+                  <strong style={{ color: 'var(--text)' }}>{myInvoices.length}</strong>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.75rem 0.9rem', background: 'var(--bg2)', borderRadius: '10px' }}>
+                  <span style={{ color: 'var(--text2)' }}>Scheduled Calls</span>
+                  <strong style={{ color: 'var(--text)' }}>{myMeetings.length}</strong>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     );
