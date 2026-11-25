@@ -555,6 +555,53 @@ app.post('/api/rest/:table', async (req, res) => {
         const r = await run(`${verb} INTO "${table}" (${keys.map(k => `"${k}"`).join(', ')}) VALUES (${placeholders})`, vals);
         inserted.push({ ...item, ...(r.lastID && !item.id ? { id: r.lastID } : {}) });
 
+        // Notify applicant email & Discord webhook when a career application is submitted
+        if (table === 'applications' && action === 'insert') {
+          if (item.email && String(item.email).includes('@')) {
+            sendRdkEmail(
+              String(item.email),
+              `Application Received — ${item.position || 'RDK Tech'}`,
+              `<table width="100%" cellpadding="0" cellspacing="0" style="background:#f8f7ff;padding:32px 12px;font-family:Inter,Segoe UI,Arial,sans-serif;">
+                <tr><td align="center">
+                  <table width="520" cellpadding="0" cellspacing="0" style="max-width:520px;width:100%;background:#ffffff;border-radius:16px;border:1px solid #ede9fe;padding:28px;">
+                    <tr><td>
+                      <div style="font-size:15px;font-weight:800;color:#111827;margin-bottom:14px;">RDK <span style="color:#7c3aed;">TECH</span></div>
+                      <h2 style="margin:0 0 8px;font-size:20px;color:#111827;">Application Received</h2>
+                      <p style="margin:0 0 16px;font-size:14px;line-height:1.6;color:#4b5563;">
+                        Hi ${item.name || 'Builder'}, thank you for applying for <b>${item.position || 'an open role'}</b> at RDK Tech. Our engineering team will review your portfolio and reach out shortly.
+                      </p>
+                      <div style="background:#faf8ff;border:1px solid #ede9fe;border-radius:10px;padding:12px 14px;font-size:13px;color:#374151;">
+                        <b>Role:</b> ${item.position || 'N/A'}<br/>
+                        <b>Portfolio / Resume:</b> ${item.resume || 'N/A'}
+                      </div>
+                      <p style="margin:20px 0 0;font-size:12px;color:#9ca3af;">RDK Tech • <a href="mailto:rdksupport@ragefps.in" style="color:#7c3aed;text-decoration:none;">rdksupport@ragefps.in</a></p>
+                    </td></tr>
+                  </table>
+                </td></tr>
+              </table>`
+            );
+          }
+          const webhookUrl = process.env.DISCORD_TICKET_WEBHOOK_URL || 'https://discord.com/api/webhooks/1555981268678742088/JJfYUiRAv1G3AP_u0teQ-iI4Nlnk7n3CbnkgBM0uXtvqP7kXV3PzF9Dkt4BBowt8E6G7';
+          fetch(webhookUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              username: 'RDK Tech Careers',
+              embeds: [{
+                title: `New Career Application: ${item.position || 'Role'}`,
+                color: 0x7c3aed,
+                fields: [
+                  { name: 'Applicant', value: String(item.name || 'N/A'), inline: true },
+                  { name: 'Email', value: String(item.email || 'N/A'), inline: true },
+                  { name: 'Portfolio / Resume', value: String(item.resume || 'N/A'), inline: false }
+                ],
+                footer: { text: 'RDK Tech • rdkweb.netlify.app/#careers' },
+                timestamp: new Date().toISOString()
+              }]
+            })
+          }).catch(() => {});
+        }
+
         // Notify Discord webhook & client email when a ticket is created on rdkweb.netlify.app
         if (table === 'tickets' && action === 'insert') {
           if (item.client && String(item.client).includes('@')) {
