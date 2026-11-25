@@ -13,6 +13,8 @@ export const TicketSection: React.FC = () => {
 
   const [ticketTitle, setTicketTitle] = useState('');
   const [clientEmail, setClientEmail] = useState('');
+  const [ticketCategory, setTicketCategory] = useState('Rage Optimiser (Bot / Dashboard)');
+  const [serverId, setServerId] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [createdTicket, setCreatedTicket] = useState<TicketType | null>(null);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
@@ -32,13 +34,16 @@ export const TicketSection: React.FC = () => {
     setIsSubmitting(true);
 
     try {
+      const fullDesc = serverId.trim()
+        ? `[Server ID: ${serverId.trim()}] ${ticketTitle}`
+        : ticketTitle;
       const res = await ticketsApi.create({
         client: clientEmail,
         clientName: clientEmail.split('@')[0],
         title: ticketTitle,
         priority: 'High',
-        category: 'Web Engineering',
-        description: ticketTitle
+        category: ticketCategory,
+        description: fullDesc
       });
 
       if (res.success) {
@@ -47,11 +52,11 @@ export const TicketSection: React.FC = () => {
           id: res.data?.id || `WEB-2026-${Math.floor(1000 + Math.random() * 9000)}`,
           title: ticketTitle,
           client: clientEmail,
-          category: 'Web Engineering',
+          category: ticketCategory,
           priority: 'High',
           status: 'Active',
           assignedTo: 'engineering@rdktech.com',
-          description: ticketTitle,
+          description: fullDesc,
           messages: [
             {
               sender: 'client',
@@ -124,6 +129,25 @@ export const TicketSection: React.FC = () => {
             </div>
 
             <form onSubmit={handleSubmitTicket} style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.6rem' }}>
+                <select
+                  value={ticketCategory}
+                  onChange={(e) => setTicketCategory(e.target.value)}
+                  style={{ padding: '0.8rem 1rem', background: 'var(--bg2)', border: '1px solid var(--border)', color: 'var(--text)', borderRadius: '10px', fontSize: '0.875rem' }}
+                >
+                  <option value="Rage Optimiser (Bot / Dashboard)">Rage Optimiser (Bot / Dashboard)</option>
+                  <option value="Rage Pro Billing (₹99)">Rage Pro Billing (₹99)</option>
+                  <option value="Web Engineering">Web Engineering</option>
+                  <option value="Mobile & IoT">Mobile & IoT</option>
+                </select>
+                <input
+                  type="text"
+                  value={serverId}
+                  onChange={(e) => setServerId(e.target.value)}
+                  placeholder="Discord Server ID (optional)"
+                  style={{ padding: '0.8rem 1rem', background: 'var(--bg2)', border: '1px solid var(--border)', color: 'var(--text)', borderRadius: '10px', fontSize: '0.875rem' }}
+                />
+              </div>
               <input
                 type="email"
                 required

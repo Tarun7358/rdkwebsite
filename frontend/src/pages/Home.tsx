@@ -10,6 +10,7 @@ import {
   Stats,
   DashboardPreview,
   Workflow,
+  Portfolio,
   TicketSection,
   MeetingsSection,
   Pricing,
@@ -102,6 +103,7 @@ export const Home: React.FC = () => {
       <Stats />
       <DashboardPreview />
       <Workflow />
+      <Portfolio />
       <TicketSection />
       <MeetingsSection />
       <Pricing />

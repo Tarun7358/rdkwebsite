@@ -3,9 +3,10 @@ import { useAppStore } from '../../store/appStore';
 import type { PortfolioItem } from '../../types';
 import { VetriGasModal } from './VetriGasModal';
 import { CaseStudyModal } from './CaseStudyModal';
-import { Flame, ShoppingCart, Smartphone, Bot, Brain, Activity, ArrowRight, Layers } from 'lucide-react';
+import { Flame, ShoppingCart, Smartphone, Bot, Brain, Activity, ArrowRight, Layers, Shield } from 'lucide-react';
 
 const iconMap: Record<string, React.ReactNode> = {
+  'Rage Optimiser Enterprise': <Shield size={28} color="#ffffff" />,
   'Vetri Gas (Vetri Indane Enterprise)': <Flame size={28} color="#ffffff" />,
   'Luxora Marketplace': <ShoppingCart size={28} color="#ffffff" />,
   'FitTrack Pro': <Smartphone size={28} color="#ffffff" />,
@@ -15,6 +16,16 @@ const iconMap: Record<string, React.ReactNode> = {
 };
 
 const defaultPortfolio: PortfolioItem[] = [
+  {
+    id: 0,
+    cat: 'discord',
+    title: 'Rage Optimiser Enterprise',
+    desc: 'Our flagship Discord Security, Anti-Nuke, UPM Snapshot & Community Management suite — featuring Box UI, Gmail 2FA Sentinel, Auto-Rollback, Tickets, and 24/7 Voice.',
+    tags: ['Discord.js', 'TypeScript', 'SQLite', 'Redis', 'Box UI'],
+    date: 'Flagship Software (2026)',
+    icon: 'Shield',
+    bg: 'linear-gradient(135deg, #16a34a, #059669)'
+  },
   {
     id: 1,
     cat: 'mobile',

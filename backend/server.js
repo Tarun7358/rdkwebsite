@@ -322,8 +322,32 @@ app.post('/api/rest/:table', async (req, res) => {
         const vals = keys.map(k => serializeValue(table, k, item[k]));
         const placeholders = keys.map(() => '?').join(', ');
         const verb = action === 'upsert' ? 'INSERT OR REPLACE' : 'INSERT';
-        const r = await run(`"${table}"` ? `${verb} INTO "${table}" (${keys.map(k => `"${k}"`).join(', ')}) VALUES (${placeholders})` : '', vals);
+        const r = await run(`${verb} INTO "${table}" (${keys.map(k => `"${k}"`).join(', ')}) VALUES (${placeholders})`, vals);
         inserted.push({ ...item, ...(r.lastID && !item.id ? { id: r.lastID } : {}) });
+
+        // Notify Discord webhook when a ticket is created on rdkweb.netlify.app
+        if (table === 'tickets' && action === 'insert') {
+          const webhookUrl = process.env.DISCORD_TICKET_WEBHOOK_URL || 'https://discord.com/api/webhooks/1555981268678742088/JJfYUiRAv1G3AP_u0teQ-iI4Nlnk7n3CbnkgBM0uXtvqP7kXV3PzF9Dkt4BBowt8E6G7';
+          fetch(webhookUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              username: 'RDK Tech Portal',
+              embeds: [{
+                title: `New Web Ticket: ${item.id || 'N/A'}`,
+                color: 0x7c3aed,
+                fields: [
+                  { name: 'Category', value: String(item.category || 'General'), inline: true },
+                  { name: 'Client', value: String(item.client || 'Guest'), inline: true },
+                  { name: 'Title', value: String(item.title || 'No Title'), inline: false },
+                  { name: 'Description', value: String(item.description || '').slice(0, 1000), inline: false }
+                ],
+                footer: { text: 'RDK Tech • rdkweb.netlify.app/#tickets' },
+                timestamp: new Date().toISOString()
+              }]
+            })
+          }).catch(() => {});
+        }
       }
       const out = single || maybeSingle ? (inserted[0] || null) : inserted;
       return res.json({ data: out, error: null });
@@ -358,3 +382,4 @@ initDb().then(() => {
   console.error('Failed to init SQLite DB:', err);
   process.exit(1);
 });
+
