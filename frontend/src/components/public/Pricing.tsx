@@ -333,50 +333,20 @@ export const Pricing: React.FC = () => {
               </form>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', marginTop: '0.5rem' }}>
-                <div style={{ fontSize: '0.82rem', color: 'var(--text2)' }}>
-                  Invoice <strong>{checkout.invoiceId}</strong> • <strong>{selectedGuild?.name}</strong>
+                <div style={{ fontSize: '0.84rem', color: 'var(--text2)', padding: '0.75rem 0.9rem', background: 'var(--bg2)', border: '1px solid var(--border)', borderRadius: '10px' }}>
+                  <div>Invoice: <strong>{checkout.invoiceId}</strong></div>
+                  <div style={{ marginTop: '0.2rem' }}>Server: <strong>{selectedGuild?.name}</strong></div>
+                  <div style={{ marginTop: '0.2rem', color: 'var(--primary)', fontWeight: 800 }}>Amount: ₹99 INR (30 Days)</div>
                 </div>
-
-                <div style={{ background: '#fff', padding: '0.9rem', borderRadius: '14px', textAlign: 'center' }}>
-                  <img src={checkout.qrDataUrl} alt="UPI QR" style={{ width: '210px', height: '210px', margin: '0 auto', display: 'block' }} />
-                  <div style={{ color: '#374151', fontSize: '0.78rem', fontWeight: 700, marginTop: '0.35rem' }}>
-                    Scan ₹99 with GPay • PhonePe • Paytm • BHIM
-                  </div>
-                </div>
-
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.65rem 0.85rem', background: 'var(--bg2)', border: '1px solid var(--border)', borderRadius: '10px', fontSize: '0.82rem' }}>
-                  <span>UPI: <strong>{checkout.upiVpa}</strong></span>
-                  <button
-                    type="button"
-                    onClick={() => { navigator.clipboard.writeText(checkout.upiVpa); addToast('UPI ID copied!', 'info'); }}
-                    style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem', background: 'none', border: 'none', color: 'var(--primary)', cursor: 'pointer', fontWeight: 700 }}
-                  >
-                    <Copy size={13} /> Copy
-                  </button>
-                </div>
-
-                <a href={checkout.upiUri} className="btn btn-outline" style={{ justifyContent: 'center' }}>
-                  Open in UPI App (Mobile)
-                </a>
 
                 {utrSubmitted ? (
-                  <div style={{ padding: '0.85rem', borderRadius: '10px', background: 'rgba(16,185,129,0.12)', border: '1px solid #10b981', color: '#10b981', fontSize: '0.84rem', fontWeight: 600, textAlign: 'center' }}>
+                  <div style={{ padding: '0.9rem', borderRadius: '10px', background: 'rgba(16,185,129,0.12)', border: '1px solid #10b981', color: '#10b981', fontSize: '0.86rem', fontWeight: 600, textAlign: 'center' }}>
                     Payment confirmed via Razorpay! Rage Pro for <strong>{selectedGuild?.name}</strong> is queued for activation.
                   </div>
                 ) : (
-                  <form onSubmit={handleSubmitUtr} style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
-                    <input
-                      type="text"
-                      required
-                      value={utr}
-                      onChange={(e) => setUtr(e.target.value)}
-                      placeholder="Enter 12-digit UPI UTR / Ref Number"
-                      style={{ padding: '0.75rem 0.9rem', background: 'var(--bg2)', border: '1px solid var(--border)', color: 'var(--text)', borderRadius: '10px', fontSize: '0.875rem' }}
-                    />
-                    <button type="submit" disabled={isLoading} className="btn btn-primary" style={{ justifyContent: 'center' }}>
-                      {isLoading ? 'Submitting...' : 'Submit UTR for Activation'}
-                    </button>
-                  </form>
+                  <button type="button" onClick={handleOpenProCheckout} disabled={isLoading} className="btn btn-primary" style={{ justifyContent: 'center' }}>
+                    {isLoading ? 'Opening Razorpay...' : 'Pay ₹99 with Razorpay'} <ArrowUpRight size={16} />
+                  </button>
                 )}
               </div>
             )}
