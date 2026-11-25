@@ -1,38 +1,80 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Briefcase, CheckCircle2, ArrowUpRight, Shield, Zap, X } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { useAppStore } from '../../store/appStore';
 
 const RAGE_PAY_URL = 'https://apirageoptimisercom.altvr.in/pay';
 
+interface OwnedGuild {
+  id: string;
+  name: string;
+  icon?: string | null;
+}
+
+interface DiscordUser {
+  id: string;
+  username: string;
+  global_name?: string;
+}
+
 export const Pricing: React.FC = () => {
   const addToast = useAppStore((s) => s.addToast);
   const [showProModal, setShowProModal] = useState(false);
-  const [guildId, setGuildId] = useState('');
-  const [guildName, setGuildName] = useState('');
+  const [discordUser, setDiscordUser] = useState<DiscordUser | null>(null);
+  const [ownedGuilds, setOwnedGuilds] = useState<OwnedGuild[]>([]);
+  const [selectedGuildId, setSelectedGuildId] = useState('');
+  const [confirmedOwner, setConfirmedOwner] = useState(false);
   const [clientEmail, setClientEmail] = useState('');
+
+  useEffect(() => {
+    const onMessage = (ev: MessageEvent) => {
+      if (ev.data?.type === 'RDK_DISCORD_AUTH' && ev.data?.user) {
+        setDiscordUser(ev.data.user);
+        const guilds: OwnedGuild[] = ev.data.ownedGuilds || [];
+        setOwnedGuilds(guilds);
+        if (guilds.length > 0) setSelectedGuildId(guilds[0].id);
+        setConfirmedOwner(false);
+        addToast(`Verified Discord account: ${ev.data.user.username}`, 'success');
+      }
+    };
+    window.addEventListener('message', onMessage);
+    return () => window.removeEventListener('message', onMessage);
+  }, [addToast]);
+
+  const handleDiscordAuth = () => {
+    window.open('/api/discord/login', 'rdk_discord_oauth', 'width=520,height=720');
+  };
+
+  const selectedGuild = ownedGuilds.find((g) => g.id === selectedGuildId);
 
   const handleOpenProCheckout = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!/^\d{15,22}$/.test(guildId.trim())) {
-      addToast('Please enter a valid Discord Server ID (15–22 digits).', 'error');
+    if (!discordUser || !selectedGuild) {
+      addToast('Please connect Discord and select a server you own.', 'error');
+      return;
+    }
+    if (!confirmedOwner) {
+      addToast('Please confirm server ownership before proceeding.', 'error');
       return;
     }
 
-    // Log invoice in RDK Tech SQLite DB
     const invId = 'INV-RAGE-' + Math.floor(1000 + Math.random() * 9000);
     await supabase.from('invoices').insert({
       id: invId,
-      client: clientEmail.trim() || guildId.trim(),
-      project: `Rage Pro (30d) — ${guildName.trim() || guildId.trim()}`,
+      client: clientEmail.trim() || `${discordUser.username} (${discordUser.id})`,
+      project: `Rage Pro (30d) — ${selectedGuild.name}`,
       amount: 99,
       status: 'Unpaid',
-      items: ['Rage Pro 30-Day Subscription', `Server ID: ${guildId.trim()}`],
+      items: [
+        'Rage Pro 30-Day Subscription',
+        `Owner: ${discordUser.username} (${discordUser.id})`,
+        `Server: ${selectedGuild.name} (${selectedGuild.id})`
+      ],
       date: new Date().toISOString().slice(0, 10)
     }).catch(() => {});
 
     window.open(RAGE_PAY_URL, '_blank', 'noopener,noreferrer');
-    addToast(`Invoice ${invId} logged! Opening ₹99 UPI Checkout...`, 'success');
+    addToast(`Owner verified! Invoice ${invId} logged — opening ₹99 UPI Checkout.`, 'success');
     setShowProModal(false);
   };
 
@@ -127,44 +169,77 @@ export const Pricing: React.FC = () => {
         </div>
       </div>
 
-      {/* Rage Pro Checkout Modal */}
+      {/* Rage Pro Discord OAuth Verification & Checkout Modal */}
       {showProModal && (
         <div style={{ position: 'fixed', inset: 0, zIndex: 2000, background: 'rgba(0,0,0,0.65)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
-          <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '20px', maxWidth: '420px', width: '100%', padding: '1.75rem', position: 'relative' }}>
+          <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '20px', maxWidth: '440px', width: '100%', padding: '1.75rem', position: 'relative' }}>
             <button onClick={() => setShowProModal(false)} style={{ position: 'absolute', top: '1rem', right: '1rem', background: 'none', border: 'none', color: 'var(--text3)', cursor: 'pointer' }}>
               <X size={18} />
             </button>
             <h3 style={{ fontWeight: 800, fontSize: '1.25rem', marginBottom: '0.4rem', color: 'var(--text)' }}>Upgrade to Rage Pro (₹99)</h3>
             <p style={{ fontSize: '0.84rem', color: 'var(--text2)', marginBottom: '1.1rem' }}>
-              Enter your Discord Server ID to log your RDK invoice and open our ₹99 UPI QR checkout.
+              Verify your Discord account to auto-detect servers you own before paying.
             </p>
-            <form onSubmit={handleOpenProCheckout} style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-              <input
-                type="text"
-                required
-                value={guildId}
-                onChange={(e) => setGuildId(e.target.value)}
-                placeholder="Discord Server ID (e.g. 1266048940101599293)"
-                style={{ padding: '0.75rem 0.9rem', background: 'var(--bg2)', border: '1px solid var(--border)', color: 'var(--text)', borderRadius: '10px', fontSize: '0.875rem' }}
-              />
-              <input
-                type="text"
-                value={guildName}
-                onChange={(e) => setGuildName(e.target.value)}
-                placeholder="Server Name (optional)"
-                style={{ padding: '0.75rem 0.9rem', background: 'var(--bg2)', border: '1px solid var(--border)', color: 'var(--text)', borderRadius: '10px', fontSize: '0.875rem' }}
-              />
-              <input
-                type="email"
-                value={clientEmail}
-                onChange={(e) => setClientEmail(e.target.value)}
-                placeholder="Your Email (for invoice receipt)"
-                style={{ padding: '0.75rem 0.9rem', background: 'var(--bg2)', border: '1px solid var(--border)', color: 'var(--text)', borderRadius: '10px', fontSize: '0.875rem' }}
-              />
-              <button type="submit" className="btn btn-primary" style={{ justifyContent: 'center', marginTop: '0.25rem' }}>
-                Proceed to ₹99 UPI Checkout <ArrowUpRight size={16} />
+
+            {!discordUser ? (
+              <button
+                type="button"
+                onClick={handleDiscordAuth}
+                className="btn btn-primary"
+                style={{ width: '100%', justifyContent: 'center', background: '#5865F2', borderColor: '#5865F2' }}
+              >
+                Connect Discord to Verify Server Owner
               </button>
-            </form>
+            ) : (
+              <form onSubmit={handleOpenProCheckout} style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+                <div style={{ padding: '0.75rem 0.9rem', background: 'var(--bg2)', border: '1px solid var(--border)', borderRadius: '10px', fontSize: '0.84rem' }}>
+                  <div><strong>Discord Owner:</strong> {discordUser.global_name || discordUser.username} (<code>{discordUser.id}</code>)</div>
+                </div>
+
+                {ownedGuilds.length === 0 ? (
+                  <div style={{ fontSize: '0.84rem', color: '#ef4444' }}>
+                    No Discord servers owned by this account were found.
+                  </div>
+                ) : (
+                  <>
+                    <select
+                      value={selectedGuildId}
+                      onChange={(e) => setSelectedGuildId(e.target.value)}
+                      style={{ padding: '0.75rem 0.9rem', background: 'var(--bg2)', border: '1px solid var(--border)', color: 'var(--text)', borderRadius: '10px', fontSize: '0.875rem' }}
+                    >
+                      {ownedGuilds.map((g) => (
+                        <option key={g.id} value={g.id}>
+                          {g.name} ({g.id})
+                        </option>
+                      ))}
+                    </select>
+
+                    <input
+                      type="email"
+                      value={clientEmail}
+                      onChange={(e) => setClientEmail(e.target.value)}
+                      placeholder="Email for invoice receipt (optional)"
+                      style={{ padding: '0.75rem 0.9rem', background: 'var(--bg2)', border: '1px solid var(--border)', color: 'var(--text)', borderRadius: '10px', fontSize: '0.875rem' }}
+                    />
+
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.82rem', color: 'var(--text2)', cursor: 'pointer' }}>
+                      <input
+                        type="checkbox"
+                        checked={confirmedOwner}
+                        onChange={(e) => setConfirmedOwner(e.target.checked)}
+                      />
+                      <span>
+                        I confirm I am the owner of <strong>{selectedGuild?.name}</strong> (<code>{selectedGuild?.id}</code>)
+                      </span>
+                    </label>
+
+                    <button type="submit" className="btn btn-primary" style={{ justifyContent: 'center', marginTop: '0.25rem' }}>
+                      Confirm &amp; Pay ₹99 (UPI Checkout) <ArrowUpRight size={16} />
+                    </button>
+                  </>
+                )}
+              </form>
+            )}
           </div>
         </div>
       )}

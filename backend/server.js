@@ -222,6 +222,68 @@ app.get('/api/health', (_req, res) => {
   res.json({ status: 'online', service: 'rdkwebsite-sqlite-api', database: 'sqlite' });
 });
 
+// ── Discord OAuth2 (Server Owner Verification for Rage Pro) ───────────────────
+const DISCORD_CLIENT_ID = process.env.DISCORD_CLIENT_ID || '1519626369594818560';
+const DISCORD_CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET || 'WdbpuKs8EhgkSG6MzF_drSjGSua5SQZY';
+const DISCORD_REDIRECT_URI = process.env.DISCORD_REDIRECT_URI || 'https://rdkweb.netlify.app/api/discord/callback';
+
+app.get('/api/discord/login', (_req, res) => {
+  const params = new URLSearchParams({
+    client_id: DISCORD_CLIENT_ID,
+    redirect_uri: DISCORD_REDIRECT_URI,
+    response_type: 'code',
+    scope: 'identify guilds'
+  });
+  res.redirect(`https://discord.com/api/oauth2/authorize?${params.toString()}`);
+});
+
+app.get('/api/discord/callback', async (req, res) => {
+  const code = String(req.query.code || '');
+  if (!code) return res.status(400).send('Missing Discord OAuth code.');
+
+  try {
+    const tokenRes = await fetch('https://discord.com/api/oauth2/token', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
+        client_id: DISCORD_CLIENT_ID,
+        client_secret: DISCORD_CLIENT_SECRET,
+        grant_type: 'authorization_code',
+        code,
+        redirect_uri: DISCORD_REDIRECT_URI
+      })
+    });
+    const tokenData = await tokenRes.json();
+    if (!tokenData.access_token) {
+      return res.status(400).send(`Discord OAuth failed: ${JSON.stringify(tokenData)}`);
+    }
+
+    const authHeader = { Authorization: `Bearer ${tokenData.access_token}` };
+    const [userRes, guildsRes] = await Promise.all([
+      fetch('https://discord.com/api/users/@me', { headers: authHeader }),
+      fetch('https://discord.com/api/users/@me/guilds', { headers: authHeader })
+    ]);
+    const user = await userRes.json();
+    const guilds = await guildsRes.json();
+
+    const ownedGuilds = Array.isArray(guilds)
+      ? guilds.filter((g) => g.owner === true).map((g) => ({ id: g.id, name: g.name, icon: g.icon }))
+      : [];
+
+    const payload = JSON.stringify({ type: 'RDK_DISCORD_AUTH', user: { id: user.id, username: user.username, global_name: user.global_name }, ownedGuilds });
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    res.send(`<!DOCTYPE html><html><body style="background:#0b0d12;color:#fff;font-family:sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;">
+      <p>Discord verified! Returning to RDK Tech...</p>
+      <script>
+        if (window.opener) { window.opener.postMessage(${payload}, '*'); }
+        window.close();
+      </script>
+    </body></html>`);
+  } catch (err) {
+    res.status(500).send('Discord OAuth error: ' + err.message);
+  }
+});
+
 // ── Auth Routes ───────────────────────────────────────────────────────────────
 app.post('/api/auth/signup', async (req, res) => {
   try {
