@@ -256,6 +256,76 @@ app.get('/api/health', (_req, res) => {
   res.json({ status: 'online', service: 'rdkwebsite-sqlite-api', database: 'sqlite' });
 });
 
+// ── Real-Time App State & SSE Sync (/api/state & /api/events) ─────────────────
+const sseClients = new Set();
+
+async function getFullAppState() {
+  const [rawProjects, rawTickets, rawInvoices, rawMeetings, rawChat, rawApps, rawCms] = await Promise.all([
+    all('SELECT * FROM projects ORDER BY id DESC'),
+    all('SELECT * FROM tickets ORDER BY created_at DESC'),
+    all('SELECT * FROM invoices ORDER BY date DESC'),
+    all('SELECT * FROM meetings ORDER BY id DESC'),
+    all('SELECT * FROM chat_messages ORDER BY id ASC'),
+    all('SELECT * FROM applications ORDER BY id DESC'),
+    all('SELECT * FROM cms_config'),
+  ]);
+  const mapRow = (t, r) => deserializeRow(t, r);
+  const cms = {};
+  for (const c of rawCms) {
+    try { cms[c.key] = JSON.parse(c.value); } catch { cms[c.key] = c.value; }
+  }
+  return {
+    projects: rawProjects.map(r => { const d = mapRow('projects', r); return { ...d, assignedTo: d.assigned_to || '', desc: d.description || '' }; }),
+    tickets: rawTickets.map(r => { const d = mapRow('tickets', r); return { ...d, assignedTo: d.assigned_to || 'employee@rdk.com', createdAt: d.created_at }; }),
+    invoices: rawInvoices.map(r => mapRow('invoices', r)),
+    meetings: rawMeetings.map(r => mapRow('meetings', r)),
+    chatMessages: rawChat.map(r => { const d = mapRow('chat_messages', r); return { ...d, senderName: d.sender_name || d.sender }; }),
+    applications: rawApps.map(r => mapRow('applications', r)),
+    services: Array.isArray(cms.services) ? cms.services : [],
+    portfolio: Array.isArray(cms.portfolio) ? cms.portfolio : [],
+    careers: Array.isArray(cms.careers) ? cms.careers : [],
+  };
+}
+
+async function broadcastAppState() {
+  if (sseClients.size === 0) return;
+  try {
+    const state = await getFullAppState();
+    const payload = `data: ${JSON.stringify({ type: 'UPDATE_STATE', state })}\n\n`;
+    for (const res of sseClients) {
+      try { res.write(payload); } catch {}
+    }
+  } catch {}
+}
+
+app.get('/api/state', async (_req, res) => {
+  try {
+    const state = await getFullAppState();
+    res.json({ type: 'UPDATE_STATE', state });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.get('/api/events', async (req, res) => {
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Connection', 'keep-alive');
+  res.flushHeaders?.();
+  sseClients.add(res);
+  try {
+    const state = await getFullAppState();
+    res.write(`data: ${JSON.stringify({ type: 'UPDATE_STATE', state })}\n\n`);
+  } catch {}
+  const hb = setInterval(() => {
+    try { res.write(': ping\n\n'); } catch {}
+  }, 25000);
+  req.on('close', () => {
+    clearInterval(hb);
+    sseClients.delete(res);
+  });
+});
+
 // ── Discord OAuth2 (Server Owner Verification for Rage Pro) ───────────────────
 const DISCORD_CLIENT_ID = process.env.DISCORD_CLIENT_ID || '1519626369594818560';
 const DISCORD_CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET || 'WdbpuKs8EhgkSG6MzF_drSjGSua5SQZY';
@@ -1298,6 +1368,7 @@ app.post('/api/rest/:table', async (req, res) => {
         }
       }
       const out = single || maybeSingle ? (inserted[0] || null) : inserted;
+      broadcastAppState();
       return res.json({ data: out, error: null });
     }
 
@@ -1340,11 +1411,13 @@ app.post('/api/rest/:table', async (req, res) => {
           }
         }
       }
+      broadcastAppState();
       return res.json({ data: single || maybeSingle ? (rows[0] || null) : rows, error: null });
     }
 
     if (action === 'delete') {
       await run(`DELETE FROM "${table}"${whereSql}`, whereParams);
+      broadcastAppState();
       return res.json({ data: null, error: null });
     }
 
