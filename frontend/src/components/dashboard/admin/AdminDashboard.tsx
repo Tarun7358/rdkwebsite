@@ -44,6 +44,7 @@ export const AdminDashboard: React.FC = () => {
   const [devAssignment, setDevAssignment] = useState<Record<string, string>>({});
   const [projectStatus, setProjectStatus] = useState<Record<string, string>>({});
   const [projectProgress, setProjectProgress] = useState<Record<string, number>>({});
+  const [projFilter, setProjFilter] = useState<string>('all');
 
   // Ticket console states
   const [selectedTicketId, setSelectedTicketId] = useState<string>(tickets[0]?.id || '');
@@ -216,8 +217,6 @@ export const AdminDashboard: React.FC = () => {
       </div>
     );
   }
-
-  const [projFilter, setProjFilter] = useState<string>('all');
 
   // Projects Tab
   if (activeTab === 'projects') {
