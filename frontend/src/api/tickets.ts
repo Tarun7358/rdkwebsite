@@ -1,4 +1,5 @@
 import { supabase } from '../lib/supabase';
+import { useAppStore } from '../store/appStore';
 import type { ApiResponse } from '../types';
 
 const BOT_NAME = 'Sarah K.';
@@ -19,23 +20,31 @@ export const ticketsApi = {
   }): Promise<ApiResponse> => {
     const ticketId = 'WEB-2026-' + Math.floor(1000 + Math.random() * 9000);
     const firstMsg = {
-      sender: 'client',
+      sender: 'client' as const,
       senderName: data.clientName || 'Client',
       text: data.description,
       time: nowTime(),
     };
-    const { error } = await supabase.from('tickets').insert({
+    const row = {
       id: ticketId,
       client: data.client,
       category: data.category,
       priority: data.priority,
-      status: 'Active',
+      status: 'Active' as const,
       assigned_to: 'employee@rdk.com',
       title: data.title,
       description: data.description,
       messages: [firstMsg],
-    });
+    };
+    const { error } = await supabase.from('tickets').insert(row);
     if (error) return { success: false, message: error.message };
+
+    const existing = useAppStore.getState().tickets ?? [];
+    if (!existing.some((t) => t.id === ticketId)) {
+      useAppStore.getState().setState({
+        tickets: [{ ...row, assignedTo: 'employee@rdk.com', createdAt: new Date().toISOString() } as any, ...existing],
+      });
+    }
 
     // Auto-reply after 1.5s (client-side, same as server.js setTimeout)
     setTimeout(async () => {
@@ -55,7 +64,7 @@ export const ticketsApi = {
       }
     }, 1500);
 
-    return { success: true, message: 'Ticket created' };
+    return { success: true, message: 'Ticket created', data: { id: ticketId } };
   },
 
   sendMessage: async (data: {

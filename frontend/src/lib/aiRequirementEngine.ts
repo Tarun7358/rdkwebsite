@@ -51,46 +51,33 @@ export function analyzeProjectRequirement(userText: string, userName: string = '
 
     const features: string[] = [];
     if (/auth|login|signup|user|role/i.test(lower)) features.push('Role-Based Auth & Security');
-    if (/payment|stripe|pay|invoice|billing|cart/i.test(lower)) features.push('Stripe Payment & Automated Checkout');
-    if (/chat|realtime|live|stream|message|db/i.test(lower)) features.push('Real-time Supabase Messaging & DB Sync');
+    if (/payment|stripe|razorpay|pay|invoice|billing|cart/i.test(lower)) features.push('Razorpay Payment & Automated Checkout');
+    if (/chat|realtime|live|stream|message|db/i.test(lower)) features.push('Real-time Messaging & Database Sync');
     if (/dashboard|admin|analytics|panel|stats/i.test(lower)) features.push('Executive Control Dashboard & Analytics');
-    if (/mobile|responsive|design|ui/i.test(lower)) features.push('Modern Glassmorphic Responsive UI/UX');
+    if (/mobile|responsive|design|ui/i.test(lower)) features.push('Modern White & Purple Responsive UI/UX');
 
     if (features.length === 0) {
       features.push(
         'User Authentication & Role Management',
         'Interactive Control Dashboard',
-        'Real-time Cloud Database Integration',
+        'Real-time Database Integration',
         'REST & Event Stream API Infrastructure'
       );
     }
 
-    const replyText = `🤖 RDK AI Requirement Analysis & Project Scope
+    const replyText = `🤖 RDK AI Scope & Estimate
 ━━━━━━━━━━━━━━━━━━━━━━━
 📌 Project Type: ${projCategory}
-🛠️ Tech Architecture: React + Node.js + Supabase Real-Time DB
+🛠️ Suggested Stack: React + Node.js + SQLite/PostgreSQL
 ⚡ Core Features:
 ${features.map((f) => `  • ${f}`).join('\n')}
 
 ⏱️ Recommended Timeline: ${estimatedTimeline}
 💰 Estimated Investment: ${finalBudget}
 
-✅ Requirement Registered!
-Your project scope has been analyzed and logged under profile "${userName}". You can track milestones and sprint updates under the Projects tab.`;
+👉 Ready to start? Submit this in the **Projects** tab — it will automatically create your Project, open an engineering Ticket, and launch a live support Chat.`;
 
-    const projId = 'PROJ-' + Math.floor(1000 + Math.random() * 9000);
-
-    return {
-      replyText,
-      projectCreated: {
-        id: projId,
-        name: `${projCategory} (${userName})`,
-        category: projCategory,
-        budget: finalBudget,
-        deadline: estimatedTimeline,
-        features,
-      },
-    };
+    return { replyText };
   }
 
   return {

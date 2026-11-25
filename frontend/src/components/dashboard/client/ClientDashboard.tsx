@@ -76,14 +76,37 @@ export const ClientDashboard: React.FC = () => {
     try {
       const res = await projectsApi.request({
         name: projForm.name,
-        client: user.name,
+        client: user.email,
         budget: projForm.budget,
         deadline: projForm.deadline,
-        desc: `[Email: ${user.email}] ${projForm.desc}`,
+        desc: projForm.desc,
       });
       if (res.success) {
-        addToast('Project request submitted cleanly!', 'success');
+        // Automatically create a linked support/intake ticket and open a chat thread
+        const ticketRes = await ticketsApi.create({
+          client: user.email,
+          clientName: user.name,
+          title: `Project: ${projForm.name}`,
+          priority: 'Medium',
+          category: 'Project Intake',
+          description: `New project submitted (Budget: ${projForm.budget || 'TBD'}, Target: ${projForm.deadline || 'TBD'}):\n\n${projForm.desc}`,
+        });
+        const chatNotice = `Submitted project "${projForm.name}"${ticketRes.data?.id ? ` (Ticket ${ticketRes.data.id} opened)` : ''}.`;
+        const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const currentMsgs = useAppStore.getState().chatMessages ?? [];
+        useAppStore.getState().setState({
+          chatMessages: [...currentMsgs, { sender: 'in', senderName: user.name, text: chatNotice, time: timeStr }],
+        });
+        chatApi.send({ sender: 'in', senderName: user.name, text: chatNotice }).catch(() => {});
+
+        addToast('Project submitted! Ticket & Chat opened.', 'success');
         setProjForm({ name: '', budget: '', deadline: '', desc: '' });
+        if (ticketRes.success && ticketRes.data?.id) {
+          setActiveTicketId(ticketRes.data.id);
+          setActiveTab('tickets');
+        } else {
+          setActiveTab('messages');
+        }
       } else {
         addToast(res.message || 'Failed to request project', 'error');
       }
@@ -105,8 +128,12 @@ export const ClientDashboard: React.FC = () => {
         description: ticketForm.description,
       });
       if (res.success) {
-        addToast('Ticket created and synced cleanly!', 'success');
+        addToast('Ticket created and opened!', 'success');
         setTicketForm({ title: '', priority: 'Low', category: 'Website Dev', description: '' });
+        if (res.data?.id) {
+          setActiveTicketId(res.data.id);
+          setActiveTab('tickets');
+        }
       } else {
         addToast(res.message || 'Failed to create ticket', 'error');
       }
@@ -168,32 +195,6 @@ export const ClientDashboard: React.FC = () => {
 
       const updatedMsgs = useAppStore.getState().chatMessages ?? [];
       useAppStore.getState().setState({ chatMessages: [...updatedMsgs, aiMsg] });
-
-      if (aiResult.projectCreated) {
-        const { id, name, budget, deadline } = aiResult.projectCreated;
-        const currentProjects = useAppStore.getState().projects ?? [];
-        if (!currentProjects.some((p) => p.name === name)) {
-          const newProj = {
-            id,
-            name,
-            client: user.email,
-            assignedTo: 'engineering@rdk.com',
-            status: 'Proposed' as const,
-            progress: 10,
-            desc: `Automated AI Requirement Intake for ${user.name}`,
-            milestones: [
-              { name: 'AI Scope Analysis & Intake', completed: true },
-              { name: 'Architecture Review & Budget Approval', completed: false },
-              { name: 'Sprint 1 Core Build', completed: false },
-            ],
-            tasks: [{ id: 1, title: 'Scope Verification with Engineering', status: 'To Do' as const }],
-            deliverables: [],
-            budget,
-            deadline,
-          };
-          useAppStore.getState().setState({ projects: [newProj, ...currentProjects] });
-        }
-      }
     }, 600);
   };
 

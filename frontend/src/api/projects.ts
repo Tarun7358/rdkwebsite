@@ -1,4 +1,5 @@
 import { supabase } from '../lib/supabase';
+import { useAppStore } from '../store/appStore';
 import type { ApiResponse } from '../types';
 
 export const projectsApi = {
@@ -10,7 +11,7 @@ export const projectsApi = {
     desc: string;
   }): Promise<ApiResponse> => {
     const newId = 'PROJ-' + (100 + (Date.now() % 1000));
-    const { error } = await supabase.from('projects').insert({
+    const newProject = {
       id: newId,
       name: data.name,
       client: data.client,
@@ -27,9 +28,16 @@ export const projectsApi = {
       deliverables: [],
       budget: data.budget,
       deadline: data.deadline,
-    });
+    };
+    const { error } = await supabase.from('projects').insert(newProject);
     if (error) return { success: false, message: error.message };
-    return { success: true, message: 'Project request submitted' };
+    const existing = useAppStore.getState().projects ?? [];
+    if (!existing.some((p) => p.id === newId)) {
+      useAppStore.getState().setState({
+        projects: [{ ...newProject, assignedTo: '', desc: data.desc } as any, ...existing],
+      });
+    }
+    return { success: true, message: 'Project request submitted', data: newProject };
   },
 
   assign: async (data: {
