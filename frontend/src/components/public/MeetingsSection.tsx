@@ -31,7 +31,7 @@ export const MeetingsSection: React.FC = () => {
       });
       if (res.success) {
         setBooked(true);
-        addToast('Meeting persisted to real-time calendar!', 'success');
+        addToast('Meeting request submitted! Awaiting admin approval.', 'success');
       } else {
         addToast(res.message || 'Failed to schedule meeting', 'error');
       }
@@ -122,10 +122,10 @@ export const MeetingsSection: React.FC = () => {
               </form>
             ) : (
               <div style={{ textAlign: 'center', padding: '1.5rem' }}>
-                <CheckCircle2 size={42} color="#10b981" style={{ margin: '0 auto 0.75rem auto' }} />
-                <h4 style={{ fontFamily: 'var(--font-display)', fontSize: '1.25rem', fontWeight: 800, color: 'var(--text)' }}>Meeting Confirmed & Saved to Database!</h4>
+                <CheckCircle2 size={42} color="#7c3aed" style={{ margin: '0 auto 0.75rem auto' }} />
+                <h4 style={{ fontFamily: 'var(--font-display)', fontSize: '1.25rem', fontWeight: 800, color: 'var(--text)' }}>Request Submitted — Pending Approval</h4>
                 <p style={{ fontSize: '0.9rem', color: 'var(--text2)', marginTop: '0.4rem' }}>
-                  A {selectedMeeting} calendar invitation for <strong>{selectedDate}</strong> has been dispatched for <strong>{clientEmail}</strong>.
+                  Your {selectedMeeting} request for <strong>{selectedDate}</strong> has been received for <strong>{clientEmail}</strong>. You will receive a confirmation email once an admin approves your slot.
                 </p>
                 <button onClick={() => setSelectedMeeting(null)} className="btn btn-outline" style={{ marginTop: '1.25rem' }}>Done</button>
               </div>

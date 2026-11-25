@@ -115,7 +115,7 @@ async function initDb() {
       date TEXT,
       time TEXT,
       duration TEXT DEFAULT '30 min',
-      status TEXT DEFAULT 'Scheduled'
+      status TEXT DEFAULT 'Pending'
     );`,
     `CREATE TABLE IF NOT EXISTS chat_messages (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -570,8 +570,8 @@ app.post('/api/rest/:table', async (req, res) => {
     const { action = 'select', filters = [], orderBy, payload, single, maybeSingle } = req.body || {};
 
     // Require JWT auth for mutations on protected tables
-    const protectedMutations = new Set(['profiles', 'invoices', 'projects', 'applications', 'cms_config', 'app_config']);
-    if (action !== 'select' && !(action === 'insert' && table === 'applications') && protectedMutations.has(table)) {
+    const protectedMutations = new Set(['profiles', 'invoices', 'projects', 'applications', 'meetings', 'cms_config', 'app_config']);
+    if (action !== 'select' && !(action === 'insert' && (table === 'applications' || table === 'meetings')) && protectedMutations.has(table)) {
       const token = (req.headers.authorization || '').replace(/^Bearer\s+/i, '');
       if (!token) {
         return res.status(401).json({ data: null, error: { message: 'Authentication required for this action.' } });
@@ -622,22 +622,23 @@ app.post('/api/rest/:table', async (req, res) => {
         const r = await run(`${verb} INTO "${table}" (${keys.map(k => `"${k}"`).join(', ')}) VALUES (${placeholders})`, vals);
         inserted.push({ ...item, ...(r.lastID && !item.id ? { id: r.lastID } : {}) });
 
-        // Notify Discord webhook & client email when a meeting is scheduled
+        // Notify Discord webhook & client email (pending review) when a meeting is requested
         if (table === 'meetings' && action === 'insert') {
           if (item.client && String(item.client).includes('@')) {
             sendRdkEmail(
               String(item.client),
-              `Consultation Confirmed — ${item.type || 'RDK Tech'}`,
+              `Meeting Request Received (Pending Review) — ${item.type || 'RDK Tech'}`,
               `<table width="100%" cellpadding="0" cellspacing="0" style="background:#f8f7ff;padding:32px 12px;font-family:Inter,Segoe UI,Arial,sans-serif;">
                 <tr><td align="center">
                   <table width="520" cellpadding="0" cellspacing="0" style="max-width:520px;width:100%;background:#ffffff;border-radius:16px;border:1px solid #ede9fe;padding:28px;">
                     <tr><td>
                       <div style="font-size:15px;font-weight:800;color:#111827;margin-bottom:14px;">RDK <span style="color:#7c3aed;">TECH</span></div>
-                      <h2 style="margin:0 0 8px;font-size:20px;color:#111827;">Consultation Scheduled</h2>
-                      <p style="margin:0 0 16px;font-size:14px;line-height:1.6;color:#4b5563;">Your engineering session has been booked. Here are your details:</p>
+                      <h2 style="margin:0 0 8px;font-size:20px;color:#111827;">Meeting Request Received</h2>
+                      <p style="margin:0 0 16px;font-size:14px;line-height:1.6;color:#4b5563;">We have received your consultation request. Our team is reviewing availability and will send you a confirmation email once approved.</p>
                       <div style="background:#faf8ff;border:1px solid #ede9fe;border-radius:10px;padding:12px 14px;font-size:13px;color:#374151;">
                         <b>Platform:</b> ${item.type || 'Google Meet'}<br/>
-                        <b>Date &amp; Time:</b> ${item.date || 'TBD'} • ${item.time || 'TBD'}
+                        <b>Requested Slot:</b> ${item.date || 'TBD'} • ${item.time || 'TBD'}<br/>
+                        <b>Status:</b> Pending Admin Approval
                       </div>
                       <p style="margin:20px 0 0;font-size:12px;color:#9ca3af;">RDK Tech • <a href="mailto:rdksupport@ragefps.in" style="color:#7c3aed;text-decoration:none;">rdksupport@ragefps.in</a></p>
                     </td></tr>
@@ -653,11 +654,12 @@ app.post('/api/rest/:table', async (req, res) => {
             body: JSON.stringify({
               username: 'RDK Tech Meetings',
               embeds: [{
-                title: `New Consultation Booked: ${item.type || 'Call'}`,
+                title: `New Consultation Request (Pending Approval): ${item.type || 'Call'}`,
                 color: 0x7c3aed,
                 fields: [
                   { name: 'Client', value: String(item.client || 'N/A'), inline: true },
-                  { name: 'Date & Time', value: `${item.date || 'TBD'} ${item.time || ''}`, inline: true }
+                  { name: 'Requested Slot', value: `${item.date || 'TBD'} ${item.time || ''}`, inline: true },
+                  { name: 'Action Needed', value: 'Approve or Decline in Admin Dashboard -> Meetings', inline: false }
                 ],
                 footer: { text: 'RDK Tech • rdkweb.netlify.app/#meetings' },
                 timestamp: new Date().toISOString()
@@ -755,6 +757,38 @@ app.post('/api/rest/:table', async (req, res) => {
       const vals = [...keys.map(k => serializeValue(table, k, payload[k])), ...whereParams];
       await run(`UPDATE "${table}" SET ${setSql}${whereSql}`, vals);
       const rows = (await all(`SELECT * FROM "${table}"${whereSql}`, whereParams)).map(r => deserializeRow(table, r));
+      if (table === 'meetings' && (payload?.status === 'Confirmed' || payload?.status === 'Declined')) {
+        for (const row of rows) {
+          if (row.client && String(row.client).includes('@')) {
+            const isConfirmed = payload.status === 'Confirmed';
+            sendRdkEmail(
+              String(row.client),
+              isConfirmed
+                ? `Consultation Confirmed — ${row.type || 'RDK Tech'}`
+                : `Consultation Update — ${row.type || 'RDK Tech'}`,
+              `<table width="100%" cellpadding="0" cellspacing="0" style="background:#f8f7ff;padding:32px 12px;font-family:Inter,Segoe UI,Arial,sans-serif;">
+                <tr><td align="center">
+                  <table width="520" cellpadding="0" cellspacing="0" style="max-width:520px;width:100%;background:#ffffff;border-radius:16px;border:1px solid #ede9fe;padding:28px;">
+                    <tr><td>
+                      <div style="font-size:15px;font-weight:800;color:#111827;margin-bottom:14px;">RDK <span style="color:#7c3aed;">TECH</span></div>
+                      <h2 style="margin:0 0 8px;font-size:20px;color:#111827;">${isConfirmed ? 'Consultation Confirmed' : 'Consultation Declined'}</h2>
+                      <p style="margin:0 0 16px;font-size:14px;line-height:1.6;color:#4b5563;">${isConfirmed
+                        ? 'Your engineering consultation has been approved and confirmed by our team.'
+                        : 'Unfortunately, the requested slot is unavailable. Please submit a new time or reply to this email to reschedule.'}</p>
+                      <div style="background:#faf8ff;border:1px solid #ede9fe;border-radius:10px;padding:12px 14px;font-size:13px;color:#374151;">
+                        <b>Platform:</b> ${row.type || 'Google Meet'}<br/>
+                        <b>Date &amp; Time:</b> ${row.date || 'TBD'} • ${row.time || 'TBD'}<br/>
+                        <b>Status:</b> ${payload.status}
+                      </div>
+                      <p style="margin:20px 0 0;font-size:12px;color:#9ca3af;">RDK Tech • <a href="mailto:rdksupport@ragefps.in" style="color:#7c3aed;text-decoration:none;">rdksupport@ragefps.in</a></p>
+                    </td></tr>
+                  </table>
+                </td></tr>
+              </table>`
+            );
+          }
+        }
+      }
       return res.json({ data: single || maybeSingle ? (rows[0] || null) : rows, error: null });
     }
 

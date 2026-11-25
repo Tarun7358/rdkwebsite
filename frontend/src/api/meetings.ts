@@ -14,9 +14,14 @@ export const meetingsApi = {
       date: data.date,
       time: data.time,
       duration: '30 min',
-      status: 'Scheduled',
+      status: 'Pending',
     });
     if (error) return { success: false, message: error.message };
-    return { success: true, message: 'Meeting scheduled' };
+    return { success: true, message: 'Meeting request submitted for approval' };
+  },
+  updateStatus: async (id: string | number, status: 'Confirmed' | 'Declined'): Promise<ApiResponse> => {
+    const { error } = await supabase.from('meetings').update({ status }).eq('id', id);
+    if (error) return { success: false, message: error.message };
+    return { success: true, message: `Meeting ${status.toLowerCase()}` };
   },
 };

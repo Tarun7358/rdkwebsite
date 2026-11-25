@@ -4,6 +4,7 @@ import { useDashboardStore } from '../../../store/dashboardStore';
 import { projectsApi } from '../../../api/projects';
 import { ticketsApi } from '../../../api/tickets';
 import { invoicesApi } from '../../../api/invoices';
+import { meetingsApi } from '../../../api/meetings';
 import { cmsApi } from '../../../api/cms';
 import { applicationsApi } from '../../../api/applications';
 import { Badge, TicketWorkspace } from '../../ui';
@@ -21,7 +22,8 @@ import {
   FolderKanban,
   Receipt,
   Users,
-  Briefcase
+  Briefcase,
+  Calendar
 } from 'lucide-react';
 
 export const AdminDashboard: React.FC = () => {
@@ -31,6 +33,7 @@ export const AdminDashboard: React.FC = () => {
   const projects = useAppStore((s) => s.projects) ?? [];
   const tickets = useAppStore((s) => s.tickets) ?? [];
   const invoices = useAppStore((s) => s.invoices) ?? [];
+  const meetings = useAppStore((s) => s.meetings) ?? [];
   const applications = useAppStore((s) => s.applications) ?? [];
   const services = useAppStore((s) => s.services) ?? [];
   const portfolio = useAppStore((s) => s.portfolio) ?? [];
@@ -535,6 +538,80 @@ export const AdminDashboard: React.FC = () => {
                     <button onClick={() => handleUpdateAppStatus(app.id, 'Interviewing')} className="btn btn-outline" style={{ padding: '0.25rem 0.5rem', fontSize: '0.7rem' }}>Interview</button>
                     <button onClick={() => handleUpdateAppStatus(app.id, 'Hired')} className="btn btn-primary" style={{ padding: '0.25rem 0.5rem', fontSize: '0.7rem', background: '#10B981', border: 'none' }}>Hire</button>
                     <button onClick={() => handleUpdateAppStatus(app.id, 'Rejected')} className="btn btn-ghost" style={{ padding: '0.25rem 0.5rem', fontSize: '0.7rem', color: '#EF4444' }}>Reject</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+    );
+  }
+
+  const handleUpdateMeetingStatus = async (id: string | number, status: 'Confirmed' | 'Declined') => {
+    try {
+      const res = await meetingsApi.updateStatus(id, status);
+      if (res.success) {
+        addToast(`Meeting ${status.toLowerCase()}! Client email dispatched.`, 'success');
+      } else {
+        addToast(res.message, 'error');
+      }
+    } catch (err: any) {
+      addToast(err.message, 'error');
+    }
+  };
+
+  // Meetings Approval Tab
+  if (activeTab === 'meetings') {
+    return (
+      <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '12px', padding: '1.5rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '1rem' }}>
+          <Calendar size={20} color="var(--primary)" />
+          <h3 style={{ fontSize: '1.2rem', fontWeight: 800, margin: 0 }}>Consultation Requests &amp; Meetings</h3>
+        </div>
+        {meetings.length === 0 ? (
+          <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--text3)' }}>No consultation requests yet.</div>
+        ) : (
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem', textAlign: 'left' }}>
+            <thead>
+              <tr style={{ borderBottom: '1px solid var(--border)', color: 'var(--text3)' }}>
+                <th style={{ padding: '0.75rem 0.5rem' }}>ID</th>
+                <th style={{ padding: '0.75rem 0.5rem' }}>Client</th>
+                <th style={{ padding: '0.75rem 0.5rem' }}>Platform</th>
+                <th style={{ padding: '0.75rem 0.5rem' }}>Date &amp; Time</th>
+                <th style={{ padding: '0.75rem 0.5rem' }}>Status</th>
+                <th style={{ padding: '0.75rem 0.5rem', textAlign: 'right' }}>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {meetings.map((m) => (
+                <tr key={m.id} style={{ borderBottom: '1px solid var(--border)' }}>
+                  <td style={{ padding: '1rem 0.5rem', fontWeight: 700, fontFamily: 'var(--font-mono)', color: 'var(--primary)' }}>MEET-{m.id}</td>
+                  <td style={{ padding: '1rem 0.5rem', fontWeight: 600 }}>{m.client}</td>
+                  <td style={{ padding: '1rem 0.5rem' }}>{m.type}</td>
+                  <td style={{ padding: '1rem 0.5rem' }}>{m.date} • {m.time}</td>
+                  <td style={{ padding: '1rem 0.5rem' }}>
+                    <Badge status={m.status} />
+                  </td>
+                  <td style={{ padding: '1rem 0.5rem', textAlign: 'right', display: 'flex', gap: '0.4rem', justifyContent: 'flex-end' }}>
+                    {m.status !== 'Confirmed' && (
+                      <button
+                        onClick={() => handleUpdateMeetingStatus(m.id, 'Confirmed')}
+                        className="btn btn-primary"
+                        style={{ padding: '0.3rem 0.7rem', fontSize: '0.75rem', background: '#10B981', border: 'none' }}
+                      >
+                        Approve &amp; Confirm
+                      </button>
+                    )}
+                    {m.status !== 'Declined' && (
+                      <button
+                        onClick={() => handleUpdateMeetingStatus(m.id, 'Declined')}
+                        className="btn btn-ghost"
+                        style={{ padding: '0.3rem 0.7rem', fontSize: '0.75rem', color: '#EF4444' }}
+                      >
+                        Decline
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))}

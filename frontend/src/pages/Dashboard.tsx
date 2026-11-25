@@ -85,6 +85,7 @@ export const Dashboard: React.FC = () => {
         { id: 'projects', label: 'Projects', icon: <FolderKanban size={18} /> },
         { id: 'tickets', label: 'Tickets', icon: <Ticket size={18} /> },
         { id: 'invoices', label: 'Invoices', icon: <Receipt size={18} /> },
+        { id: 'meetings', label: 'Meetings', icon: <Calendar size={18} /> },
         { id: 'careers', label: 'Job Applications', icon: <Users size={18} /> },
         { id: 'cms', label: 'CMS Config', icon: <Settings size={18} /> },
       ];
