@@ -12,14 +12,62 @@ export const AuthModal: React.FC = () => {
   const setIsOpen = useDashboardStore((s) => s.setAuthModalOpen);
   const addToast = useAppStore((s) => s.addToast);
 
-  const [tab, setTab] = useState<'login' | 'register'>('login');
+  const [tab, setTab] = useState<'login' | 'register' | 'forgot'>('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
+  const [otp, setOtp] = useState('');
+  const [otpSent, setOtpSent] = useState(false);
+  const [newPassword, setNewPassword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPwd, setShowPwd] = useState(false);
 
   if (!isOpen) return null;
+
+  const handleSendResetOtp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) return;
+    setIsSubmitting(true);
+    try {
+      const res = await fetch('/api/auth/forgot-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email.trim() }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error?.message || 'Failed to send OTP');
+      setOtpSent(true);
+      addToast('6-digit OTP sent to your email!', 'success');
+    } catch (err: any) {
+      addToast(err.message || 'Could not send OTP', 'error');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleResetPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email || !otp || !newPassword) return;
+    setIsSubmitting(true);
+    try {
+      const res = await fetch('/api/auth/reset-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email.trim(), otp: otp.trim(), newPassword }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error?.message || 'Failed to reset password');
+      addToast('Password updated! You can now sign in.', 'success');
+      setOtp('');
+      setNewPassword('');
+      setOtpSent(false);
+      setTab('login');
+    } catch (err: any) {
+      addToast(err.message || 'Password reset failed', 'error');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -206,6 +254,16 @@ export const AuthModal: React.FC = () => {
                   />
                 </Field>
 
+                <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '-0.35rem' }}>
+                  <button
+                    type="button"
+                    onClick={() => { setOtpSent(false); setTab('forgot'); }}
+                    style={{ background: 'none', border: 'none', color: '#7c3aed', fontSize: '0.78rem', fontWeight: 600, cursor: 'pointer' }}
+                  >
+                    Forgot password?
+                  </button>
+                </div>
+
                 <SubmitButton loading={isSubmitting} label="Authenticate & Sign In" loadingLabel="Authenticating…" />
 
                 <button
@@ -231,6 +289,63 @@ export const AuthModal: React.FC = () => {
                   </span>
                 </div>
               </form>
+            )}
+
+            {/* ─── FORGOT PASSWORD (EMAIL OTP) ─── */}
+            {tab === 'forgot' && (
+              !otpSent ? (
+                <form onSubmit={handleSendResetOtp} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                  <p style={{ margin: 0, fontSize: '0.84rem', color: 'var(--text2, #6b7280)', lineHeight: 1.5 }}>
+                    Enter your registered email address and we'll send you a 6-digit OTP to reset your password.
+                  </p>
+                  <Field label="Email Address" icon={<Mail size={16} color="#7c3aed" />}>
+                    <input
+                      type="email"
+                      placeholder="name@company.com"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                      style={inputStyle}
+                    />
+                  </Field>
+                  <SubmitButton loading={isSubmitting} label="Send 6-Digit OTP" loadingLabel="Sending OTP…" />
+                  <button type="button" onClick={() => setTab('login')} style={{ background: 'none', border: 'none', color: '#7c3aed', fontSize: '0.82rem', fontWeight: 600, cursor: 'pointer' }}>
+                    ← Back to Sign In
+                  </button>
+                </form>
+              ) : (
+                <form onSubmit={handleResetPassword} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                  <p style={{ margin: 0, fontSize: '0.84rem', color: 'var(--text2, #6b7280)', lineHeight: 1.5 }}>
+                    Enter the 6-digit OTP sent to <strong>{email}</strong> and choose a new password.
+                  </p>
+                  <Field label="6-Digit Email OTP" icon={<Lock size={16} color="#7c3aed" />}>
+                    <input
+                      type="text"
+                      placeholder="e.g. 482910"
+                      value={otp}
+                      onChange={(e) => setOtp(e.target.value)}
+                      required
+                      maxLength={6}
+                      style={inputStyle}
+                    />
+                  </Field>
+                  <Field label="New Password (min 6 chars)" icon={<Lock size={16} color="#7c3aed" />}>
+                    <input
+                      type="password"
+                      placeholder="Enter new password"
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      required
+                      minLength={6}
+                      style={inputStyle}
+                    />
+                  </Field>
+                  <SubmitButton loading={isSubmitting} label="Verify OTP & Update Password" loadingLabel="Updating…" />
+                  <button type="button" onClick={() => setOtpSent(false)} style={{ background: 'none', border: 'none', color: '#7c3aed', fontSize: '0.82rem', fontWeight: 600, cursor: 'pointer' }}>
+                    Resend OTP
+                  </button>
+                </form>
+              )
             )}
 
             {/* ─── REGISTER FORM ─── */}

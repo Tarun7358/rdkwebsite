@@ -64,6 +64,12 @@ async function initDb() {
       role TEXT DEFAULT 'client',
       created_at TEXT DEFAULT (datetime('now'))
     );`,
+    `CREATE TABLE IF NOT EXISTS password_resets (
+      email TEXT PRIMARY KEY,
+      otp_hash TEXT NOT NULL,
+      expires_at INTEGER NOT NULL,
+      attempts INTEGER DEFAULT 0
+    );`,
     `CREATE TABLE IF NOT EXISTS profiles (
       id TEXT PRIMARY KEY,
       email TEXT UNIQUE,
@@ -1045,6 +1051,77 @@ app.get('/api/auth/session', (req, res) => {
     res.json({ data: { session: { access_token: token, user } }, error: null });
   } catch {
     res.json({ data: { session: null }, error: null });
+  }
+});
+
+// ── Forgot Password (Email 6-Digit OTP) ──────────────────────────────────────
+app.post('/api/auth/forgot-password', async (req, res) => {
+  try {
+    const email = String(req.body?.email || '').trim().toLowerCase();
+    if (!email || !email.includes('@')) {
+      return res.status(400).json({ error: { message: 'Valid email address is required.' } });
+    }
+    const user = await get('SELECT id, full_name FROM auth_users WHERE email = ?', [email]);
+    if (!user) {
+      return res.status(404).json({ error: { message: 'No account found with this email address.' } });
+    }
+    const otp = crypto.randomInt(100000, 999999).toString();
+    const otpHash = crypto.createHash('sha256').update(otp).digest('hex');
+    const expiresAt = Date.now() + 10 * 60 * 1000;
+    await run(
+      `INSERT INTO password_resets (email, otp_hash, expires_at, attempts) VALUES (?, ?, ?, 0)
+       ON CONFLICT(email) DO UPDATE SET otp_hash = excluded.otp_hash, expires_at = excluded.expires_at, attempts = 0`,
+      [email, otpHash, expiresAt]
+    );
+    await sendRdkEmail(
+      email,
+      `Password Reset OTP: ${otp} — RDK Tech`,
+      `<table width="100%" cellpadding="0" cellspacing="0" style="background:#f8f7ff;padding:32px 12px;font-family:Inter,Segoe UI,Arial,sans-serif;">
+        <tr><td align="center">
+          <table width="500" cellpadding="0" cellspacing="0" style="max-width:500px;width:100%;background:#ffffff;border-radius:16px;border:1px solid #ede9fe;padding:28px;">
+            <tr><td>
+              <div style="font-size:15px;font-weight:800;color:#111827;margin-bottom:14px;">RDK <span style="color:#7c3aed;">TECH</span></div>
+              <h2 style="margin:0 0 8px;font-size:20px;color:#111827;">Password Reset OTP</h2>
+              <p style="margin:0 0 18px;font-size:14px;line-height:1.6;color:#4b5563;">Use the 6-digit verification code below to reset your password. It expires in 10 minutes.</p>
+              <div style="background:#faf8ff;border:1px solid #ede9fe;border-radius:12px;padding:16px;text-align:center;font-size:28px;font-weight:900;letter-spacing:8px;color:#7c3aed;">${otp}</div>
+              <p style="margin:20px 0 0;font-size:12px;color:#9ca3af;">If you did not request this, you can safely ignore this email. • <a href="mailto:rdksupport@ragefps.in" style="color:#7c3aed;text-decoration:none;">rdksupport@ragefps.in</a></p>
+            </td></tr>
+          </table>
+        </td></tr>
+      </table>`
+    );
+    res.json({ success: true, message: 'A 6-digit OTP has been sent to your email.' });
+  } catch (err) {
+    res.status(500).json({ error: { message: err.message } });
+  }
+});
+
+app.post('/api/auth/reset-password', async (req, res) => {
+  try {
+    const email = String(req.body?.email || '').trim().toLowerCase();
+    const otp = String(req.body?.otp || '').trim();
+    const newPassword = String(req.body?.newPassword || '');
+    if (!email || !otp || newPassword.length < 6) {
+      return res.status(400).json({ error: { message: 'Email, 6-digit OTP, and a new password (min 6 chars) are required.' } });
+    }
+    const record = await get('SELECT * FROM password_resets WHERE email = ?', [email]);
+    if (!record || Date.now() > Number(record.expires_at)) {
+      return res.status(400).json({ error: { message: 'OTP expired or not requested. Please request a new code.' } });
+    }
+    if (Number(record.attempts || 0) >= 5) {
+      return res.status(429).json({ error: { message: 'Too many invalid attempts. Please request a new OTP.' } });
+    }
+    const otpHash = crypto.createHash('sha256').update(otp).digest('hex');
+    if (otpHash !== record.otp_hash) {
+      await run('UPDATE password_resets SET attempts = attempts + 1 WHERE email = ?', [email]);
+      return res.status(400).json({ error: { message: 'Invalid OTP code. Please check and try again.' } });
+    }
+    const hash = await bcrypt.hash(newPassword, 10);
+    await run('UPDATE auth_users SET password_hash = ? WHERE email = ?', [hash, email]);
+    await run('DELETE FROM password_resets WHERE email = ?', [email]);
+    res.json({ success: true, message: 'Password updated! You can now sign in.' });
+  } catch (err) {
+    res.status(500).json({ error: { message: err.message } });
   }
 });
 
