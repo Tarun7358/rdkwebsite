@@ -832,10 +832,11 @@ app.post('/api/payments/razorpay/webhook', async (req, res) => {
     }
 
     const event = req.body?.event;
-    if (event === 'payment.captured' || event === 'order.paid') {
+    if (event === 'payment.captured' || event === 'order.paid' || event === 'payment_link.paid') {
       const paymentEntity = req.body?.payload?.payment?.entity || {};
       const orderEntity = req.body?.payload?.order?.entity || {};
-      const invoiceId = String(paymentEntity.notes?.invoiceId || orderEntity.receipt || '').trim();
+      const linkEntity = req.body?.payload?.payment_link?.entity || {};
+      const invoiceId = String(paymentEntity.notes?.invoiceId || linkEntity.notes?.invoiceId || orderEntity.receipt || '').trim();
       const paymentId = String(paymentEntity.id || '').trim();
       if (invoiceId) {
         const inv = await get('SELECT * FROM invoices WHERE id = ?', [invoiceId]);
@@ -1311,6 +1312,60 @@ app.post('/api/rest/:table', async (req, res) => {
               timestamp: new Date().toISOString()
             }]
           });
+        }
+
+        // Send Razorpay payment link email when an invoice is dispatched to a client email
+        if (table === 'invoices' && action === 'insert' && item.client && String(item.client).includes('@') && Number(item.amount || 0) > 0) {
+          (async () => {
+            let payUrl = 'https://rdkweb.netlify.app/dashboard';
+            try {
+              const auth = Buffer.from(`${RAZORPAY_KEY_ID}:${RAZORPAY_KEY_SECRET}`).toString('base64');
+              const plRes = await fetch('https://api.razorpay.com/v1/payment_links', {
+                method: 'POST',
+                headers: { 'Authorization': `Basic ${auth}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  amount: Math.round(Number(item.amount) * 100),
+                  currency: 'INR',
+                  description: `${item.id} — ${item.project || 'RDK Tech Services'}`,
+                  customer: { email: String(item.client) },
+                  notify: { sms: false, email: false },
+                  notes: { invoiceId: String(item.id) },
+                  callback_url: 'https://rdkweb.netlify.app/dashboard',
+                  callback_method: 'get'
+                })
+              });
+              const plData = await plRes.json();
+              if (plData?.short_url) payUrl = plData.short_url;
+            } catch {}
+
+            const lineItems = Array.isArray(item.items) ? item.items.join(', ') : String(item.items || '');
+            await sendRdkEmail(
+              String(item.client),
+              `Invoice ${item.id} — ₹${item.amount} INR (RDK Tech)`,
+              `<table width="100%" cellpadding="0" cellspacing="0" style="background:#f8f7ff;padding:32px 12px;font-family:Inter,Segoe UI,Arial,sans-serif;">
+                <tr><td align="center">
+                  <table width="520" cellpadding="0" cellspacing="0" style="max-width:520px;width:100%;background:#ffffff;border-radius:16px;border:1px solid #ede9fe;padding:28px;">
+                    <tr><td>
+                      <div style="font-size:15px;font-weight:800;color:#111827;margin-bottom:14px;">RDK <span style="color:#7c3aed;">TECH</span></div>
+                      <h2 style="margin:0 0 8px;font-size:20px;color:#111827;">New Invoice Ready</h2>
+                      <p style="margin:0 0 16px;font-size:14px;line-height:1.6;color:#4b5563;">A new invoice has been issued to your RDK Tech account. You can pay directly via Razorpay below or inside your Client Console.</p>
+                      <div style="background:#faf8ff;border:1px solid #ede9fe;border-radius:10px;padding:12px 14px;font-size:13px;color:#374151;">
+                        <b>Invoice ID:</b> ${item.id}<br/>
+                        <b>Project:</b> ${item.project || 'RDK Tech Services'}<br/>
+                        ${lineItems ? `<b>Items:</b> ${lineItems}<br/>` : ''}
+                        <b>Amount Due:</b> ₹${item.amount} INR
+                      </div>
+                      <p style="margin:20px 0 0;">
+                        <a href="${payUrl}" style="display:inline-block;background:#7c3aed;color:#ffffff;padding:11px 20px;border-radius:10px;text-decoration:none;font-weight:700;font-size:13px;">Pay ₹${item.amount} with Razorpay</a>
+                        <a href="https://rdkweb.netlify.app/dashboard" style="display:inline-block;margin-left:10px;color:#7c3aed;font-weight:700;font-size:13px;text-decoration:none;">Open Console →</a>
+                      </p>
+                      <p style="margin:20px 0 0;font-size:12px;color:#9ca3af;">RDK Tech • <a href="mailto:rdksupport@ragefps.in" style="color:#7c3aed;text-decoration:none;">rdksupport@ragefps.in</a></p>
+                    </td></tr>
+                  </table>
+                </td></tr>
+              </table>`
+            );
+          })();
         }
       }
       const out = single || maybeSingle ? (inserted[0] || null) : inserted;
