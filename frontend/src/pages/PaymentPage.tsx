@@ -298,13 +298,13 @@ export default function PaymentPage() {
           <h1 style={{ fontSize: '1.85rem', fontWeight: 900, margin: '0.85rem 0 0.45rem', color: '#111827' }}>{product.name}</h1>
           <p style={{ color: '#4b5563', fontSize: '0.94rem', lineHeight: 1.6, margin: '0 0 1.5rem' }}>{product.tagline}</p>
 
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.4rem', padding: '1rem 1.15rem', background: '#faf8ff', border: '1px solid #ede9fe', borderRadius: '14px', marginBottom: '1.5rem' }}>
-            <span style={{ fontSize: '2.1rem', fontWeight: 900, color: '#7c3aed' }}>₹{product.priceInr}</span>
-            <span style={{ fontSize: '0.9rem', color: '#6b7280', fontWeight: 600 }}>/ {product.periodLabel}</span>
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.45rem', padding: '1rem 1.2rem', background: '#faf8ff', border: '1px solid #ede9fe', borderRadius: '14px', marginBottom: '1.6rem' }}>
+            <span style={{ fontSize: '2.2rem', fontWeight: 900, color: '#7c3aed', letterSpacing: '-0.02em' }}>₹{product.priceInr}</span>
+            <span style={{ fontSize: '0.9rem', color: '#64748b', fontWeight: 600 }}>/ {product.periodLabel}</span>
           </div>
 
-          <h3 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#111827', margin: '0 0 1rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-            What You Get
+          <h3 style={{ fontSize: '0.78rem', fontWeight: 800, color: '#64748b', margin: '0 0 1rem', textTransform: 'uppercase', letterSpacing: '0.07em' }}>
+            Included Features
           </h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.9rem' }}>
             {product.features.map((f) => (
@@ -321,9 +321,9 @@ export default function PaymentPage() {
 
         {/* Right: Account + Discord + Checkout Card */}
         <section style={{ background: '#ffffff', border: '1px solid #ede9fe', borderRadius: '20px', padding: '2rem', boxShadow: '0 8px 30px rgba(124, 58, 237, 0.08)' }}>
-          <h2 style={{ fontSize: '1.25rem', fontWeight: 800, margin: '0 0 0.35rem', color: '#111827' }}>Complete Your Upgrade</h2>
-          <p style={{ fontSize: '0.84rem', color: '#6b7280', margin: '0 0 1.25rem' }}>
-            Sign in to your RDK Tech account so invoices, receipts &amp; upcoming due dates sync to your Console.
+          <h2 style={{ fontSize: '1.35rem', fontWeight: 800, margin: '0 0 0.3rem', color: '#111827', letterSpacing: '-0.01em' }}>Checkout</h2>
+          <p style={{ fontSize: '0.85rem', color: '#64748b', margin: '0 0 1.35rem', lineHeight: 1.5 }}>
+            Your invoices, payment receipts, and renewal reminders are saved to your RDK Tech account.
           </p>
 
           {/* Step 1: RDK Account Required */}
@@ -420,15 +420,15 @@ export default function PaymentPage() {
               {/* Billing Mode Selector */}
               {product.supportsAutoPay && (
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: '#374151', marginBottom: '0.45rem' }}>
-                    Billing Preference
+                  <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>
+                    Billing Option
                   </label>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.65rem' }}>
                     <button
                       type="button"
                       onClick={() => setBillingMode('onetime')}
                       style={{
-                        padding: '0.8rem',
+                        padding: '0.85rem',
                         borderRadius: '12px',
                         border: billingMode === 'onetime' ? '2px solid #7c3aed' : '1px solid #e5e7eb',
                         background: billingMode === 'onetime' ? '#faf8ff' : '#ffffff',
@@ -436,11 +436,11 @@ export default function PaymentPage() {
                         cursor: 'pointer',
                       }}
                     >
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontWeight: 800, fontSize: '0.84rem', color: '#111827' }}>
-                        <CreditCard size={15} color="#7c3aed" /> Pay Monthly
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontWeight: 800, fontSize: '0.86rem', color: '#111827' }}>
+                        <CreditCard size={15} color="#7c3aed" /> One-Time
                       </div>
-                      <div style={{ fontSize: '0.75rem', color: '#6b7280', marginTop: '0.2rem' }}>
-                        One-time ₹{product.priceInr} for 30 days. Renew manually when needed.
+                      <div style={{ fontSize: '0.76rem', color: '#64748b', marginTop: '0.25rem', lineHeight: 1.4 }}>
+                        ₹{product.priceInr} for 30 days. Renew manually next month.
                       </div>
                     </button>
 
@@ -448,7 +448,7 @@ export default function PaymentPage() {
                       type="button"
                       onClick={() => setBillingMode('autopay')}
                       style={{
-                        padding: '0.8rem',
+                        padding: '0.85rem',
                         borderRadius: '12px',
                         border: billingMode === 'autopay' ? '2px solid #7c3aed' : '1px solid #e5e7eb',
                         background: billingMode === 'autopay' ? '#faf8ff' : '#ffffff',
@@ -456,11 +456,11 @@ export default function PaymentPage() {
                         cursor: 'pointer',
                       }}
                     >
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontWeight: 800, fontSize: '0.84rem', color: '#111827' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontWeight: 800, fontSize: '0.86rem', color: '#111827' }}>
                         <RefreshCw size={15} color="#7c3aed" /> Auto-Pay
                       </div>
-                      <div style={{ fontSize: '0.75rem', color: '#6b7280', marginTop: '0.2rem' }}>
-                        Auto-renew ₹{product.priceInr}/mo via UPI Autopay or Card. Cancel anytime.
+                      <div style={{ fontSize: '0.76rem', color: '#64748b', marginTop: '0.25rem', lineHeight: 1.4 }}>
+                        ₹{product.priceInr}/mo automatic renewal. Cancel anytime.
                       </div>
                     </button>
                   </div>
@@ -515,8 +515,9 @@ export default function PaymentPage() {
               )}
 
               {isLifetimePro ? (
-                <div style={{ padding: '1rem', borderRadius: '12px', background: 'rgba(16,185,129,0.1)', border: '1px solid #10b981', color: '#059669', fontSize: '0.86rem', fontWeight: 600, textAlign: 'center' }}>
-                  Lifetime Rage Pro Active! <strong>{selectedGuild?.name}</strong> is covered by Owner / Support Lifetime Pro — no payment required.
+                <div style={{ padding: '1rem 1.1rem', borderRadius: '12px', background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.45)', color: '#059669', fontSize: '0.86rem', lineHeight: 1.5, textAlign: 'center' }}>
+                  <div style={{ fontWeight: 800, marginBottom: '0.2rem' }}>Lifetime Pro Active</div>
+                  <strong>{selectedGuild?.name}</strong> already has complimentary Lifetime access — no payment needed.
                 </div>
               ) : (
                 discordUser && ownedGuilds.length > 0 && (

@@ -14,22 +14,21 @@ export const RDK_PRODUCTS: Record<string, RdkProduct> = {
   'rage-pro': {
     id: 'rage-pro',
     name: 'Rage Optimiser Pro',
-    tagline: 'Enterprise-grade Discord security, 2FA sentinel, unlimited backups, and custom branding.',
-    badge: 'Flagship Discord Suite',
+    tagline: 'Enterprise Discord protection, 2FA approval alerts, unlimited backups, and custom bot branding.',
+    badge: 'Pro License',
     priceInr: 99,
-    periodLabel: '30 Days',
+    periodLabel: '30 days',
     supportsAutoPay: true,
     requiresDiscordGuild: true,
     features: [
-      { title: 'Gmail 2FA Sentinel & EOD Reports', desc: 'Approve high-risk anti-nuke & admin actions via email and receive daily security digests.' },
-      { title: 'Unlimited Extra Owners & Backups', desc: 'No caps on trusted extra owners, full server snapshots, and UPM version history.' },
-      { title: 'Custom Server Bot Avatar & Banner', desc: 'Per-server custom bot identity so Rage Optimiser matches your community brand.' },
-      { title: 'Unlimited Tickets, Embeds & Giveaways', desc: 'Unlimited interactive ticket panels, custom Box UI embeds, role menus, and giveaways.' },
-      { title: '24/7 Voice Presence & Social Trackers', desc: 'Persistent 24/7 voice channel presence plus unlimited YouTube, Twitch & stat trackers.' },
-      { title: 'Free Core Included Always', desc: 'Whitelist Bot & unlimited server member size remain 100% free on every plan.' },
+      { title: 'Gmail 2FA & Daily Security Reports', desc: 'Verify critical admin actions by email and receive daily EOD audit summaries.' },
+      { title: 'Unlimited Extra Owners & Backups', desc: 'Add unlimited trusted owners with full server snapshots and UPM restore points.' },
+      { title: 'Custom Bot Avatar & Banner', desc: 'Personalize Rage Optimiser’s profile per server to match your community.' },
+      { title: 'Unlimited Tickets, Embeds & Giveaways', desc: 'Create unlimited ticket panels, role menus, giveaways, and Box UI embeds.' },
+      { title: '24/7 Voice & Social Trackers', desc: 'Keep 24/7 voice presence active alongside unlimited YouTube, Twitch & stat feeds.' },
+      { title: 'Free Core Always Included', desc: 'Anti-Nuke, AutoMod, Whitelist Bot, and unlimited member size stay 100% free.' },
     ],
   },
 };
 
 export const DEFAULT_PRODUCT_ID = 'rage-pro';
-
