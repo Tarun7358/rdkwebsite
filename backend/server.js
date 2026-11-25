@@ -6,6 +6,7 @@ import jwt from 'jsonwebtoken';
 import crypto from 'node:crypto';
 import path from 'node:path';
 import dotenv from 'dotenv';
+import QRCode from 'qrcode';
 
 dotenv.config();
 
@@ -281,6 +282,100 @@ app.get('/api/discord/callback', async (req, res) => {
     </body></html>`);
   } catch (err) {
     res.status(500).send('Discord OAuth error: ' + err.message);
+  }
+});
+
+// ── Rage Pro (Rs.99) Inline UPI QR Checkout & UTR Submission ──────────────────
+const RAGE_UPI_VPA = process.env.UPI_VPA || 'rbzclasher@okaxis';
+const RAGE_UPI_NAME = process.env.UPI_PAYEE_NAME || 'Rage Optimiser';
+
+app.post('/api/rage-pro/checkout', async (req, res) => {
+  try {
+    const guildId = String(req.body?.guildId || '').trim();
+    const guildName = String(req.body?.guildName || guildId).trim();
+    const ownerId = String(req.body?.ownerId || '').trim();
+    const ownerUsername = String(req.body?.ownerUsername || '').trim();
+    const email = String(req.body?.email || '').trim();
+
+    if (!/^\d{15,22}$/.test(guildId)) {
+      return res.status(400).json({ error: 'Valid Discord Server ID is required.' });
+    }
+
+    const invId = 'INV-RAGE-' + crypto.randomBytes(3).toString('hex').toUpperCase();
+    const upiParams = new URLSearchParams({
+      pa: RAGE_UPI_VPA,
+      pn: RAGE_UPI_NAME,
+      am: '99',
+      cu: 'INR',
+      tn: `RagePro ${invId}`
+    });
+    const upiUri = `upi://pay?${upiParams.toString()}`;
+    const qrDataUrl = await QRCode.toDataURL(upiUri, { width: 320, margin: 2 });
+
+    await run(
+      `INSERT OR REPLACE INTO invoices (id, client, project, amount, status, items, date) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      [
+        invId,
+        email || `${ownerUsername} (${ownerId})`,
+        `Rage Pro (30d) — ${guildName}`,
+        99,
+        'Unpaid',
+        JSON.stringify([
+          'Rage Pro 30-Day Subscription',
+          `Owner: ${ownerUsername} (${ownerId})`,
+          `Server: ${guildName} (${guildId})`
+        ]),
+        new Date().toISOString().slice(0, 10)
+      ]
+    );
+
+    res.json({ invoiceId: invId, upiVpa: RAGE_UPI_VPA, upiName: RAGE_UPI_NAME, upiUri, qrDataUrl, amountInr: 99 });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post('/api/rage-pro/submit-utr', async (req, res) => {
+  try {
+    const invoiceId = String(req.body?.invoiceId || '').trim();
+    const utr = String(req.body?.utr || '').trim().replace(/\s+/g, '');
+    const guildId = String(req.body?.guildId || '').trim();
+    const guildName = String(req.body?.guildName || guildId).trim();
+    const ownerId = String(req.body?.ownerId || '').trim();
+    const ownerUsername = String(req.body?.ownerUsername || '').trim();
+
+    if (!/^[A-Za-z0-9]{8,28}$/.test(utr)) {
+      return res.status(400).json({ error: 'Enter a valid 12-digit UPI UTR / Reference Number.' });
+    }
+
+    await run(`UPDATE invoices SET status = ? WHERE id = ?`, [`Pending Verification (UTR: ${utr})`, invoiceId]);
+
+    const webhookUrl = process.env.DISCORD_TICKET_WEBHOOK_URL || 'https://discord.com/api/webhooks/1555981268678742088/JJfYUiRAv1G3AP_u0teQ-iI4Nlnk7n3CbnkgBM0uXtvqP7kXV3PzF9Dkt4BBowt8E6G7';
+    fetch(webhookUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        username: 'RDK Tech Billing',
+        content: `<@1140892126402596905>`,
+        embeds: [{
+          title: `New Rage Pro (₹99) UPI Payment Submitted`,
+          color: 0x10b981,
+          fields: [
+            { name: 'Invoice ID', value: invoiceId, inline: true },
+            { name: 'UTR / Ref', value: `\`${utr}\``, inline: true },
+            { name: 'Amount', value: '₹99 INR (30 Days)', inline: true },
+            { name: 'Server', value: `${guildName} (\`${guildId}\`)`, inline: false },
+            { name: 'Verified Owner', value: `<@${ownerId}> (${ownerUsername})`, inline: false }
+          ],
+          footer: { text: 'Run r!premium grant <guildId> 30 after verifying UTR' },
+          timestamp: new Date().toISOString()
+        }]
+      })
+    }).catch(() => {});
+
+    res.json({ success: true, invoiceId, utr, status: 'submitted' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });
 

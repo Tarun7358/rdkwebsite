@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Briefcase, CheckCircle2, ArrowUpRight, Shield, Zap, X } from 'lucide-react';
-import { supabase } from '../../lib/supabase';
+import { Briefcase, CheckCircle2, ArrowUpRight, Shield, Zap, X, Copy } from 'lucide-react';
 import { useAppStore } from '../../store/appStore';
-
-const RAGE_PAY_URL = 'https://apirageoptimisercom.altvr.in/pay';
 
 interface OwnedGuild {
   id: string;
@@ -17,6 +14,15 @@ interface DiscordUser {
   global_name?: string;
 }
 
+interface CheckoutData {
+  invoiceId: string;
+  upiVpa: string;
+  upiName: string;
+  upiUri: string;
+  qrDataUrl: string;
+  amountInr: number;
+}
+
 export const Pricing: React.FC = () => {
   const addToast = useAppStore((s) => s.addToast);
   const [showProModal, setShowProModal] = useState(false);
@@ -25,6 +31,10 @@ export const Pricing: React.FC = () => {
   const [selectedGuildId, setSelectedGuildId] = useState('');
   const [confirmedOwner, setConfirmedOwner] = useState(false);
   const [clientEmail, setClientEmail] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [checkout, setCheckout] = useState<CheckoutData | null>(null);
+  const [utr, setUtr] = useState('');
+  const [utrSubmitted, setUtrSubmitted] = useState(false);
 
   useEffect(() => {
     const onMessage = (ev: MessageEvent) => {
@@ -58,24 +68,57 @@ export const Pricing: React.FC = () => {
       return;
     }
 
-    const invId = 'INV-RAGE-' + Math.floor(1000 + Math.random() * 9000);
-    await supabase.from('invoices').insert({
-      id: invId,
-      client: clientEmail.trim() || `${discordUser.username} (${discordUser.id})`,
-      project: `Rage Pro (30d) — ${selectedGuild.name}`,
-      amount: 99,
-      status: 'Unpaid',
-      items: [
-        'Rage Pro 30-Day Subscription',
-        `Owner: ${discordUser.username} (${discordUser.id})`,
-        `Server: ${selectedGuild.name} (${selectedGuild.id})`
-      ],
-      date: new Date().toISOString().slice(0, 10)
-    }).catch(() => {});
+    setIsLoading(true);
+    try {
+      const res = await fetch('/api/rage-pro/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          guildId: selectedGuild.id,
+          guildName: selectedGuild.name,
+          ownerId: discordUser.id,
+          ownerUsername: discordUser.global_name || discordUser.username,
+          email: clientEmail.trim()
+        })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Checkout creation failed');
+      setCheckout(data);
+      setUtrSubmitted(false);
+      setUtr('');
+    } catch (err: any) {
+      addToast(err.message || 'Failed to generate UPI QR', 'error');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-    window.open(RAGE_PAY_URL, '_blank', 'noopener,noreferrer');
-    addToast(`Owner verified! Invoice ${invId} logged — opening ₹99 UPI Checkout.`, 'success');
-    setShowProModal(false);
+  const handleSubmitUtr = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!checkout || !discordUser || !selectedGuild) return;
+    setIsLoading(true);
+    try {
+      const res = await fetch('/api/rage-pro/submit-utr', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          invoiceId: checkout.invoiceId,
+          utr: utr.trim(),
+          guildId: selectedGuild.id,
+          guildName: selectedGuild.name,
+          ownerId: discordUser.id,
+          ownerUsername: discordUser.global_name || discordUser.username
+        })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'UTR submission failed');
+      setUtrSubmitted(true);
+      addToast('UTR submitted! Owner notified on Discord for activation.', 'success');
+    } catch (err: any) {
+      addToast(err.message || 'Failed to submit UTR', 'error');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -148,7 +191,7 @@ export const Pricing: React.FC = () => {
                 ))}
               </div>
             </div>
-            <button onClick={() => setShowProModal(true)} className="btn btn-primary" style={{ justifyContent: 'center', width: '100%' }}>
+            <button onClick={() => { setCheckout(null); setShowProModal(true); }} className="btn btn-primary" style={{ justifyContent: 'center', width: '100%' }}>
               Upgrade to Rage Pro (₹99) <ArrowUpRight size={16} />
             </button>
           </div>
@@ -169,29 +212,31 @@ export const Pricing: React.FC = () => {
         </div>
       </div>
 
-      {/* Rage Pro Discord OAuth Verification & Checkout Modal */}
+      {/* Rage Pro Discord OAuth Verification & Inline UPI Checkout Modal */}
       {showProModal && (
         <div style={{ position: 'fixed', inset: 0, zIndex: 2000, background: 'rgba(0,0,0,0.65)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
-          <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '20px', maxWidth: '440px', width: '100%', padding: '1.75rem', position: 'relative' }}>
+          <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '20px', maxWidth: '450px', width: '100%', padding: '1.75rem', position: 'relative', maxHeight: '92vh', overflowY: 'auto' }}>
             <button onClick={() => setShowProModal(false)} style={{ position: 'absolute', top: '1rem', right: '1rem', background: 'none', border: 'none', color: 'var(--text3)', cursor: 'pointer' }}>
               <X size={18} />
             </button>
             <h3 style={{ fontWeight: 800, fontSize: '1.25rem', marginBottom: '0.4rem', color: 'var(--text)' }}>Upgrade to Rage Pro (₹99)</h3>
-            <p style={{ fontSize: '0.84rem', color: 'var(--text2)', marginBottom: '1.1rem' }}>
-              Verify your Discord account to auto-detect servers you own before paying.
-            </p>
 
             {!discordUser ? (
-              <button
-                type="button"
-                onClick={handleDiscordAuth}
-                className="btn btn-primary"
-                style={{ width: '100%', justifyContent: 'center', background: '#5865F2', borderColor: '#5865F2' }}
-              >
-                Connect Discord to Verify Server Owner
-              </button>
-            ) : (
-              <form onSubmit={handleOpenProCheckout} style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+              <>
+                <p style={{ fontSize: '0.84rem', color: 'var(--text2)', marginBottom: '1.1rem' }}>
+                  Verify your Discord account to auto-detect servers you own before paying.
+                </p>
+                <button
+                  type="button"
+                  onClick={handleDiscordAuth}
+                  className="btn btn-primary"
+                  style={{ width: '100%', justifyContent: 'center', background: '#5865F2', borderColor: '#5865F2' }}
+                >
+                  Connect Discord to Verify Server Owner
+                </button>
+              </>
+            ) : !checkout ? (
+              <form onSubmit={handleOpenProCheckout} style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem', marginTop: '0.5rem' }}>
                 <div style={{ padding: '0.75rem 0.9rem', background: 'var(--bg2)', border: '1px solid var(--border)', borderRadius: '10px', fontSize: '0.84rem' }}>
                   <div><strong>Discord Owner:</strong> {discordUser.global_name || discordUser.username} (<code>{discordUser.id}</code>)</div>
                 </div>
@@ -233,12 +278,60 @@ export const Pricing: React.FC = () => {
                       </span>
                     </label>
 
-                    <button type="submit" className="btn btn-primary" style={{ justifyContent: 'center', marginTop: '0.25rem' }}>
-                      Confirm &amp; Pay ₹99 (UPI Checkout) <ArrowUpRight size={16} />
+                    <button type="submit" disabled={isLoading} className="btn btn-primary" style={{ justifyContent: 'center', marginTop: '0.25rem' }}>
+                      {isLoading ? 'Generating UPI QR...' : 'Confirm & Pay ₹99 (UPI Checkout)'} <ArrowUpRight size={16} />
                     </button>
                   </>
                 )}
               </form>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', marginTop: '0.5rem' }}>
+                <div style={{ fontSize: '0.82rem', color: 'var(--text2)' }}>
+                  Invoice <strong>{checkout.invoiceId}</strong> • <strong>{selectedGuild?.name}</strong>
+                </div>
+
+                <div style={{ background: '#fff', padding: '0.9rem', borderRadius: '14px', textAlign: 'center' }}>
+                  <img src={checkout.qrDataUrl} alt="UPI QR" style={{ width: '210px', height: '210px', margin: '0 auto', display: 'block' }} />
+                  <div style={{ color: '#374151', fontSize: '0.78rem', fontWeight: 700, marginTop: '0.35rem' }}>
+                    Scan ₹99 with GPay • PhonePe • Paytm • BHIM
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.65rem 0.85rem', background: 'var(--bg2)', border: '1px solid var(--border)', borderRadius: '10px', fontSize: '0.82rem' }}>
+                  <span>UPI: <strong>{checkout.upiVpa}</strong></span>
+                  <button
+                    type="button"
+                    onClick={() => { navigator.clipboard.writeText(checkout.upiVpa); addToast('UPI ID copied!', 'info'); }}
+                    style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem', background: 'none', border: 'none', color: 'var(--primary)', cursor: 'pointer', fontWeight: 700 }}
+                  >
+                    <Copy size={13} /> Copy
+                  </button>
+                </div>
+
+                <a href={checkout.upiUri} className="btn btn-outline" style={{ justifyContent: 'center' }}>
+                  Open in UPI App (Mobile)
+                </a>
+
+                {utrSubmitted ? (
+                  <div style={{ padding: '0.85rem', borderRadius: '10px', background: 'rgba(16,185,129,0.12)', border: '1px solid #10b981', color: '#10b981', fontSize: '0.84rem', fontWeight: 600, textAlign: 'center' }}>
+                    UTR Submitted! Our team has been notified on Discord and will activate Rage Pro for <strong>{selectedGuild?.name}</strong> shortly.
+                  </div>
+                ) : (
+                  <form onSubmit={handleSubmitUtr} style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+                    <input
+                      type="text"
+                      required
+                      value={utr}
+                      onChange={(e) => setUtr(e.target.value)}
+                      placeholder="Enter 12-digit UPI UTR / Ref Number"
+                      style={{ padding: '0.75rem 0.9rem', background: 'var(--bg2)', border: '1px solid var(--border)', color: 'var(--text)', borderRadius: '10px', fontSize: '0.875rem' }}
+                    />
+                    <button type="submit" disabled={isLoading} className="btn btn-primary" style={{ justifyContent: 'center' }}>
+                      {isLoading ? 'Submitting...' : 'Submit UTR for Activation'}
+                    </button>
+                  </form>
+                )}
+              </div>
             )}
           </div>
         </div>
