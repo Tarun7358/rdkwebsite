@@ -135,44 +135,80 @@ export const AdminDashboard: React.FC = () => {
     }
   };
 
+  const setActiveTab = useDashboardStore((s) => s.setActiveTab);
+
   // Overview Tab
   if (activeTab === 'overview') {
+    const activeTickets = tickets.filter((t) => t.status === 'Active').length;
+    const pendingMeetings = meetings.filter((m) => m.status === 'Pending').length;
+    const totalRevenue = invoices.filter((i) => i.status === 'Paid').reduce((sum, item) => sum + Number(item.amount || 0), 0);
+
     return (
-      <div className="dash-overview">
+      <div className="dash-overview" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
         <div className="dash-card-grid">
-          <div className="dash-card">
-            <div className="dc-num">{projects.length}</div>
-            <div className="dc-label">Total projects</div>
+          <div className="dash-card" style={{ borderRadius: '16px', boxShadow: 'var(--shadow-sm)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div className="dc-num">{projects.length}</div>
+              <FolderKanban size={22} color="var(--primary)" />
+            </div>
+            <div className="dc-label">Total Projects</div>
           </div>
-          <div className="dash-card">
-            <div className="dc-num">{tickets.filter((t) => t.status === 'Active').length}</div>
-            <div className="dc-label">Open tickets</div>
+          <div className="dash-card" style={{ borderRadius: '16px', boxShadow: 'var(--shadow-sm)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div className="dc-num">{activeTickets}</div>
+              <Ticket size={22} color="var(--primary)" />
+            </div>
+            <div className="dc-label">Open Tickets</div>
           </div>
-          <div className="dash-card">
-            <div className="dc-num">${invoices.reduce((sum, item) => sum + item.amount, 0)}</div>
-            <div className="dc-label">Total invoicing</div>
+          <div className="dash-card" style={{ borderRadius: '16px', boxShadow: 'var(--shadow-sm)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div className="dc-num">₹{totalRevenue}</div>
+              <Receipt size={22} color="var(--primary)" />
+            </div>
+            <div className="dc-label">Collected Revenue</div>
           </div>
-          <div className="dash-card">
-            <div className="dc-num">{applications.length}</div>
-            <div className="dc-label">Job applications</div>
+          <div className="dash-card" style={{ borderRadius: '16px', boxShadow: 'var(--shadow-sm)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div className="dc-num">{pendingMeetings}</div>
+              <Calendar size={22} color="var(--primary)" />
+            </div>
+            <div className="dc-label">Pending Meetings</div>
           </div>
         </div>
 
-        <div style={{ marginTop: '2rem', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
-          <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '12px', padding: '1.5rem' }}>
-            <h4 style={{ fontWeight: 800, marginBottom: '1rem' }}>Active systems</h4>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', fontSize: '0.85rem' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span>Uptime</span>
-                <span style={{ color: 'green' }}>99.98%</span>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>
+          <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '16px', padding: '1.5rem', boxShadow: 'var(--shadow-sm)' }}>
+            <h4 style={{ fontWeight: 800, marginBottom: '1rem', fontSize: '1.05rem', color: 'var(--text)' }}>Pending Action Queue</h4>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', fontSize: '0.86rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.65rem 0.85rem', background: 'var(--bg2)', borderRadius: '10px' }}>
+                <span>Active Support Tickets ({activeTickets})</span>
+                <button onClick={() => setActiveTab('tickets')} className="btn btn-outline" style={{ padding: '0.28rem 0.7rem', fontSize: '0.75rem', borderColor: 'rgba(124,58,237,0.35)', color: 'var(--primary)' }}>Open Queue</button>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span>DB Connections</span>
-                <span>Active</span>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.65rem 0.85rem', background: 'var(--bg2)', borderRadius: '10px' }}>
+                <span>Pending Call Requests ({pendingMeetings})</span>
+                <button onClick={() => setActiveTab('meetings')} className="btn btn-outline" style={{ padding: '0.28rem 0.7rem', fontSize: '0.75rem', borderColor: 'rgba(124,58,237,0.35)', color: 'var(--primary)' }}>Review</button>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span>SSE Sync Engine</span>
-                <span style={{ color: 'var(--primary)' }}>Real-Time Active</span>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.65rem 0.85rem', background: 'var(--bg2)', borderRadius: '10px' }}>
+                <span>Job Applications ({applications.length})</span>
+                <button onClick={() => setActiveTab('careers')} className="btn btn-outline" style={{ padding: '0.28rem 0.7rem', fontSize: '0.75rem', borderColor: 'rgba(124,58,237,0.35)', color: 'var(--primary)' }}>View</button>
+              </div>
+            </div>
+          </div>
+
+          <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '16px', padding: '1.5rem', boxShadow: 'var(--shadow-sm)' }}>
+            <h4 style={{ fontWeight: 800, marginBottom: '1rem', fontSize: '1.05rem', color: 'var(--text)' }}>Infrastructure Status</h4>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', fontSize: '0.86rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.65rem 0.85rem', background: 'var(--bg2)', borderRadius: '10px' }}>
+                <span>SQLite + Express API</span>
+                <span style={{ color: '#10b981', fontWeight: 700 }}>Online</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.65rem 0.85rem', background: 'var(--bg2)', borderRadius: '10px' }}>
+                <span>Real-Time SSE Sync</span>
+                <span style={{ color: 'var(--primary)', fontWeight: 700 }}>Connected</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.65rem 0.85rem', background: 'var(--bg2)', borderRadius: '10px' }}>
+                <span>Razorpay &amp; SMTP Mailer</span>
+                <span style={{ color: '#10b981', fontWeight: 700 }}>Live Mode</span>
               </div>
             </div>
           </div>
@@ -184,74 +220,84 @@ export const AdminDashboard: React.FC = () => {
   // Projects Tab
   if (activeTab === 'projects') {
     return (
-      <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '12px', padding: '1.5rem' }}>
-        <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '1rem' }}>Manage all projects</h3>
-        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem', textAlign: 'left' }}>
-          <thead>
-            <tr style={{ borderBottom: '1px solid var(--border)', color: 'var(--text3)' }}>
-              <th style={{ padding: '0.75rem 0.5rem' }}>Project ID</th>
-              <th style={{ padding: '0.75rem 0.5rem' }}>Name</th>
-              <th style={{ padding: '0.75rem 0.5rem' }}>Client</th>
-              <th style={{ padding: '0.75rem 0.5rem' }}>Developer</th>
-              <th style={{ padding: '0.75rem 0.5rem' }}>Progress</th>
-              <th style={{ padding: '0.75rem 0.5rem' }}>Status</th>
-              <th style={{ padding: '0.75rem 0.5rem', textAlign: 'right' }}>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {projects.map((p) => {
-              const currentDev = devAssignment[p.id] ?? p.assignedTo;
-              const currentStatus = projectStatus[p.id] ?? p.status;
-              const currentProgress = projectProgress[p.id] ?? p.progress;
+      <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '16px', padding: '1.5rem', boxShadow: 'var(--shadow-sm)', overflowX: 'auto' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '1.15rem' }}>
+          <FolderKanban size={20} color="var(--primary)" />
+          <h3 style={{ fontSize: '1.2rem', fontWeight: 800, margin: 0 }}>Manage All Projects</h3>
+        </div>
+        {projects.length === 0 ? (
+          <div style={{ padding: '2.5rem', textAlign: 'center', color: 'var(--text2)', background: 'var(--bg2)', borderRadius: '12px' }}>
+            No client projects yet.
+          </div>
+        ) : (
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem', textAlign: 'left' }}>
+            <thead>
+              <tr style={{ borderBottom: '1px solid var(--border)', color: 'var(--text2)' }}>
+                <th style={{ padding: '0.75rem 0.5rem' }}>Project ID</th>
+                <th style={{ padding: '0.75rem 0.5rem' }}>Name</th>
+                <th style={{ padding: '0.75rem 0.5rem' }}>Client</th>
+                <th style={{ padding: '0.75rem 0.5rem' }}>Developer</th>
+                <th style={{ padding: '0.75rem 0.5rem' }}>Progress</th>
+                <th style={{ padding: '0.75rem 0.5rem' }}>Status</th>
+                <th style={{ padding: '0.75rem 0.5rem', textAlign: 'right' }}>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {projects.map((p) => {
+                const currentDev = devAssignment[p.id] ?? p.assignedTo;
+                const currentStatus = projectStatus[p.id] ?? p.status;
+                const currentProgress = projectProgress[p.id] ?? p.progress;
 
-              return (
-                <tr key={p.id} style={{ borderBottom: '1px solid var(--border)' }}>
-                  <td style={{ padding: '1rem 0.5rem', fontWeight: 600 }}>{p.id}</td>
-                  <td style={{ padding: '1rem 0.5rem', fontWeight: 700 }}>{p.name}</td>
-                  <td style={{ padding: '1rem 0.5rem' }}>{p.client}</td>
-                  <td style={{ padding: '1rem 0.5rem' }}>
-                    <input
-                      type="text"
-                      value={currentDev}
-                      onChange={(e) => setDevAssignment({ ...devAssignment, [p.id]: e.target.value })}
-                      style={{ padding: '0.25rem 0.5rem', background: 'var(--bg2)', color: 'var(--text)', border: '1px solid var(--border)', borderRadius: '4px', fontSize: '0.8rem', width: '120px' }}
-                    />
-                  </td>
-                  <td style={{ padding: '1rem 0.5rem' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                return (
+                  <tr key={p.id} style={{ borderBottom: '1px solid var(--border)' }}>
+                    <td style={{ padding: '1rem 0.5rem', fontWeight: 700, fontFamily: 'var(--font-mono)', color: 'var(--primary)' }}>{p.id}</td>
+                    <td style={{ padding: '1rem 0.5rem', fontWeight: 700 }}>{p.name}</td>
+                    <td style={{ padding: '1rem 0.5rem', color: 'var(--text2)' }}>{p.client}</td>
+                    <td style={{ padding: '1rem 0.5rem' }}>
                       <input
-                        type="range"
-                        min="0"
-                        max="100"
-                        value={currentProgress}
-                        onChange={(e) => setProjectProgress({ ...projectProgress, [p.id]: parseInt(e.target.value) })}
-                        style={{ width: '80px' }}
+                        type="text"
+                        value={currentDev}
+                        onChange={(e) => setDevAssignment({ ...devAssignment, [p.id]: e.target.value })}
+                        placeholder="Assign dev email"
+                        style={{ padding: '0.35rem 0.6rem', background: 'var(--bg2)', color: 'var(--text)', border: '1px solid var(--border)', borderRadius: '8px', fontSize: '0.8rem', width: '140px' }}
                       />
-                      <span>{currentProgress}%</span>
-                    </div>
-                  </td>
-                  <td style={{ padding: '1rem 0.5rem' }}>
-                    <select
-                      value={currentStatus}
-                      onChange={(e) => setProjectStatus({ ...projectStatus, [p.id]: e.target.value })}
-                      style={{ padding: '0.25rem 0.5rem', background: 'var(--bg2)', color: 'var(--text)', border: '1px solid var(--border)', borderRadius: '4px', fontSize: '0.8rem' }}
-                    >
-                      <option>Proposed</option>
-                      <option>In progress</option>
-                      <option>Review</option>
-                      <option>Done</option>
-                    </select>
-                  </td>
-                  <td style={{ padding: '1rem 0.5rem', textAlign: 'right' }}>
-                    <button onClick={() => handleUpdateProject(p.id)} className="btn btn-primary" style={{ padding: '0.35rem 0.75rem', fontSize: '0.75rem' }}>
-                      Save changes
-                    </button>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+                    </td>
+                    <td style={{ padding: '1rem 0.5rem' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <input
+                          type="range"
+                          min="0"
+                          max="100"
+                          value={currentProgress}
+                          onChange={(e) => setProjectProgress({ ...projectProgress, [p.id]: parseInt(e.target.value) })}
+                          style={{ width: '80px', accentColor: 'var(--primary)' }}
+                        />
+                        <span style={{ fontWeight: 700, fontSize: '0.8rem' }}>{currentProgress}%</span>
+                      </div>
+                    </td>
+                    <td style={{ padding: '1rem 0.5rem' }}>
+                      <select
+                        value={currentStatus}
+                        onChange={(e) => setProjectStatus({ ...projectStatus, [p.id]: e.target.value })}
+                        style={{ padding: '0.35rem 0.6rem', background: 'var(--bg2)', color: 'var(--text)', border: '1px solid var(--border)', borderRadius: '8px', fontSize: '0.8rem' }}
+                      >
+                        <option>Proposed</option>
+                        <option>In progress</option>
+                        <option>Review</option>
+                        <option>Done</option>
+                      </select>
+                    </td>
+                    <td style={{ padding: '1rem 0.5rem', textAlign: 'right' }}>
+                      <button onClick={() => handleUpdateProject(p.id)} className="btn btn-primary" style={{ padding: '0.4rem 0.85rem', fontSize: '0.76rem' }}>
+                        Save
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        )}
       </div>
     );
   }
@@ -451,55 +497,82 @@ export const AdminDashboard: React.FC = () => {
 
   // Invoices Tab
   if (activeTab === 'invoices') {
+    const paidTotal = invoices.filter((i) => i.status === 'Paid').reduce((s, i) => s + Number(i.amount || 0), 0);
+    const unpaidTotal = invoices.filter((i) => i.status !== 'Paid').reduce((s, i) => s + Number(i.amount || 0), 0);
+
     return (
-      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '2rem' }}>
-        <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '12px', padding: '1.5rem' }}>
-          <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '1rem' }}>Invoices Ledger</h3>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem', textAlign: 'left' }}>
-            <thead>
-              <tr style={{ borderBottom: '1px solid var(--border)', color: 'var(--text3)' }}>
-                <th style={{ padding: '0.75rem 0.5rem' }}>Invoice ID</th>
-                <th style={{ padding: '0.75rem 0.5rem' }}>Client</th>
-                <th style={{ padding: '0.75rem 0.5rem' }}>Amount</th>
-                <th style={{ padding: '0.75rem 0.5rem' }}>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {invoices.map((inv) => (
-                <tr key={inv.id} style={{ borderBottom: '1px solid var(--border)' }}>
-                  <td style={{ padding: '1rem 0.5rem', fontWeight: 700 }}>{inv.id}</td>
-                  <td style={{ padding: '1rem 0.5rem' }}>{inv.client}</td>
-                  <td style={{ padding: '1rem 0.5rem', fontWeight: 600 }}>${inv.amount}</td>
-                  <td style={{ padding: '1rem 0.5rem' }}>
-                    <Badge status={inv.status} />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))', gap: '1rem' }}>
+          <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '14px', padding: '1.15rem 1.25rem', boxShadow: 'var(--shadow-sm)' }}>
+            <div style={{ fontSize: '0.78rem', color: 'var(--text2)', fontWeight: 600 }}>Total Invoices</div>
+            <div style={{ fontSize: '1.55rem', fontWeight: 800, color: 'var(--text)', marginTop: '0.25rem' }}>{invoices.length}</div>
+          </div>
+          <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '14px', padding: '1.15rem 1.25rem', boxShadow: 'var(--shadow-sm)' }}>
+            <div style={{ fontSize: '0.78rem', color: 'var(--text2)', fontWeight: 600 }}>Paid Revenue</div>
+            <div style={{ fontSize: '1.55rem', fontWeight: 800, color: '#10b981', marginTop: '0.25rem' }}>₹{paidTotal}</div>
+          </div>
+          <div style={{ background: 'var(--card)', border: '1px solid rgba(124, 58, 237, 0.25)', borderRadius: '14px', padding: '1.15rem 1.25rem', boxShadow: 'var(--shadow-sm)' }}>
+            <div style={{ fontSize: '0.78rem', color: 'var(--primary)', fontWeight: 700 }}>Pending Balance</div>
+            <div style={{ fontSize: '1.55rem', fontWeight: 800, color: 'var(--primary)', marginTop: '0.25rem' }}>₹{unpaidTotal}</div>
+          </div>
         </div>
 
-        <div>
-          <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '1rem' }}>Generate invoice</h3>
-          <form onSubmit={handleCreateInvoice} className="contact-form" style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '12px', padding: '1.2rem' }}>
-            <div className="form-group">
-              <label>Client email</label>
-              <input type="email" value={invForm.client} onChange={(e) => setInvForm({ ...invForm, client: e.target.value })} required />
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem', alignItems: 'start' }}>
+          <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '16px', padding: '1.5rem', boxShadow: 'var(--shadow-sm)', overflowX: 'auto' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '1rem' }}>
+              <Receipt size={20} color="var(--primary)" />
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 800, margin: 0 }}>Invoices Ledger</h3>
             </div>
-            <div className="form-group">
-              <label>Project name</label>
-              <input type="text" value={invForm.project} onChange={(e) => setInvForm({ ...invForm, project: e.target.value })} required />
-            </div>
-            <div className="form-group">
-              <label>Amount ($)</label>
-              <input type="number" value={invForm.amount} onChange={(e) => setInvForm({ ...invForm, amount: e.target.value })} required />
-            </div>
-            <div className="form-group">
-              <label>Line Items (comma separated)</label>
-              <textarea placeholder="e.g. Design mockups, API Integration" value={invForm.items} onChange={(e) => setInvForm({ ...invForm, items: e.target.value })} required />
-            </div>
-            <button type="submit" className="btn btn-primary" style={{ width: '100%', marginTop: '0.5rem' }}>Dispatch Invoice</button>
-          </form>
+            {invoices.length === 0 ? (
+              <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--text2)', background: 'var(--bg2)', borderRadius: '12px' }}>No invoices yet.</div>
+            ) : (
+              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem', textAlign: 'left' }}>
+                <thead>
+                  <tr style={{ borderBottom: '1px solid var(--border)', color: 'var(--text2)' }}>
+                    <th style={{ padding: '0.75rem 0.5rem' }}>Invoice ID</th>
+                    <th style={{ padding: '0.75rem 0.5rem' }}>Client</th>
+                    <th style={{ padding: '0.75rem 0.5rem' }}>Amount</th>
+                    <th style={{ padding: '0.75rem 0.5rem' }}>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {invoices.map((inv) => (
+                    <tr key={inv.id} style={{ borderBottom: '1px solid var(--border)' }}>
+                      <td style={{ padding: '0.9rem 0.5rem', fontWeight: 700, fontFamily: 'var(--font-mono)', color: 'var(--primary)' }}>{inv.id}</td>
+                      <td style={{ padding: '0.9rem 0.5rem' }}>{inv.client}</td>
+                      <td style={{ padding: '0.9rem 0.5rem', fontWeight: 700 }}>₹{inv.amount}</td>
+                      <td style={{ padding: '0.9rem 0.5rem' }}>
+                        <Badge status={inv.status} />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </div>
+
+          <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '16px', padding: '1.5rem', boxShadow: 'var(--shadow-sm)' }}>
+            <h3 style={{ fontSize: '1.15rem', fontWeight: 800, marginBottom: '1rem' }}>Dispatch Invoice</h3>
+            <form onSubmit={handleCreateInvoice} className="contact-form">
+              <div className="form-group">
+                <label>Client Email</label>
+                <input type="email" placeholder="client@company.com" value={invForm.client} onChange={(e) => setInvForm({ ...invForm, client: e.target.value })} required />
+              </div>
+              <div className="form-group">
+                <label>Project Name</label>
+                <input type="text" placeholder="e.g. Custom Web Portal" value={invForm.project} onChange={(e) => setInvForm({ ...invForm, project: e.target.value })} required />
+              </div>
+              <div className="form-group">
+                <label>Amount (₹ INR)</label>
+                <input type="number" placeholder="99" value={invForm.amount} onChange={(e) => setInvForm({ ...invForm, amount: e.target.value })} required />
+              </div>
+              <div className="form-group">
+                <label>Line Items (comma separated)</label>
+                <textarea placeholder="e.g. UI Design, API Integration" value={invForm.items} onChange={(e) => setInvForm({ ...invForm, items: e.target.value })} required />
+              </div>
+              <button type="submit" className="btn btn-primary" style={{ width: '100%', justifyContent: 'center', marginTop: '0.5rem' }}>Dispatch Invoice</button>
+            </form>
+          </div>
         </div>
       </div>
     );
@@ -508,18 +581,21 @@ export const AdminDashboard: React.FC = () => {
   // Careers (Applications) Tab
   if (activeTab === 'careers') {
     return (
-      <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '12px', padding: '1.5rem' }}>
-        <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '1rem' }}>Review Job Applicants</h3>
+      <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '16px', padding: '1.5rem', boxShadow: 'var(--shadow-sm)', overflowX: 'auto' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '1.15rem' }}>
+          <Users size={20} color="var(--primary)" />
+          <h3 style={{ fontSize: '1.2rem', fontWeight: 800, margin: 0 }}>Review Job Applicants</h3>
+        </div>
         {applications.length === 0 ? (
-          <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--text3)' }}>No applicants yet.</div>
+          <div style={{ padding: '2.5rem', textAlign: 'center', color: 'var(--text2)', background: 'var(--bg2)', borderRadius: '12px' }}>No applicants yet.</div>
         ) : (
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem', textAlign: 'left' }}>
             <thead>
-              <tr style={{ borderBottom: '1px solid var(--border)', color: 'var(--text3)' }}>
+              <tr style={{ borderBottom: '1px solid var(--border)', color: 'var(--text2)' }}>
                 <th style={{ padding: '0.75rem 0.5rem' }}>Candidate</th>
                 <th style={{ padding: '0.75rem 0.5rem' }}>Email</th>
-                <th style={{ padding: '0.75rem 0.5rem' }}>Role applied</th>
-                <th style={{ padding: '0.75rem 0.5rem' }}>Resume</th>
+                <th style={{ padding: '0.75rem 0.5rem' }}>Role Applied</th>
+                <th style={{ padding: '0.75rem 0.5rem' }}>Portfolio / Resume</th>
                 <th style={{ padding: '0.75rem 0.5rem' }}>Status</th>
                 <th style={{ padding: '0.75rem 0.5rem', textAlign: 'right' }}>Actions</th>
               </tr>
@@ -528,16 +604,16 @@ export const AdminDashboard: React.FC = () => {
               {applications.map((app) => (
                 <tr key={app.id} style={{ borderBottom: '1px solid var(--border)' }}>
                   <td style={{ padding: '1rem 0.5rem', fontWeight: 700 }}>{app.name}</td>
-                  <td style={{ padding: '1rem 0.5rem' }}>{app.email}</td>
+                  <td style={{ padding: '1rem 0.5rem', color: 'var(--text2)' }}>{app.email}</td>
                   <td style={{ padding: '1rem 0.5rem' }}>{app.position}</td>
-                  <td style={{ padding: '1rem 0.5rem', color: 'var(--primary)' }}>📄 {app.resume}</td>
+                  <td style={{ padding: '1rem 0.5rem', color: 'var(--primary)', fontWeight: 600 }}>{app.resume}</td>
                   <td style={{ padding: '1rem 0.5rem' }}>
                     <Badge status={app.status} />
                   </td>
-                  <td style={{ padding: '1rem 0.5rem', textAlign: 'right', display: 'flex', gap: '0.25rem', justifyContent: 'flex-end' }}>
-                    <button onClick={() => handleUpdateAppStatus(app.id, 'Interviewing')} className="btn btn-outline" style={{ padding: '0.25rem 0.5rem', fontSize: '0.7rem' }}>Interview</button>
-                    <button onClick={() => handleUpdateAppStatus(app.id, 'Hired')} className="btn btn-primary" style={{ padding: '0.25rem 0.5rem', fontSize: '0.7rem', background: '#10B981', border: 'none' }}>Hire</button>
-                    <button onClick={() => handleUpdateAppStatus(app.id, 'Rejected')} className="btn btn-ghost" style={{ padding: '0.25rem 0.5rem', fontSize: '0.7rem', color: '#EF4444' }}>Reject</button>
+                  <td style={{ padding: '1rem 0.5rem', textAlign: 'right', display: 'flex', gap: '0.35rem', justifyContent: 'flex-end' }}>
+                    <button onClick={() => handleUpdateAppStatus(app.id, 'Interviewing')} className="btn btn-outline" style={{ padding: '0.3rem 0.65rem', fontSize: '0.73rem', borderColor: 'rgba(124,58,237,0.35)', color: 'var(--primary)' }}>Interview</button>
+                    <button onClick={() => handleUpdateAppStatus(app.id, 'Hired')} className="btn btn-primary" style={{ padding: '0.3rem 0.65rem', fontSize: '0.73rem', background: '#10B981', border: 'none' }}>Hire</button>
+                    <button onClick={() => handleUpdateAppStatus(app.id, 'Rejected')} className="btn btn-ghost" style={{ padding: '0.3rem 0.65rem', fontSize: '0.73rem', color: '#EF4444' }}>Reject</button>
                   </td>
                 </tr>
               ))}
@@ -625,50 +701,50 @@ export const AdminDashboard: React.FC = () => {
   // CMS Tab
   if (activeTab === 'cms') {
     return (
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1.5rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem' }}>
         {/* Services CMS */}
-        <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '12px', padding: '1.5rem' }}>
-          <h4 style={{ fontWeight: 800, marginBottom: '0.5rem' }}>Services Configuration</h4>
-          <p style={{ fontSize: '0.75rem', color: 'var(--text3)', marginBottom: '1.5rem' }}>Add or delete core services cards on landing page.</p>
-          <div style={{ maxHeight: '300px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '1.5rem' }}>
+        <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '16px', padding: '1.5rem', boxShadow: 'var(--shadow-sm)' }}>
+          <h4 style={{ fontWeight: 800, marginBottom: '0.35rem', color: 'var(--text)' }}>Services Configuration</h4>
+          <p style={{ fontSize: '0.78rem', color: 'var(--text2)', marginBottom: '1.25rem' }}>Manage core service cards displayed on the landing page.</p>
+          <div style={{ maxHeight: '300px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '1.25rem' }}>
             {services.map((s) => (
-              <div key={s.id} style={{ display: 'flex', justifyContent: 'space-between', background: 'var(--bg2)', padding: '0.5rem', borderRadius: '6px', fontSize: '0.8rem' }}>
-                <span>{s.icon} {s.name}</span>
-                <span style={{ fontSize: '0.7rem', color: 'var(--text3)' }}>{s.delivery}</span>
+              <div key={s.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--bg2)', padding: '0.6rem 0.75rem', borderRadius: '10px', fontSize: '0.82rem' }}>
+                <span style={{ fontWeight: 600 }}>{s.icon} {s.name}</span>
+                <span style={{ fontSize: '0.72rem', color: 'var(--primary)', fontWeight: 700 }}>{s.delivery}</span>
               </div>
             ))}
           </div>
-          <button onClick={() => handleSaveCMS('services', services)} className="btn btn-primary" style={{ width: '100%' }}>Publish Services</button>
+          <button onClick={() => handleSaveCMS('services', services)} className="btn btn-primary" style={{ width: '100%', justifyContent: 'center' }}>Publish Services</button>
         </div>
 
         {/* Portfolio CMS */}
-        <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '12px', padding: '1.5rem' }}>
-          <h4 style={{ fontWeight: 800, marginBottom: '0.5rem' }}>Portfolio Case Studies</h4>
-          <p style={{ fontSize: '0.75rem', color: 'var(--text3)', marginBottom: '1.5rem' }}>Manage projects displayed in the public showcase.</p>
-          <div style={{ maxHeight: '300px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '1.5rem' }}>
+        <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '16px', padding: '1.5rem', boxShadow: 'var(--shadow-sm)' }}>
+          <h4 style={{ fontWeight: 800, marginBottom: '0.35rem', color: 'var(--text)' }}>Portfolio Case Studies</h4>
+          <p style={{ fontSize: '0.78rem', color: 'var(--text2)', marginBottom: '1.25rem' }}>Manage projects displayed in the public showcase.</p>
+          <div style={{ maxHeight: '300px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '1.25rem' }}>
             {portfolio.map((p) => (
-              <div key={p.id} style={{ display: 'flex', justifyContent: 'space-between', background: 'var(--bg2)', padding: '0.5rem', borderRadius: '6px', fontSize: '0.8rem' }}>
-                <span>{p.icon} {p.title}</span>
+              <div key={p.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--bg2)', padding: '0.6rem 0.75rem', borderRadius: '10px', fontSize: '0.82rem' }}>
+                <span style={{ fontWeight: 600 }}>{p.icon} {p.title}</span>
                 <Badge status={p.cat} />
               </div>
             ))}
           </div>
-          <button onClick={() => handleSaveCMS('portfolio', portfolio)} className="btn btn-primary" style={{ width: '100%' }}>Publish Portfolio</button>
+          <button onClick={() => handleSaveCMS('portfolio', portfolio)} className="btn btn-primary" style={{ width: '100%', justifyContent: 'center' }}>Publish Portfolio</button>
         </div>
 
         {/* Careers CMS */}
-        <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '12px', padding: '1.5rem' }}>
-          <h4 style={{ fontWeight: 800, marginBottom: '0.5rem' }}>Jobs Configuration</h4>
-          <p style={{ fontSize: '0.75rem', color: 'var(--text3)', marginBottom: '1.5rem' }}>Edit live remote job descriptions.</p>
-          <div style={{ maxHeight: '300px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '1.5rem' }}>
+        <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '16px', padding: '1.5rem', boxShadow: 'var(--shadow-sm)' }}>
+          <h4 style={{ fontWeight: 800, marginBottom: '0.35rem', color: 'var(--text)' }}>Jobs Configuration</h4>
+          <p style={{ fontSize: '0.78rem', color: 'var(--text2)', marginBottom: '1.25rem' }}>Manage active open positions on the Careers section.</p>
+          <div style={{ maxHeight: '300px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '1.25rem' }}>
             {careers.map((c) => (
-              <div key={c.id} style={{ display: 'flex', justifyContent: 'space-between', background: 'var(--bg2)', padding: '0.5rem', borderRadius: '6px', fontSize: '0.8rem' }}>
-                <span>{c.title}</span>
-                <span style={{ fontSize: '0.75rem', fontWeight: 600 }}>{c.salary}</span>
+              <div key={c.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--bg2)', padding: '0.6rem 0.75rem', borderRadius: '10px', fontSize: '0.82rem' }}>
+                <span style={{ fontWeight: 600 }}>{c.title}</span>
+                <span style={{ fontSize: '0.74rem', fontWeight: 700, color: 'var(--primary)' }}>{c.salary}</span>
               </div>
             ))}
           </div>
-          <button onClick={() => handleSaveCMS('careers', careers)} className="btn btn-primary" style={{ width: '100%' }}>Publish Careers</button>
+          <button onClick={() => handleSaveCMS('careers', careers)} className="btn btn-primary" style={{ width: '100%', justifyContent: 'center' }}>Publish Careers</button>
         </div>
       </div>
     );
