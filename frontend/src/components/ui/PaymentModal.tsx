@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Copy, CheckCircle2 } from 'lucide-react';
+import { CreditCard, CheckCircle2, ShieldCheck } from 'lucide-react';
 import { useDashboardStore } from '../../store/dashboardStore';
 import { useAppStore } from '../../store/appStore';
+
+declare global {
+  interface Window {
+    Razorpay: any;
+  }
+}
 
 export const PaymentModal: React.FC = () => {
   const isOpen = useDashboardStore((s) => s.paymentModalOpen);
@@ -12,57 +18,86 @@ export const PaymentModal: React.FC = () => {
 
   const invoice = invoices.find((i) => i.id === invoiceId);
 
-  const [qrDataUrl, setQrDataUrl] = useState('');
-  const [upiVpa, setUpiVpa] = useState('');
-  const [upiUri, setUpiUri] = useState('');
-  const [utr, setUtr] = useState('');
-  const [submitted, setSubmitted] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [paid, setPaid] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
-    if (!isOpen || !invoice) return;
-    setSubmitted(false);
-    setUtr('');
-    fetch('/api/invoices/upi-checkout', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ invoiceId: invoice.id, amount: invoice.amount, project: invoice.project })
-    })
-      .then((r) => r.json())
-      .then((d) => {
-        if (d.qrDataUrl) {
-          setQrDataUrl(d.qrDataUrl);
-          setUpiVpa(d.upiVpa);
-          setUpiUri(d.upiUri);
-        }
-      })
-      .catch(() => {});
-  }, [isOpen, invoice]);
+    if (isOpen) {
+      setPaid(false);
+      setIsProcessing(false);
+    }
+  }, [isOpen, invoiceId]);
 
   if (!isOpen || !invoice) return null;
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!utr.trim()) return;
-    setIsSubmitting(true);
+  const handleRazorpayCheckout = async () => {
+    if (!window.Razorpay) {
+      addToast('Razorpay SDK failed to load. Please refresh and try again.', 'error');
+      return;
+    }
+    setIsProcessing(true);
     try {
-      const res = await fetch('/api/invoices/submit-utr', {
+      const orderRes = await fetch('/api/payments/razorpay/create-order', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ invoiceId: invoice.id, utr: utr.trim() })
+        body: JSON.stringify({
+          invoiceId: invoice.id,
+          amount: invoice.amount,
+          currency: 'INR',
+        }),
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'UTR submission failed');
-      const updatedInvoices = invoices.map((inv) =>
-        inv.id === invoice.id ? { ...inv, status: `Pending Verification (UTR: ${utr.trim()})` } : inv
-      );
-      useAppStore.getState().setState({ invoices: updatedInvoices });
-      setSubmitted(true);
-      addToast(`UTR submitted for Invoice ${invoice.id}!`, 'success');
+      const order = await orderRes.json();
+      if (!orderRes.ok || !order.orderId) {
+        throw new Error(order.error || 'Could not initialize Razorpay order');
+      }
+
+      const rzp = new window.Razorpay({
+        key: order.keyId,
+        amount: order.amount,
+        currency: order.currency,
+        name: 'RDK Tech',
+        description: `${invoice.id} — ${invoice.project}`,
+        order_id: order.orderId,
+        prefill: {
+          email: invoice.client && invoice.client.includes('@') ? invoice.client : undefined,
+        },
+        theme: { color: '#7c3aed' },
+        modal: {
+          ondismiss: () => setIsProcessing(false),
+        },
+        handler: async (response: any) => {
+          try {
+            const verifyRes = await fetch('/api/payments/razorpay/verify', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                invoiceId: invoice.id,
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+              }),
+            });
+            const verifyData = await verifyRes.json();
+            if (!verifyRes.ok || !verifyData.success) {
+              throw new Error(verifyData.error || 'Payment verification failed');
+            }
+            const updatedInvoices = invoices.map((inv) =>
+              inv.id === invoice.id ? { ...inv, status: 'Paid' } : inv
+            );
+            useAppStore.getState().setState({ invoices: updatedInvoices });
+            setPaid(true);
+            addToast(`Invoice ${invoice.id} paid via Razorpay!`, 'success');
+          } catch (err: any) {
+            addToast(err.message || 'Verification failed', 'error');
+          } finally {
+            setIsProcessing(false);
+          }
+        },
+      });
+      rzp.open();
     } catch (err: any) {
-      addToast(err.message || 'Failed to submit UTR', 'error');
-    } finally {
-      setIsSubmitting(false);
+      addToast(err.message || 'Failed to launch Razorpay checkout', 'error');
+      setIsProcessing(false);
     }
   };
 
@@ -72,10 +107,17 @@ export const PaymentModal: React.FC = () => {
         <button className="modal-close" onClick={close}>
           &times;
         </button>
-        <h3 style={{ marginBottom: '0.35rem' }}>Pay Invoice via UPI</h3>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.35rem' }}>
+          <CreditCard size={20} color="#7c3aed" />
+          <h3 style={{ margin: 0 }}>Pay Invoice via Razorpay</h3>
+        </div>
+        <p style={{ fontSize: '0.82rem', color: 'var(--text2)', margin: '0 0 0.85rem' }}>
+          Instant checkout with UPI, Cards, Netbanking &amp; Wallets.
+        </p>
+
         <div
           style={{
-            margin: '0.85rem 0 1rem',
+            margin: '0 0 1.15rem',
             padding: '0.9rem',
             background: 'var(--bg2)',
             borderRadius: '10px',
@@ -99,7 +141,7 @@ export const PaymentModal: React.FC = () => {
               paddingTop: '0.5rem',
               borderTop: '1px solid var(--border)',
               fontWeight: 800,
-              color: 'var(--primary)'
+              color: 'var(--primary)',
             }}
           >
             <span>Amount Due:</span>
@@ -107,44 +149,25 @@ export const PaymentModal: React.FC = () => {
           </div>
         </div>
 
-        {qrDataUrl && (
-          <div style={{ background: '#ffffff', padding: '0.75rem', borderRadius: '12px', textAlign: 'center', marginBottom: '0.85rem', border: '1px solid var(--border)' }}>
-            <img src={qrDataUrl} alt="UPI QR" style={{ width: '190px', height: '190px', margin: '0 auto', display: 'block' }} />
-            <div style={{ fontSize: '0.76rem', color: '#4b5563', fontWeight: 600, marginTop: '0.3rem' }}>
-              Scan with GPay • PhonePe • Paytm • BHIM
-            </div>
-          </div>
-        )}
-
-        {upiVpa && (
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.6rem 0.85rem', background: 'var(--bg2)', borderRadius: '8px', border: '1px solid var(--border)', fontSize: '0.8rem', marginBottom: '0.85rem' }}>
-            <span>UPI ID: <strong>{upiVpa}</strong></span>
-            <button type="button" onClick={() => { navigator.clipboard.writeText(upiVpa); addToast('UPI ID copied!', 'info'); }} style={{ background: 'none', border: 'none', color: 'var(--primary)', fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
-              <Copy size={13} /> Copy
-            </button>
-          </div>
-        )}
-
-        {upiUri && (
-          <a href={upiUri} className="btn btn-outline" style={{ width: '100%', justifyContent: 'center', marginBottom: '0.85rem', fontSize: '0.85rem' }}>
-            Open in UPI App (Mobile)
-          </a>
-        )}
-
-        {submitted ? (
-          <div style={{ padding: '0.9rem', borderRadius: '10px', background: 'rgba(16,185,129,0.12)', border: '1px solid #10b981', color: '#10b981', fontSize: '0.84rem', fontWeight: 600, textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem' }}>
-            <CheckCircle2 size={16} /> UTR submitted! Verification in progress.
+        {paid ? (
+          <div style={{ padding: '1rem', borderRadius: '12px', background: 'rgba(16,185,129,0.12)', border: '1px solid #10b981', color: '#10b981', fontSize: '0.88rem', fontWeight: 600, textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.45rem' }}>
+            <CheckCircle2 size={18} /> Payment confirmed! Invoice marked as Paid.
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="contact-form">
-            <div className="form-group">
-              <label>12-Digit UPI UTR / Reference Number</label>
-              <input type="text" placeholder="e.g. 432918273645" value={utr} onChange={(e) => setUtr(e.target.value)} required />
-            </div>
-            <button type="submit" disabled={isSubmitting} className="btn btn-primary" style={{ width: '100%', padding: '0.75rem', fontWeight: 700, justifyContent: 'center' }}>
-              {isSubmitting ? 'Submitting...' : 'Submit UTR for Verification'}
+          <>
+            <button
+              type="button"
+              onClick={handleRazorpayCheckout}
+              disabled={isProcessing}
+              className="btn btn-primary"
+              style={{ width: '100%', padding: '0.8rem', fontWeight: 700, justifyContent: 'center' }}
+            >
+              {isProcessing ? 'Opening Razorpay...' : `Pay ₹${invoice.amount} with Razorpay`}
             </button>
-          </form>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', marginTop: '0.75rem', fontSize: '0.75rem', color: 'var(--text3)' }}>
+              <ShieldCheck size={14} color="#7c3aed" /> Secured by Razorpay 256-bit encryption
+            </div>
+          </>
         )}
       </div>
     </div>

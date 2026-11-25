@@ -321,6 +321,108 @@ async function sendRdkEmail(to, subject, html) {
   }
 }
 
+const RAZORPAY_KEY_ID = (process.env.RAZORPAY_KEY_ID || 'rzp_test_U4Q1BQlFLpbrzg').trim();
+const RAZORPAY_KEY_SECRET = (process.env.RAZORPAY_KEY_SECRET || 'tFf732JTEvY1CCPZujZ9s7p5').trim();
+
+async function sendDiscordWebhook(body) {
+  if (process.env.ENABLE_DISCORD_WEBHOOK !== 'true') return;
+  const webhookUrl = process.env.DISCORD_TICKET_WEBHOOK_URL;
+  if (!webhookUrl) return;
+  try {
+    await fetch(webhookUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+  } catch {}
+}
+
+// ── Razorpay Order Creation & Signature Verification ──────────────────────────
+app.post('/api/payments/razorpay/create-order', async (req, res) => {
+  try {
+    const invoiceId = String(req.body?.invoiceId || '').trim();
+    let amount = Number(req.body?.amount || 0);
+    const currency = String(req.body?.currency || 'INR').trim().toUpperCase();
+    if ((!amount || amount <= 0) && invoiceId) {
+      const inv = await get('SELECT * FROM invoices WHERE id = ?', [invoiceId]);
+      if (inv) amount = Number(inv.amount || 0);
+    }
+    if (!amount || amount <= 0) {
+      return res.status(400).json({ error: 'Valid payment amount is required.' });
+    }
+    const auth = Buffer.from(`${RAZORPAY_KEY_ID}:${RAZORPAY_KEY_SECRET}`).toString('base64');
+    const rzpRes = await fetch('https://api.razorpay.com/v1/orders', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Basic ${auth}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        amount: Math.round(amount * 100),
+        currency,
+        receipt: (invoiceId || `rdk_${Date.now()}`).slice(0, 40),
+        notes: req.body?.notes || (invoiceId ? { invoiceId } : {})
+      })
+    });
+    const order = await rzpRes.json();
+    if (!rzpRes.ok || !order.id) {
+      return res.status(rzpRes.status || 500).json({ error: order?.error?.description || 'Failed to create Razorpay order.' });
+    }
+    res.json({ orderId: order.id, amount: order.amount, currency: order.currency, keyId: RAZORPAY_KEY_ID, invoiceId });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post('/api/payments/razorpay/verify', async (req, res) => {
+  try {
+    const invoiceId = String(req.body?.invoiceId || '').trim();
+    const orderId = String(req.body?.razorpay_order_id || '').trim();
+    const paymentId = String(req.body?.razorpay_payment_id || '').trim();
+    const signature = String(req.body?.razorpay_signature || '').trim();
+    const email = String(req.body?.email || '').trim();
+    if (!orderId || !paymentId || !signature) {
+      return res.status(400).json({ error: 'Missing Razorpay verification fields.' });
+    }
+    const expected = crypto.createHmac('sha256', RAZORPAY_KEY_SECRET).update(`${orderId}|${paymentId}`).digest('hex');
+    if (expected !== signature) {
+      return res.status(400).json({ error: 'Invalid Razorpay payment signature.' });
+    }
+    let inv = null;
+    if (invoiceId) {
+      await run(`UPDATE invoices SET status = ? WHERE id = ?`, ['Paid', invoiceId]);
+      inv = await get('SELECT * FROM invoices WHERE id = ?', [invoiceId]);
+    }
+    const recipient = (email && email.includes('@')) ? email : (inv?.client && String(inv.client).includes('@') ? String(inv.client) : '');
+    if (recipient) {
+      sendRdkEmail(
+        recipient,
+        `Payment Receipt — ${invoiceId || paymentId}`,
+        `<table width="100%" cellpadding="0" cellspacing="0" style="background:#f8f7ff;padding:32px 12px;font-family:Inter,Segoe UI,Arial,sans-serif;">
+          <tr><td align="center">
+            <table width="520" cellpadding="0" cellspacing="0" style="max-width:520px;width:100%;background:#ffffff;border-radius:16px;border:1px solid #ede9fe;padding:28px;">
+              <tr><td>
+                <div style="font-size:15px;font-weight:800;color:#111827;margin-bottom:14px;">RDK <span style="color:#7c3aed;">TECH</span></div>
+                <h2 style="margin:0 0 8px;font-size:20px;color:#111827;">Payment Confirmed</h2>
+                <p style="margin:0 0 16px;font-size:14px;line-height:1.6;color:#4b5563;">Thank you! Your Razorpay payment has been verified and marked as Paid.</p>
+                <div style="background:#faf8ff;border:1px solid #ede9fe;border-radius:10px;padding:12px 14px;font-size:13px;color:#374151;">
+                  <b>Invoice:</b> ${invoiceId || 'Direct Payment'}<br/>
+                  <b>Payment ID:</b> ${paymentId}<br/>
+                  <b>Amount:</b> ₹${inv?.amount || req.body?.amount || 'Paid'}
+                </div>
+                <p style="margin:20px 0 0;font-size:12px;color:#9ca3af;">RDK Tech • <a href="mailto:rdksupport@ragefps.in" style="color:#7c3aed;text-decoration:none;">rdksupport@ragefps.in</a></p>
+              </td></tr>
+            </table>
+          </td></tr>
+        </table>`
+      );
+    }
+    res.json({ success: true, invoiceId, paymentId, status: 'Paid' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 app.post('/api/rage-pro/checkout', async (req, res) => {
   try {
     const guildId = String(req.body?.guildId || '').trim();
@@ -389,28 +491,23 @@ app.post('/api/rage-pro/submit-utr', async (req, res) => {
 
     await run(`UPDATE invoices SET status = ? WHERE id = ?`, [`Pending Verification (UTR: ${utr})`, invoiceId]);
 
-    const webhookUrl = process.env.DISCORD_TICKET_WEBHOOK_URL || 'https://discord.com/api/webhooks/1555981268678742088/JJfYUiRAv1G3AP_u0teQ-iI4Nlnk7n3CbnkgBM0uXtvqP7kXV3PzF9Dkt4BBowt8E6G7';
-    fetch(webhookUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        username: 'RDK Tech Billing',
-        content: `<@1140892126402596905>`,
-        embeds: [{
-          title: `New Rage Pro (₹99) UPI Payment Submitted`,
-          color: 0x10b981,
-          fields: [
-            { name: 'Invoice ID', value: invoiceId, inline: true },
-            { name: 'UTR / Ref', value: `\`${utr}\``, inline: true },
-            { name: 'Amount', value: '₹99 INR (30 Days)', inline: true },
-            { name: 'Server', value: `${guildName} (\`${guildId}\`)`, inline: false },
-            { name: 'Verified Owner', value: `<@${ownerId}> (${ownerUsername})`, inline: false }
-          ],
-          footer: { text: 'Run r!premium grant <guildId> 30 after verifying UTR' },
-          timestamp: new Date().toISOString()
-        }]
-      })
-    }).catch(() => {});
+    sendDiscordWebhook({
+      username: 'RDK Tech Billing',
+      content: `<@1140892126402596905>`,
+      embeds: [{
+        title: `New Rage Pro (₹99) UPI Payment Submitted`,
+        color: 0x10b981,
+        fields: [
+          { name: 'Invoice ID', value: invoiceId, inline: true },
+          { name: 'UTR / Ref', value: `\`${utr}\``, inline: true },
+          { name: 'Amount', value: '₹99 INR (30 Days)', inline: true },
+          { name: 'Server', value: `${guildName} (\`${guildId}\`)`, inline: false },
+          { name: 'Verified Owner', value: `<@${ownerId}> (${ownerUsername})`, inline: false }
+        ],
+        footer: { text: 'Run r!premium grant <guildId> 30 after verifying UTR' },
+        timestamp: new Date().toISOString()
+      }]
+    });
 
     res.json({ success: true, invoiceId, utr, status: 'submitted' });
   } catch (err) {
@@ -447,20 +544,15 @@ app.post('/api/invoices/submit-utr', async (req, res) => {
       return res.status(400).json({ error: 'Enter a valid 12-digit UPI UTR / Reference Number.' });
     }
     await run(`UPDATE invoices SET status = ? WHERE id = ?`, [`Pending Verification (UTR: ${utr})`, invoiceId]);
-    const webhookUrl = process.env.DISCORD_TICKET_WEBHOOK_URL || 'https://discord.com/api/webhooks/1555981268678742088/JJfYUiRAv1G3AP_u0teQ-iI4Nlnk7n3CbnkgBM0uXtvqP7kXV3PzF9Dkt4BBowt8E6G7';
-    fetch(webhookUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        username: 'RDK Tech Billing',
-        embeds: [{
-          title: `Invoice UTR Submitted: ${invoiceId}`,
-          color: 0x7c3aed,
-          fields: [{ name: 'UTR / Ref', value: `\`${utr}\``, inline: true }],
-          timestamp: new Date().toISOString()
-        }]
-      })
-    }).catch(() => {});
+    sendDiscordWebhook({
+      username: 'RDK Tech Billing',
+      embeds: [{
+        title: `Invoice UTR Submitted: ${invoiceId}`,
+        color: 0x7c3aed,
+        fields: [{ name: 'UTR / Ref', value: `\`${utr}\``, inline: true }],
+        timestamp: new Date().toISOString()
+      }]
+    });
     res.json({ success: true, invoiceId, utr });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -647,25 +739,20 @@ app.post('/api/rest/:table', async (req, res) => {
               </table>`
             );
           }
-          const webhookUrl = process.env.DISCORD_TICKET_WEBHOOK_URL || 'https://discord.com/api/webhooks/1555981268678742088/JJfYUiRAv1G3AP_u0teQ-iI4Nlnk7n3CbnkgBM0uXtvqP7kXV3PzF9Dkt4BBowt8E6G7';
-          fetch(webhookUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              username: 'RDK Tech Meetings',
-              embeds: [{
-                title: `New Consultation Request (Pending Approval): ${item.type || 'Call'}`,
-                color: 0x7c3aed,
-                fields: [
-                  { name: 'Client', value: String(item.client || 'N/A'), inline: true },
-                  { name: 'Requested Slot', value: `${item.date || 'TBD'} ${item.time || ''}`, inline: true },
-                  { name: 'Action Needed', value: 'Approve or Decline in Admin Dashboard -> Meetings', inline: false }
-                ],
-                footer: { text: 'RDK Tech • rdkweb.netlify.app/#meetings' },
-                timestamp: new Date().toISOString()
-              }]
-            })
-          }).catch(() => {});
+          sendDiscordWebhook({
+            username: 'RDK Tech Meetings',
+            embeds: [{
+              title: `New Consultation Request (Pending Approval): ${item.type || 'Call'}`,
+              color: 0x7c3aed,
+              fields: [
+                { name: 'Client', value: String(item.client || 'N/A'), inline: true },
+                { name: 'Requested Slot', value: `${item.date || 'TBD'} ${item.time || ''}`, inline: true },
+                { name: 'Action Needed', value: 'Approve or Decline in Admin Dashboard -> Meetings', inline: false }
+              ],
+              footer: { text: 'RDK Tech • rdkweb.netlify.app/#meetings' },
+              timestamp: new Date().toISOString()
+            }]
+          });
         }
 
         // Notify applicant email & Discord webhook when a career application is submitted
@@ -694,25 +781,20 @@ app.post('/api/rest/:table', async (req, res) => {
               </table>`
             );
           }
-          const webhookUrl = process.env.DISCORD_TICKET_WEBHOOK_URL || 'https://discord.com/api/webhooks/1555981268678742088/JJfYUiRAv1G3AP_u0teQ-iI4Nlnk7n3CbnkgBM0uXtvqP7kXV3PzF9Dkt4BBowt8E6G7';
-          fetch(webhookUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              username: 'RDK Tech Careers',
-              embeds: [{
-                title: `New Career Application: ${item.position || 'Role'}`,
-                color: 0x7c3aed,
-                fields: [
-                  { name: 'Applicant', value: String(item.name || 'N/A'), inline: true },
-                  { name: 'Email', value: String(item.email || 'N/A'), inline: true },
-                  { name: 'Portfolio / Resume', value: String(item.resume || 'N/A'), inline: false }
-                ],
-                footer: { text: 'RDK Tech • rdkweb.netlify.app/#careers' },
-                timestamp: new Date().toISOString()
-              }]
-            })
-          }).catch(() => {});
+          sendDiscordWebhook({
+            username: 'RDK Tech Careers',
+            embeds: [{
+              title: `New Career Application: ${item.position || 'Role'}`,
+              color: 0x7c3aed,
+              fields: [
+                { name: 'Applicant', value: String(item.name || 'N/A'), inline: true },
+                { name: 'Email', value: String(item.email || 'N/A'), inline: true },
+                { name: 'Portfolio / Resume', value: String(item.resume || 'N/A'), inline: false }
+              ],
+              footer: { text: 'RDK Tech • rdkweb.netlify.app/#careers' },
+              timestamp: new Date().toISOString()
+            }]
+          });
         }
 
         // Notify Discord webhook & client email when a ticket is created on rdkweb.netlify.app
@@ -724,26 +806,21 @@ app.post('/api/rest/:table', async (req, res) => {
               `<h2>Support Ticket Created</h2><p><b>Ticket ID:</b> ${item.id}<br/><b>Category:</b> ${item.category || 'General'}<br/><b>Title:</b> ${item.title || ''}</p><p>Our engineering team has received your ticket and will respond shortly.</p>`
             );
           }
-          const webhookUrl = process.env.DISCORD_TICKET_WEBHOOK_URL || 'https://discord.com/api/webhooks/1555981268678742088/JJfYUiRAv1G3AP_u0teQ-iI4Nlnk7n3CbnkgBM0uXtvqP7kXV3PzF9Dkt4BBowt8E6G7';
-          fetch(webhookUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              username: 'RDK Tech Portal',
-              embeds: [{
-                title: `New Web Ticket: ${item.id || 'N/A'}`,
-                color: 0x7c3aed,
-                fields: [
-                  { name: 'Category', value: String(item.category || 'General'), inline: true },
-                  { name: 'Client', value: String(item.client || 'Guest'), inline: true },
-                  { name: 'Title', value: String(item.title || 'No Title'), inline: false },
-                  { name: 'Description', value: String(item.description || '').slice(0, 1000), inline: false }
-                ],
-                footer: { text: 'RDK Tech • rdkweb.netlify.app/#tickets' },
-                timestamp: new Date().toISOString()
-              }]
-            })
-          }).catch(() => {});
+          sendDiscordWebhook({
+            username: 'RDK Tech Portal',
+            embeds: [{
+              title: `New Web Ticket: ${item.id || 'N/A'}`,
+              color: 0x7c3aed,
+              fields: [
+                { name: 'Category', value: String(item.category || 'General'), inline: true },
+                { name: 'Client', value: String(item.client || 'Guest'), inline: true },
+                { name: 'Title', value: String(item.title || 'No Title'), inline: false },
+                { name: 'Description', value: String(item.description || '').slice(0, 1000), inline: false }
+              ],
+              footer: { text: 'RDK Tech • rdkweb.netlify.app/#tickets' },
+              timestamp: new Date().toISOString()
+            }]
+          });
         }
       }
       const out = single || maybeSingle ? (inserted[0] || null) : inserted;

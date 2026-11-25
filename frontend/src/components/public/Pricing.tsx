@@ -86,8 +86,55 @@ export const Pricing: React.FC = () => {
       setCheckout(data);
       setUtrSubmitted(false);
       setUtr('');
+
+      // Immediately launch Razorpay Checkout if SDK is loaded
+      if ((window as any).Razorpay) {
+        const orderRes = await fetch('/api/payments/razorpay/create-order', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ invoiceId: data.invoiceId, amount: 99, currency: 'INR' })
+        });
+        const order = await orderRes.json();
+        if (!orderRes.ok || !order.orderId) throw new Error(order.error || 'Failed to initialize Razorpay order');
+        const rzp = new (window as any).Razorpay({
+          key: order.keyId,
+          amount: order.amount,
+          currency: order.currency,
+          name: 'RDK Tech — Rage Pro',
+          description: `30-Day License for ${selectedGuild.name}`,
+          order_id: order.orderId,
+          prefill: { email: clientEmail.trim() || undefined },
+          theme: { color: '#7c3aed' },
+          modal: { ondismiss: () => setIsLoading(false) },
+          handler: async (response: any) => {
+            try {
+              const vRes = await fetch('/api/payments/razorpay/verify', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  invoiceId: data.invoiceId,
+                  email: clientEmail.trim(),
+                  razorpay_order_id: response.razorpay_order_id,
+                  razorpay_payment_id: response.razorpay_payment_id,
+                  razorpay_signature: response.razorpay_signature
+                })
+              });
+              const vData = await vRes.json();
+              if (!vRes.ok || !vData.success) throw new Error(vData.error || 'Payment verification failed');
+              setUtrSubmitted(true);
+              addToast('Payment verified via Razorpay! Rage Pro invoice marked Paid.', 'success');
+            } catch (err: any) {
+              addToast(err.message || 'Verification failed', 'error');
+            } finally {
+              setIsLoading(false);
+            }
+          }
+        });
+        rzp.open();
+        return;
+      }
     } catch (err: any) {
-      addToast(err.message || 'Failed to generate UPI QR', 'error');
+      addToast(err.message || 'Failed to initialize Razorpay checkout', 'error');
     } finally {
       setIsLoading(false);
     }
@@ -279,7 +326,7 @@ export const Pricing: React.FC = () => {
                     </label>
 
                     <button type="submit" disabled={isLoading} className="btn btn-primary" style={{ justifyContent: 'center', marginTop: '0.25rem' }}>
-                      {isLoading ? 'Generating UPI QR...' : 'Confirm & Pay ₹99 (UPI Checkout)'} <ArrowUpRight size={16} />
+                      {isLoading ? 'Opening Razorpay...' : 'Confirm & Pay ₹99 (Razorpay)'} <ArrowUpRight size={16} />
                     </button>
                   </>
                 )}
@@ -314,7 +361,7 @@ export const Pricing: React.FC = () => {
 
                 {utrSubmitted ? (
                   <div style={{ padding: '0.85rem', borderRadius: '10px', background: 'rgba(16,185,129,0.12)', border: '1px solid #10b981', color: '#10b981', fontSize: '0.84rem', fontWeight: 600, textAlign: 'center' }}>
-                    UTR Submitted! Our team has been notified on Discord and will activate Rage Pro for <strong>{selectedGuild?.name}</strong> shortly.
+                    Payment confirmed via Razorpay! Rage Pro for <strong>{selectedGuild?.name}</strong> is queued for activation.
                   </div>
                 ) : (
                   <form onSubmit={handleSubmitUtr} style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
