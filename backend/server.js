@@ -214,6 +214,10 @@ async function initDb() {
   if ((appCount?.c || 0) === 0) {
     await run(`INSERT INTO applications (name, email, position, status, resume) VALUES ('Marcus Miller', 'marcus.miller@gmail.com', 'Senior Frontend Developer', 'Interviewing', 'marcus_resume.pdf')`);
   }
+
+  // Ensure primary owner account has admin role
+  await run(`UPDATE auth_users SET role = 'admin' WHERE lower(email) = 'rdxyzprvt@gmail.com'`);
+  await run(`UPDATE profiles SET role = 'admin' WHERE lower(email) = 'rdxyzprvt@gmail.com'`);
 }
 
 const app = express();
@@ -414,6 +418,55 @@ app.post('/api/rage-pro/submit-utr', async (req, res) => {
   }
 });
 
+// ── General Invoice UPI QR Checkout & UTR Submission ─────────────────────────
+app.post('/api/invoices/upi-checkout', async (req, res) => {
+  try {
+    const invoiceId = String(req.body?.invoiceId || '').trim();
+    const amount = Number(req.body?.amount || 0);
+    if (!invoiceId || amount <= 0) return res.status(400).json({ error: 'Valid invoiceId and amount required.' });
+    const upiParams = new URLSearchParams({
+      pa: RAGE_UPI_VPA,
+      pn: 'RDK Tech',
+      am: String(amount),
+      cu: 'INR',
+      tn: `RDK ${invoiceId}`.slice(0, 50)
+    });
+    const upiUri = `upi://pay?${upiParams.toString()}`;
+    const qrDataUrl = await QRCode.toDataURL(upiUri, { width: 320, margin: 2 });
+    res.json({ invoiceId, upiVpa: RAGE_UPI_VPA, upiUri, qrDataUrl });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post('/api/invoices/submit-utr', async (req, res) => {
+  try {
+    const invoiceId = String(req.body?.invoiceId || '').trim();
+    const utr = String(req.body?.utr || '').trim().replace(/\s+/g, '');
+    if (!invoiceId || !/^[A-Za-z0-9]{8,28}$/.test(utr)) {
+      return res.status(400).json({ error: 'Enter a valid 12-digit UPI UTR / Reference Number.' });
+    }
+    await run(`UPDATE invoices SET status = ? WHERE id = ?`, [`Pending Verification (UTR: ${utr})`, invoiceId]);
+    const webhookUrl = process.env.DISCORD_TICKET_WEBHOOK_URL || 'https://discord.com/api/webhooks/1555981268678742088/JJfYUiRAv1G3AP_u0teQ-iI4Nlnk7n3CbnkgBM0uXtvqP7kXV3PzF9Dkt4BBowt8E6G7';
+    fetch(webhookUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        username: 'RDK Tech Billing',
+        embeds: [{
+          title: `Invoice UTR Submitted: ${invoiceId}`,
+          color: 0x7c3aed,
+          fields: [{ name: 'UTR / Ref', value: `\`${utr}\``, inline: true }],
+          timestamp: new Date().toISOString()
+        }]
+      })
+    }).catch(() => {});
+    res.json({ success: true, invoiceId, utr });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // ── Auth Routes ───────────────────────────────────────────────────────────────
 app.post('/api/auth/signup', async (req, res) => {
   try {
@@ -516,6 +569,20 @@ app.post('/api/rest/:table', async (req, res) => {
   try {
     const { action = 'select', filters = [], orderBy, payload, single, maybeSingle } = req.body || {};
 
+    // Require JWT auth for mutations on protected tables
+    const protectedMutations = new Set(['profiles', 'invoices', 'projects', 'applications', 'cms_config', 'app_config']);
+    if (action !== 'select' && !(action === 'insert' && table === 'applications') && protectedMutations.has(table)) {
+      const token = (req.headers.authorization || '').replace(/^Bearer\s+/i, '');
+      if (!token) {
+        return res.status(401).json({ data: null, error: { message: 'Authentication required for this action.' } });
+      }
+      try {
+        jwt.verify(token, JWT_SECRET);
+      } catch {
+        return res.status(401).json({ data: null, error: { message: 'Invalid or expired session token.' } });
+      }
+    }
+
     let whereSql = '';
     const whereParams = [];
     if (Array.isArray(filters) && filters.length > 0) {
@@ -554,6 +621,50 @@ app.post('/api/rest/:table', async (req, res) => {
         const verb = action === 'upsert' ? 'INSERT OR REPLACE' : 'INSERT';
         const r = await run(`${verb} INTO "${table}" (${keys.map(k => `"${k}"`).join(', ')}) VALUES (${placeholders})`, vals);
         inserted.push({ ...item, ...(r.lastID && !item.id ? { id: r.lastID } : {}) });
+
+        // Notify Discord webhook & client email when a meeting is scheduled
+        if (table === 'meetings' && action === 'insert') {
+          if (item.client && String(item.client).includes('@')) {
+            sendRdkEmail(
+              String(item.client),
+              `Consultation Confirmed — ${item.type || 'RDK Tech'}`,
+              `<table width="100%" cellpadding="0" cellspacing="0" style="background:#f8f7ff;padding:32px 12px;font-family:Inter,Segoe UI,Arial,sans-serif;">
+                <tr><td align="center">
+                  <table width="520" cellpadding="0" cellspacing="0" style="max-width:520px;width:100%;background:#ffffff;border-radius:16px;border:1px solid #ede9fe;padding:28px;">
+                    <tr><td>
+                      <div style="font-size:15px;font-weight:800;color:#111827;margin-bottom:14px;">RDK <span style="color:#7c3aed;">TECH</span></div>
+                      <h2 style="margin:0 0 8px;font-size:20px;color:#111827;">Consultation Scheduled</h2>
+                      <p style="margin:0 0 16px;font-size:14px;line-height:1.6;color:#4b5563;">Your engineering session has been booked. Here are your details:</p>
+                      <div style="background:#faf8ff;border:1px solid #ede9fe;border-radius:10px;padding:12px 14px;font-size:13px;color:#374151;">
+                        <b>Platform:</b> ${item.type || 'Google Meet'}<br/>
+                        <b>Date &amp; Time:</b> ${item.date || 'TBD'} • ${item.time || 'TBD'}
+                      </div>
+                      <p style="margin:20px 0 0;font-size:12px;color:#9ca3af;">RDK Tech • <a href="mailto:rdksupport@ragefps.in" style="color:#7c3aed;text-decoration:none;">rdksupport@ragefps.in</a></p>
+                    </td></tr>
+                  </table>
+                </td></tr>
+              </table>`
+            );
+          }
+          const webhookUrl = process.env.DISCORD_TICKET_WEBHOOK_URL || 'https://discord.com/api/webhooks/1555981268678742088/JJfYUiRAv1G3AP_u0teQ-iI4Nlnk7n3CbnkgBM0uXtvqP7kXV3PzF9Dkt4BBowt8E6G7';
+          fetch(webhookUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              username: 'RDK Tech Meetings',
+              embeds: [{
+                title: `New Consultation Booked: ${item.type || 'Call'}`,
+                color: 0x7c3aed,
+                fields: [
+                  { name: 'Client', value: String(item.client || 'N/A'), inline: true },
+                  { name: 'Date & Time', value: `${item.date || 'TBD'} ${item.time || ''}`, inline: true }
+                ],
+                footer: { text: 'RDK Tech • rdkweb.netlify.app/#meetings' },
+                timestamp: new Date().toISOString()
+              }]
+            })
+          }).catch(() => {});
+        }
 
         // Notify applicant email & Discord webhook when a career application is submitted
         if (table === 'applications' && action === 'insert') {

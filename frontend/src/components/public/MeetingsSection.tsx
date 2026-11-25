@@ -52,7 +52,7 @@ export const MeetingsSection: React.FC = () => {
           {meetingsData.map((meet, idx) => (
             <div key={idx} className="meet-card visible" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
               <div>
-                <div className="meet-icon" style={{ background: 'var(--surface, #1f2937)', border: '1px solid var(--border, #374151)', width: '48px', height: '48px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem' }}>
+                <div className="meet-icon" style={{ background: 'rgba(124, 58, 237, 0.08)', border: '1px solid rgba(124, 58, 237, 0.2)', width: '48px', height: '48px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem' }}>
                   {meet.icon}
                 </div>
                 <div className="meet-name" style={{ fontWeight: 700, fontSize: '1rem' }}>{meet.name}</div>
