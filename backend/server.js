@@ -7,6 +7,7 @@ import crypto from 'node:crypto';
 import path from 'node:path';
 import dotenv from 'dotenv';
 import QRCode from 'qrcode';
+import nodemailer from 'nodemailer';
 
 dotenv.config();
 
@@ -289,6 +290,33 @@ app.get('/api/discord/callback', async (req, res) => {
 const RAGE_UPI_VPA = process.env.UPI_VPA || 'rbzclasher@okaxis';
 const RAGE_UPI_NAME = process.env.UPI_PAYEE_NAME || 'Rage Optimiser';
 
+// ── SMTP Email Service (rdksupport@ragefps.in) ────────────────────────────────
+const SMTP_HOST = process.env.SMTP_HOST || 'smtpout.secureserver.net';
+const SMTP_PORT = Number(process.env.SMTP_PORT || 465);
+const SMTP_USER = process.env.SMTP_USER || 'rdksupport@ragefps.in';
+const SMTP_PASS = process.env.SMTP_PASS || 'clasher@2026';
+
+const mailTransporter = nodemailer.createTransport({
+  host: SMTP_HOST,
+  port: SMTP_PORT,
+  secure: SMTP_PORT === 465,
+  auth: { user: SMTP_USER, pass: SMTP_PASS }
+});
+
+async function sendRdkEmail(to, subject, html) {
+  if (!to || !to.includes('@')) return;
+  try {
+    await mailTransporter.sendMail({
+      from: `"RDK Tech Support" <${SMTP_USER}>`,
+      to,
+      subject,
+      html
+    });
+  } catch (err) {
+    console.warn('[SMTP] Failed to send email to', to, err.message);
+  }
+}
+
 app.post('/api/rage-pro/checkout', async (req, res) => {
   try {
     const guildId = String(req.body?.guildId || '').trim();
@@ -330,6 +358,13 @@ app.post('/api/rage-pro/checkout', async (req, res) => {
     );
 
     res.json({ invoiceId: invId, upiVpa: RAGE_UPI_VPA, upiName: RAGE_UPI_NAME, upiUri, qrDataUrl, amountInr: 99 });
+    if (email && email.includes('@')) {
+      sendRdkEmail(
+        email,
+        `Rage Pro (₹99) Invoice Created — ${invId}`,
+        `<h2>Rage Pro Upgrade Invoice</h2><p><b>Invoice ID:</b> ${invId}<br/><b>Server:</b> ${guildName} (${guildId})<br/><b>Amount:</b> ₹99 INR (30 Days)<br/><b>UPI ID:</b> ${RAGE_UPI_VPA}</p><p>Once you submit your 12-digit UTR in the checkout modal, our team will activate Rage Pro on your server.</p>`
+      );
+    }
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -397,6 +432,11 @@ app.post('/api/auth/signup', async (req, res) => {
 
     const user = { id, email, user_metadata: { full_name: fullName, role: 'client' } };
     const access_token = jwt.sign({ id, email, full_name: fullName, role: 'client' }, JWT_SECRET, { expiresIn: '7d' });
+    sendRdkEmail(
+      email,
+      'Welcome to RDK Tech Client Portal',
+      `<h2>Welcome to RDK Tech, ${fullName}!</h2><p>Your account is ready. You can now manage projects, support tickets, and Rage Pro subscriptions at <a href="https://rdkweb.netlify.app">rdkweb.netlify.app</a>.</p>`
+    );
     res.json({ data: { user, session: { access_token, user } }, error: null });
   } catch (err) {
     res.status(500).json({ error: { message: err.message } });
@@ -482,8 +522,15 @@ app.post('/api/rest/:table', async (req, res) => {
         const r = await run(`${verb} INTO "${table}" (${keys.map(k => `"${k}"`).join(', ')}) VALUES (${placeholders})`, vals);
         inserted.push({ ...item, ...(r.lastID && !item.id ? { id: r.lastID } : {}) });
 
-        // Notify Discord webhook when a ticket is created on rdkweb.netlify.app
+        // Notify Discord webhook & client email when a ticket is created on rdkweb.netlify.app
         if (table === 'tickets' && action === 'insert') {
+          if (item.client && String(item.client).includes('@')) {
+            sendRdkEmail(
+              String(item.client),
+              `Ticket Received: ${item.id} — ${item.title || 'Support'}`,
+              `<h2>Support Ticket Created</h2><p><b>Ticket ID:</b> ${item.id}<br/><b>Category:</b> ${item.category || 'General'}<br/><b>Title:</b> ${item.title || ''}</p><p>Our engineering team has received your ticket and will respond shortly.</p>`
+            );
+          }
           const webhookUrl = process.env.DISCORD_TICKET_WEBHOOK_URL || 'https://discord.com/api/webhooks/1555981268678742088/JJfYUiRAv1G3AP_u0teQ-iI4Nlnk7n3CbnkgBM0uXtvqP7kXV3PzF9Dkt4BBowt8E6G7';
           fetch(webhookUrl, {
             method: 'POST',
