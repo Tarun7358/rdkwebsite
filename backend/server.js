@@ -222,7 +222,14 @@ async function initDb() {
 
 const app = express();
 app.use(cors({ origin: true, credentials: true }));
-app.use(express.json({ limit: '4mb' }));
+app.use(express.json({
+  limit: '4mb',
+  verify: (req, _res, buf) => {
+    if (req.originalUrl?.startsWith('/api/payments/razorpay/webhook')) {
+      req.rawBody = buf;
+    }
+  }
+}));
 
 app.get('/api/health', (_req, res) => {
   res.json({ status: 'online', service: 'rdkwebsite-sqlite-api', database: 'sqlite' });
@@ -323,6 +330,7 @@ async function sendRdkEmail(to, subject, html) {
 
 const RAZORPAY_KEY_ID = (process.env.RAZORPAY_KEY_ID || 'rzp_test_U4Q1BQlFLpbrzg').trim();
 const RAZORPAY_KEY_SECRET = (process.env.RAZORPAY_KEY_SECRET || 'tFf732JTEvY1CCPZujZ9s7p5').trim();
+const RAZORPAY_WEBHOOK_SECRET = (process.env.RAZORPAY_WEBHOOK_SECRET || '').trim();
 
 async function sendDiscordWebhook(body) {
   if (process.env.ENABLE_DISCORD_WEBHOOK !== 'true') return;
@@ -418,6 +426,65 @@ app.post('/api/payments/razorpay/verify', async (req, res) => {
       );
     }
     res.json({ success: true, invoiceId, paymentId, status: 'Paid' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post('/api/payments/razorpay/webhook', async (req, res) => {
+  try {
+    if (!RAZORPAY_WEBHOOK_SECRET) {
+      return res.status(500).json({ error: 'RAZORPAY_WEBHOOK_SECRET not configured.' });
+    }
+    const sig = String(req.headers['x-razorpay-signature'] || '').trim();
+    if (!sig || !req.rawBody) {
+      return res.status(400).json({ error: 'Missing webhook signature or body.' });
+    }
+    const expected = crypto.createHmac('sha256', RAZORPAY_WEBHOOK_SECRET).update(req.rawBody).digest('hex');
+    if (expected !== sig) {
+      return res.status(400).json({ error: 'Invalid Razorpay webhook signature.' });
+    }
+
+    const event = req.body?.event;
+    if (event === 'payment.captured' || event === 'order.paid') {
+      const paymentEntity = req.body?.payload?.payment?.entity || {};
+      const orderEntity = req.body?.payload?.order?.entity || {};
+      const invoiceId = String(paymentEntity.notes?.invoiceId || orderEntity.receipt || '').trim();
+      const paymentId = String(paymentEntity.id || '').trim();
+      if (invoiceId) {
+        const inv = await get('SELECT * FROM invoices WHERE id = ?', [invoiceId]);
+        if (inv && inv.status !== 'Paid') {
+          await run(`UPDATE invoices SET status = ? WHERE id = ?`, ['Paid', invoiceId]);
+          const recipient = (paymentEntity.email && String(paymentEntity.email).includes('@'))
+            ? String(paymentEntity.email)
+            : (inv.client && String(inv.client).includes('@') ? String(inv.client) : '');
+          if (recipient) {
+            sendRdkEmail(
+              recipient,
+              `Payment Receipt — ${invoiceId}`,
+              `<table width="100%" cellpadding="0" cellspacing="0" style="background:#f8f7ff;padding:32px 12px;font-family:Inter,Segoe UI,Arial,sans-serif;">
+                <tr><td align="center">
+                  <table width="520" cellpadding="0" cellspacing="0" style="max-width:520px;width:100%;background:#ffffff;border-radius:16px;border:1px solid #ede9fe;padding:28px;">
+                    <tr><td>
+                      <div style="font-size:15px;font-weight:800;color:#111827;margin-bottom:14px;">RDK <span style="color:#7c3aed;">TECH</span></div>
+                      <h2 style="margin:0 0 8px;font-size:20px;color:#111827;">Payment Confirmed</h2>
+                      <p style="margin:0 0 16px;font-size:14px;line-height:1.6;color:#4b5563;">Thank you! Your Razorpay payment has been confirmed and your invoice is marked as Paid.</p>
+                      <div style="background:#faf8ff;border:1px solid #ede9fe;border-radius:10px;padding:12px 14px;font-size:13px;color:#374151;">
+                        <b>Invoice:</b> ${invoiceId}<br/>
+                        <b>Payment ID:</b> ${paymentId || 'Verified'}<br/>
+                        <b>Amount:</b> ₹${inv.amount || ''}
+                      </div>
+                      <p style="margin:20px 0 0;font-size:12px;color:#9ca3af;">RDK Tech • <a href="mailto:rdksupport@ragefps.in" style="color:#7c3aed;text-decoration:none;">rdksupport@ragefps.in</a></p>
+                    </td></tr>
+                  </table>
+                </td></tr>
+              </table>`
+            );
+          }
+        }
+      }
+    }
+    res.json({ received: true });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
