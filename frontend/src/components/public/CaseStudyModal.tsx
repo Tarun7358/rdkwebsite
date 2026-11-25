@@ -14,6 +14,15 @@ export const CaseStudyModal: React.FC<CaseStudyModalProps> = ({ item, isOpen, on
   if (!isOpen || !item) return null;
 
   const projectDetails: Record<string, { metrics: string[]; highlights: string[]; arch: string }> = {
+    'Rage Optimiser Enterprise': {
+      metrics: ['99.99% Uptime', '< 40ms Anti-Nuke Rollback', '366+ Commands'],
+      highlights: [
+        'Instant zero-latency Anti-Nuke defense with UPM versioned channel & role snapshots',
+        'Gmail 2FA Sentinel, Pre-Bot Whitelist, and automated daily EOD security reports',
+        'Discord Components v2 Box UI across Help, Tickets, Moderation, and ₹99 UPI Billing'
+      ],
+      arch: 'Discord.js v14 · TypeScript · Node.js · SQLite WAL · Redis L1/L2 Cache · Express WebSocket'
+    },
     'Luxora Marketplace': {
       metrics: ['99.99% Uptime', '150ms Average Latency', '$4.2M Monthly Volume'],
       highlights: [
@@ -76,7 +85,7 @@ export const CaseStudyModal: React.FC<CaseStudyModalProps> = ({ item, isOpen, on
       <div style={{ background: 'var(--card, #111827)', color: 'var(--text, #f9fafb)', border: '1px solid var(--border, #374151)', borderRadius: '16px', width: '100%', maxWidth: '750px', maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)', display: 'flex', flexDirection: 'column' }}>
         
         {/* Header */}
-        <div style={{ padding: '1.25rem 1.5rem', borderBottom: '1px solid var(--border, #374151)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'var(--surface, #1f2937)' }}>
+        <div style={{ padding: '1.25rem 1.5rem', borderBottom: '1px solid var(--border, #374151)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'var(--bg2, #1f2937)' }}>
           <div>
             <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#ea580c', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
               Enterprise Project Case Study
@@ -85,7 +94,7 @@ export const CaseStudyModal: React.FC<CaseStudyModalProps> = ({ item, isOpen, on
               {item.title}
             </h2>
           </div>
-          <button onClick={onClose} style={{ background: 'var(--card, #111827)', border: '1px solid var(--border, #374151)', color: '#ffffff', width: '36px', height: '36px', borderRadius: '50%', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <button onClick={onClose} aria-label="Close modal" style={{ background: 'var(--card, #111827)', border: '1px solid var(--border, #374151)', color: 'var(--text, #ffffff)', width: '36px', height: '36px', borderRadius: '50%', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <X size={20} />
           </button>
         </div>
@@ -165,13 +174,13 @@ export const CaseStudyModal: React.FC<CaseStudyModalProps> = ({ item, isOpen, on
               </div>
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                <div style={{ background: 'var(--surface, #1f2937)', padding: '1rem', borderRadius: '8px', border: '1px solid var(--border, #374151)' }}>
+                <div style={{ background: 'var(--bg2, #1f2937)', padding: '1rem', borderRadius: '8px', border: '1px solid var(--border, #374151)' }}>
                   <span style={{ fontSize: '0.75rem', color: 'var(--text3, #9ca3af)', fontWeight: 700 }}>Security Compliance</span>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginTop: '0.3rem', color: '#4ade80', fontSize: '0.85rem', fontWeight: 700 }}>
-                    <ShieldCheck size={16} /> SOC-2 & ISO 27001 Ready
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginTop: '0.3rem', color: '#10b981', fontSize: '0.85rem', fontWeight: 700 }}>
+                    <ShieldCheck size={16} /> SOC-2 &amp; ISO 27001 Ready
                   </div>
                 </div>
-                <div style={{ background: 'var(--surface, #1f2937)', padding: '1rem', borderRadius: '8px', border: '1px solid var(--border, #374151)' }}>
+                <div style={{ background: 'var(--bg2, #1f2937)', padding: '1rem', borderRadius: '8px', border: '1px solid var(--border, #374151)' }}>
                   <span style={{ fontSize: '0.75rem', color: 'var(--text3, #9ca3af)', fontWeight: 700 }}>Deployment Model</span>
                   <div style={{ color: 'var(--text, #ffffff)', marginTop: '0.3rem', fontSize: '0.85rem', fontWeight: 700 }}>
                     Cloud-Native Microservices
@@ -184,7 +193,7 @@ export const CaseStudyModal: React.FC<CaseStudyModalProps> = ({ item, isOpen, on
           {activeTab === 'metrics' && (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
               {details.metrics.map((metric, idx) => (
-                <div key={idx} style={{ background: 'var(--surface, #1f2937)', padding: '1.25rem', borderRadius: '12px', border: '1px solid var(--border, #374151)', textAlign: 'center' }}>
+                <div key={idx} style={{ background: 'var(--bg2, #1f2937)', padding: '1.25rem', borderRadius: '12px', border: '1px solid var(--border, #374151)', textAlign: 'center' }}>
                   <div style={{ fontSize: '1.3rem', fontWeight: 900, color: '#ea580c' }}>{metric}</div>
                   <span style={{ fontSize: '0.75rem', color: 'var(--text3, #9ca3af)', marginTop: '0.2rem', display: 'block' }}>Verified Production SLA</span>
                 </div>
@@ -194,7 +203,7 @@ export const CaseStudyModal: React.FC<CaseStudyModalProps> = ({ item, isOpen, on
         </div>
 
         {/* Footer */}
-        <div style={{ padding: '1rem 1.5rem', borderTop: '1px solid var(--border, #374151)', background: 'var(--surface, #1f2937)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ padding: '1rem 1.5rem', borderTop: '1px solid var(--border, #374151)', background: 'var(--bg2, #1f2937)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <span style={{ fontSize: '0.8rem', color: 'var(--text3, #9ca3af)' }}>RDK Enterprise Portfolio Series</span>
           <a href="#contact" className="btn btn-primary" onClick={onClose} style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', background: '#ea580c', borderColor: '#ea580c' }}>
             Build Similar Architecture <ArrowUpRight size={16} />
