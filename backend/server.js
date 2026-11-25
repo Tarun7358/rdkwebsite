@@ -255,6 +255,79 @@ const DISCORD_CLIENT_ID = process.env.DISCORD_CLIENT_ID || '1519626369594818560'
 const DISCORD_CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET || 'WdbpuKs8EhgkSG6MzF_drSjGSua5SQZY';
 const DISCORD_REDIRECT_URI = process.env.DISCORD_REDIRECT_URI || 'https://rdkweb.netlify.app/api/discord/callback';
 
+// ── Google OAuth2 (Account Login & Registration) ──────────────────────────────
+const GOOGLE_CLIENT_ID = (process.env.GOOGLE_CLIENT_ID || '').trim();
+const GOOGLE_CLIENT_SECRET = (process.env.GOOGLE_CLIENT_SECRET || '').trim();
+const GOOGLE_REDIRECT_URI = (process.env.GOOGLE_REDIRECT_URI || 'https://rdkweb.netlify.app/api/auth/google/callback').trim();
+
+app.get('/api/auth/google/login', (_req, res) => {
+  if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET) {
+    return res.status(503).send('<html><body style="font-family:sans-serif;padding:24px;"><h3>Google Sign-In Not Configured</h3><p>Set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET on the server to enable Google OAuth2.</p></body></html>');
+  }
+  const params = new URLSearchParams({
+    client_id: GOOGLE_CLIENT_ID,
+    redirect_uri: GOOGLE_REDIRECT_URI,
+    response_type: 'code',
+    scope: 'openid email profile',
+    prompt: 'select_account'
+  });
+  res.redirect(`https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`);
+});
+
+app.get('/api/auth/google/callback', async (req, res) => {
+  const code = String(req.query.code || '');
+  if (!code) return res.status(400).send('Missing Google OAuth code.');
+  try {
+    const tokenRes = await fetch('https://oauth2.googleapis.com/token', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
+        code,
+        client_id: GOOGLE_CLIENT_ID,
+        client_secret: GOOGLE_CLIENT_SECRET,
+        redirect_uri: GOOGLE_REDIRECT_URI,
+        grant_type: 'authorization_code'
+      })
+    });
+    const tokenData = await tokenRes.json();
+    if (!tokenData.access_token) {
+      return res.status(400).send(`Google OAuth failed: ${JSON.stringify(tokenData)}`);
+    }
+    const userRes = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
+      headers: { Authorization: `Bearer ${tokenData.access_token}` }
+    });
+    const gUser = await userRes.json();
+    const email = String(gUser.email || '').trim().toLowerCase();
+    if (!email) return res.status(400).send('Google account did not return an email address.');
+    const fullName = String(gUser.name || email.split('@')[0] || 'User').trim();
+
+    let row = await get('SELECT * FROM profiles WHERE email = ?', [email]);
+    if (!row) {
+      const id = crypto.randomUUID();
+      const hash = await bcrypt.hash(crypto.randomBytes(24).toString('hex'), 10);
+      await run(
+        `INSERT INTO profiles (id, email, name, role, details, password_hash) VALUES (?, ?, ?, 'client', 'Google Account', ?)`,
+        [id, email, fullName, hash]
+      );
+      row = await get('SELECT * FROM profiles WHERE id = ?', [id]);
+    }
+    const token = jwt.sign({ id: row.id, email: row.email, role: row.role, full_name: row.name }, JWT_SECRET, { expiresIn: '7d' });
+    const sessionPayload = JSON.stringify({
+      type: 'RDK_GOOGLE_AUTH',
+      session: { access_token: token, user: { id: row.id, email: row.email, user_metadata: { full_name: row.name, role: row.role } } }
+    });
+    res.send(`<!doctype html><html><body style="font-family:sans-serif;background:#f8f7ff;color:#111827;display:flex;align-items:center;justify-content:center;height:100vh;">
+      <p>Signed in with Google! Returning to RDK Tech...</p>
+      <script>
+        if (window.opener) { window.opener.postMessage(${sessionPayload}, '*'); }
+        window.close();
+      </script>
+    </body></html>`);
+  } catch (err) {
+    res.status(500).send('Google OAuth error: ' + err.message);
+  }
+});
+
 app.get('/api/discord/login', (_req, res) => {
   const params = new URLSearchParams({
     client_id: DISCORD_CLIENT_ID,

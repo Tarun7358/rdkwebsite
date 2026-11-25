@@ -108,6 +108,21 @@ export default function PaymentPage() {
     }
   };
 
+  const handleGoogleAuth = async () => {
+    setAuthLoading(true);
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({ provider: 'google' }) as any;
+      if (error) throw new Error(error.message);
+      addToast('Signed in with Google!', 'success');
+    } catch (err: any) {
+      if (!String(err.message || '').includes('closed')) {
+        addToast(err.message || 'Google sign-in failed', 'error');
+      }
+    } finally {
+      setAuthLoading(false);
+    }
+  };
+
   const handleDiscordAuth = () => {
     window.open('/api/discord/login', 'rdk_discord_oauth', 'width=520,height=720');
   };
@@ -370,6 +385,15 @@ export default function PaymentPage() {
               />
               <button type="submit" disabled={authLoading} className="btn btn-primary" style={{ justifyContent: 'center', background: '#7c3aed', border: 'none', fontWeight: 700 }}>
                 {authLoading ? 'Please wait...' : authMode === 'signup' ? 'Create Account & Continue' : 'Sign In & Continue'}
+              </button>
+              <button
+                type="button"
+                disabled={authLoading}
+                onClick={handleGoogleAuth}
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', padding: '0.68rem', borderRadius: '10px', border: '1px solid #d1d5db', background: '#ffffff', color: '#111827', fontWeight: 700, fontSize: '0.84rem', cursor: 'pointer' }}
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#EA4335" d="M12 10.2v3.9h5.4c-.2 1.2-1.4 3.6-5.4 3.6-3.3 0-6-2.7-6-6s2.7-6 6-6c1.9 0 3.1.8 3.8 1.5l2.6-2.5C16.8 3.1 14.6 2 12 2 6.5 2 2 6.5 2 12s4.5 10 10 10c5.8 0 9.6-4.1 9.6-9.8 0-.7-.1-1.2-.2-1.7H12z"/></svg>
+                Continue with Google
               </button>
             </form>
           ) : (

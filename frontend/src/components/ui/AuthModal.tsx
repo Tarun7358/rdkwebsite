@@ -208,6 +208,19 @@ export const AuthModal: React.FC = () => {
 
                 <SubmitButton loading={isSubmitting} label="Authenticate & Sign In" loadingLabel="Authenticating…" />
 
+                <button
+                  type="button"
+                  onClick={async () => {
+                    const { error } = (await authApi.signInWithGoogle()) as any;
+                    if (error && !String(error.message || '').includes('closed')) addToast(error.message, 'error');
+                    else if (!error) { addToast('Signed in with Google!', 'success'); setIsOpen(false); }
+                  }}
+                  style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', padding: '0.72rem', borderRadius: '10px', border: '1px solid var(--border, #d1d5db)', background: '#ffffff', color: '#111827', fontWeight: 700, fontSize: '0.85rem', cursor: 'pointer' }}
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#EA4335" d="M12 10.2v3.9h5.4c-.2 1.2-1.4 3.6-5.4 3.6-3.3 0-6-2.7-6-6s2.7-6 6-6c1.9 0 3.1.8 3.8 1.5l2.6-2.5C16.8 3.1 14.6 2 12 2 6.5 2 2 6.5 2 12s4.5 10 10 10c5.8 0 9.6-4.1 9.6-9.8 0-.7-.1-1.2-.2-1.7H12z"/></svg>
+                  Continue with Google
+                </button>
+
                 <div style={{ textAlign: 'center', fontSize: '0.82rem', color: 'var(--text3, #9ca3af)', marginTop: '0.5rem' }}>
                   Don't have a corporate account?{' '}
                   <span

@@ -134,8 +134,34 @@ export const supabase = {
       }
       return res;
     },
-    async signInWithOAuth(_opts: any) {
-      return { data: null, error: { message: 'Please use email & password sign in.' } };
+    async signInWithOAuth(opts: any) {
+      if (opts?.provider !== 'google') {
+        return { data: null, error: { message: 'Unsupported OAuth provider.' } };
+      }
+      return new Promise((resolve) => {
+        const popup = window.open('/api/auth/google/login', 'rdk_google_oauth', 'width=500,height=640');
+        if (!popup) {
+          resolve({ data: null, error: { message: 'Popup blocked. Please allow popups and try again.' } });
+          return;
+        }
+        const onMessage = (event: MessageEvent) => {
+          if (event.data?.type === 'RDK_GOOGLE_AUTH' && event.data.session?.access_token) {
+            window.removeEventListener('message', onMessage);
+            clearInterval(timer);
+            setStoredToken(event.data.session.access_token);
+            notifyAuth('SIGNED_IN', event.data.session);
+            resolve({ data: { session: event.data.session }, error: null });
+          }
+        };
+        const timer = setInterval(() => {
+          if (popup.closed) {
+            clearInterval(timer);
+            window.removeEventListener('message', onMessage);
+            resolve({ data: null, error: { message: 'Google sign-in window closed.' } });
+          }
+        }, 500);
+        window.addEventListener('message', onMessage);
+      });
     },
     async signOut() {
       setStoredToken(null);
