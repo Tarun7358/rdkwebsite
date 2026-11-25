@@ -514,6 +514,9 @@ app.post('/api/rage-pro/checkout', async (req, res) => {
     if (!/^\d{15,22}$/.test(guildId)) {
       return res.status(400).json({ error: 'Valid Discord Server ID is required.' });
     }
+    if (ownerId === '1140892126402596905' || guildId === '1266048940101599293') {
+      return res.status(400).json({ error: 'This server already has Lifetime Rage Pro — no payment required.' });
+    }
 
     const invId = 'INV-RAGE-' + crypto.randomBytes(3).toString('hex').toUpperCase();
     const upiParams = new URLSearchParams({

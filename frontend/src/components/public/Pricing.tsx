@@ -56,6 +56,10 @@ export const Pricing: React.FC = () => {
   };
 
   const selectedGuild = ownedGuilds.find((g) => g.id === selectedGuildId);
+  const isLifetimePro = Boolean(
+    discordUser?.id === '1140892126402596905' ||
+    selectedGuild?.id === '1266048940101599293'
+  );
 
   const handleOpenProCheckout = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -292,6 +296,23 @@ export const Pricing: React.FC = () => {
                   <div style={{ fontSize: '0.84rem', color: '#ef4444' }}>
                     No Discord servers owned by this account were found.
                   </div>
+                ) : isLifetimePro ? (
+                  <>
+                    <select
+                      value={selectedGuildId}
+                      onChange={(e) => setSelectedGuildId(e.target.value)}
+                      style={{ padding: '0.75rem 0.9rem', background: 'var(--bg2)', border: '1px solid var(--border)', color: 'var(--text)', borderRadius: '10px', fontSize: '0.875rem' }}
+                    >
+                      {ownedGuilds.map((g) => (
+                        <option key={g.id} value={g.id}>
+                          {g.name} ({g.id})
+                        </option>
+                      ))}
+                    </select>
+                    <div style={{ padding: '0.95rem', borderRadius: '10px', background: 'rgba(16,185,129,0.12)', border: '1px solid #10b981', color: '#10b981', fontSize: '0.86rem', fontWeight: 600, textAlign: 'center' }}>
+                      Lifetime Rage Pro Active! <strong>{selectedGuild?.name}</strong> is covered by Owner / Support Lifetime Pro — no payment required.
+                    </div>
+                  </>
                 ) : (
                   <>
                     <select
